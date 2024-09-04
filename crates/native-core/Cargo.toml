@@ -17,8 +17,8 @@ dioxus-core = { workspace = true}
 smallvec = { workspace = true }
 rustc-hash = { workspace = true }
 anymap = "1.0.0-beta.2"
-parking_lot = { version = "0.12.1", features = ["send_guard"] }
-dashmap = "6.0.0"
+parking_lot = { version = "0.12.3", features = ["send_guard"] }
+dashmap = "6.0.1"
 shipyard = { workspace = true }
 
 [dev-dependencies]
