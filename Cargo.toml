@@ -35,7 +35,7 @@ freya-hooks = { path = "crates/hooks", version = "0.2" }
 freya-core = { path = "crates/core", version = "0.2" }
 freya-components = { path = "crates/components", version = "0.2" }
 freya-testing = { path = "crates/testing", version = "0.2" }
-freya-engine = { path = "crates/engine", version = "0.2" }
+freya-engine = { path = "crates/engine", version = "0.3" }
 torin = { path = "crates/torin", version = "0.2" }
 
 freya-native-core-macro = { path = "crates/native-core-macro", version = "0.2" }
