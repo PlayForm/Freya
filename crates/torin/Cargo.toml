@@ -26,6 +26,7 @@ criterion = "0.5.1"
 
 [lib]
 bench = false
+path = "Source/lib.rs"
 
 [[bench]]
 name = "bench"
