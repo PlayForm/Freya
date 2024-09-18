@@ -22,7 +22,9 @@ hot-reload = ["freya-renderer/hot-reload", "dioxus/hot-reload"]
 log = ["dep:tracing", "dep:tracing-subscriber"]
 devtools = ["dep:freya-devtools"]
 use_camera = ["freya-hooks/use_camera"]
-mocked-engine-development = ["freya-engine/mocked-engine"] # This is just for the CI
+mocked-engine-development = [
+	"freya-engine/mocked-engine",
+] # This is just for the CI
 default = ["skia"]
 performance-overlay = []
 

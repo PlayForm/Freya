@@ -26,6 +26,6 @@ accesskit = { workspace = true }
 winit = { workspace = true }
 freya-engine = { workspace = true }
 freya-native-core = { workspace = true }
-rustc-hash= { workspace = true }
+rustc-hash = { workspace = true }
 
 uuid = { workspace = true }

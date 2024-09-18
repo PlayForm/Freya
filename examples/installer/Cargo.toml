@@ -14,10 +14,7 @@ winresource = "0.1"
 before-packaging-command = "cargo build --release"
 product-name = "Freya + cargo-packager"
 identifier = "com.freya-installer.example"
-icons = [
-  "icon.png",
-  "icon.ico"
-]
+icons = ["icon.png", "icon.ico"]
 
 [package.metadata.winresource]
 ProductName = "Freya Installer Example"

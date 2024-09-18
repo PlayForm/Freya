@@ -37,7 +37,9 @@ winit = { workspace = true }
 uuid = { workspace = true }
 easer = "0.3.0"
 ropey = "1.6.1"
-nokhwa = { git = "https://github.com/tactile-eng/nokhwa", branch = "update-mozjpeg", features = ["input-native"], optional = true }
+nokhwa = { git = "https://github.com/tactile-eng/nokhwa", branch = "update-mozjpeg", features = [
+	"input-native",
+], optional = true }
 paste = "1.0.15"
 bitflags = "2.6.0"
 bytes = "1.7.1"

@@ -37,4 +37,4 @@ winit = { workspace = true }
 
 [dev-dependencies]
 dioxus = { workspace = true }
-freya = { path = "../freya"}
+freya = { path = "../freya" }

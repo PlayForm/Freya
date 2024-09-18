@@ -4,7 +4,11 @@ description = "Macro helper for native-core"
 version = "0.2.0"
 edition = "2021"
 license = "MIT"
-authors = ["Jonathan Kelley", "Evan Almloff", "Marc Espín <mespinsanz@gmail.com>"]
+authors = [
+	"Jonathan Kelley",
+	"Evan Almloff",
+	"Marc Espín <mespinsanz@gmail.com>",
+]
 readme = "../native-core/README.md"
 homepage = "https://freyaui.dev/"
 repository = "https://github.com/marc2332/freya"

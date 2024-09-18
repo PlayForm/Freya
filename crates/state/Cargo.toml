@@ -29,7 +29,7 @@ dioxus-core = { workspace = true }
 tokio = { workspace = true }
 accesskit = { workspace = true }
 shipyard = { workspace = true }
-rustc-hash= { workspace = true }
+rustc-hash = { workspace = true }
 
 uuid = { workspace = true }
 bytes = "1.7.1"

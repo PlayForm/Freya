@@ -40,7 +40,7 @@ winit = { workspace = true }
 accesskit = { workspace = true }
 accesskit_winit = { workspace = true }
 tracing = { workspace = true }
-futures-task ={ workspace = true }
+futures-task = { workspace = true }
 futures-util = { workspace = true }
 
 itertools = "0.13.0"

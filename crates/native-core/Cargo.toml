@@ -4,7 +4,11 @@ description = "Native DOM for Freya"
 version = "0.2.1"
 edition = "2021"
 license = "MIT"
-authors = ["Jonathan Kelley", "Evan Almloff", "Marc Espín <mespinsanz@gmail.com>"]
+authors = [
+	"Jonathan Kelley",
+	"Evan Almloff",
+	"Marc Espín <mespinsanz@gmail.com>",
+]
 readme = "./README.md"
 homepage = "https://freyaui.dev/"
 repository = "https://github.com/marc2332/freya"
@@ -12,7 +16,7 @@ keywords = ["gui", "ui", "desktop", "skia", "dioxus"]
 categories = ["gui"]
 
 [dependencies]
-dioxus-core = { workspace = true}
+dioxus-core = { workspace = true }
 
 smallvec = { workspace = true }
 rustc-hash = { workspace = true }
@@ -23,5 +27,4 @@ shipyard = { workspace = true }
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["full"] }
-freya-native-core-macro = { path = "../native-core-macro"}
-
+freya-native-core-macro = { path = "../native-core-macro" }
