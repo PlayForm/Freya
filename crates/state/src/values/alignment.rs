@@ -1,9 +1,6 @@
 use torin::alignment::Alignment;
 
-use crate::{
-    Parse,
-    ParseError,
-};
+use crate::{Parse, ParseError};
 
 impl Parse for Alignment {
     fn parse(value: &str) -> Result<Self, ParseError> {

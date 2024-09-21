@@ -1,9 +1,6 @@
 use torin::position::Position;
 
-use crate::{
-    Parse,
-    ParseError,
-};
+use crate::{Parse, ParseError};
 
 impl Parse for Position {
     fn parse(value: &str) -> Result<Self, ParseError> {

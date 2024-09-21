@@ -1,46 +1,21 @@
-use std::sync::{
-    Arc,
-    Mutex,
-    MutexGuard,
-};
+use std::sync::{Arc, Mutex, MutexGuard};
 
 use dioxus_core::VirtualDom;
-use freya_common::{
-    Layers,
-    ParagraphElements,
-};
+use freya_common::{Layers, ParagraphElements};
 use freya_native_core::{
-    prelude::{
-        DioxusState,
-        State,
-    },
-    real_dom::{
-        NodeRef,
-        RealDom,
-    },
-    NodeId,
-    SendAnyMap,
+    prelude::{DioxusState, State},
+    real_dom::{NodeRef, RealDom},
+    NodeId, SendAnyMap,
 };
 use freya_node_state::{
-    AccessibilityNodeState,
-    CursorState,
-    CustomAttributeValues,
-    FontStyleState,
-    LayerState,
-    LayoutState,
-    ReferencesState,
-    StyleState,
-    TransformState,
-    ViewportState,
+    AccessibilityNodeState, CursorState, CustomAttributeValues, FontStyleState, LayerState,
+    LayoutState, ReferencesState, StyleState, TransformState, ViewportState,
 };
 use torin::prelude::*;
 use tracing::info;
 
 use super::mutations_writer::MutationsWriter;
-use crate::prelude::{
-    measure_paragraph,
-    TextGroupMeasurement,
-};
+use crate::prelude::{measure_paragraph, TextGroupMeasurement};
 
 pub type DioxusDOM = RealDom<CustomAttributeValues>;
 pub type DioxusNode<'a> = NodeRef<'a, CustomAttributeValues>;

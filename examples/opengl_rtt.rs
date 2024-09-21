@@ -6,10 +6,7 @@
 use std::{
     ffi::CString,
     ptr,
-    sync::{
-        Arc,
-        Mutex,
-    },
+    sync::{Arc, Mutex},
 };
 
 use freya::prelude::*;

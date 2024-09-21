@@ -7,10 +7,7 @@ use torin::geometry::Area;
 use super::utils::ElementUtils;
 use crate::{
     dom::DioxusNode,
-    prelude::{
-        align_highlights_and_cursor_paragraph,
-        align_main_align_paragraph,
-    },
+    prelude::{align_highlights_and_cursor_paragraph, align_main_align_paragraph},
     skia::create_paragraph,
 };
 

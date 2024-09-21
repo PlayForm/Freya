@@ -1,20 +1,13 @@
 use dioxus::prelude::*;
 use freya_components::*;
 use freya_core::prelude::*;
-use freya_hooks::{
-    theme_with,
-    ScrollViewThemeWith,
-};
+use freya_hooks::{theme_with, ScrollViewThemeWith};
 use freya_native_core::NodeId;
 
 use crate::{
     hooks::use_node_info,
     property::{
-        BorderProperty,
-        ColorProperty,
-        GradientProperty,
-        Property,
-        ShadowProperty,
+        BorderProperty, ColorProperty, GradientProperty, Property, ShadowProperty,
         TextShadowProperty,
     },
     NodeIdSerializer,

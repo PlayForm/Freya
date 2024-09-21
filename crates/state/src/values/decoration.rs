@@ -1,9 +1,6 @@
 use freya_engine::prelude::*;
 
-use crate::{
-    Parse,
-    ParseError,
-};
+use crate::{Parse, ParseError};
 
 impl Parse for TextDecoration {
     fn parse(value: &str) -> Result<Self, ParseError> {

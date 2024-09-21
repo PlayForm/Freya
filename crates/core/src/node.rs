@@ -1,26 +1,14 @@
 use freya_engine::prelude::*;
 use freya_native_core::real_dom::NodeImmutable;
 use freya_node_state::{
-    Border,
-    CornerRadius,
-    CursorState,
-    Fill,
-    FontStyleState,
-    LayoutState,
-    ReferencesState,
-    Shadow,
-    StyleState,
-    TextOverflow,
-    TransformState,
+    Border, CornerRadius, CursorState, Fill, FontStyleState, LayoutState, ReferencesState, Shadow,
+    StyleState, TextOverflow, TransformState,
 };
 use torin::{
     alignment::Alignment,
     direction::DirectionMode,
     gaps::Gaps,
-    prelude::{
-        Content,
-        Position,
-    },
+    prelude::{Content, Position},
     size::Size,
 };
 

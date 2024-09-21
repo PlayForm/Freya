@@ -5,10 +5,7 @@
 
 use freya::prelude::*;
 use freya_core::{
-    plugins::{
-        FreyaPlugin,
-        PluginEvent,
-    },
+    plugins::{FreyaPlugin, PluginEvent},
     prelude::PluginHandle,
 };
 

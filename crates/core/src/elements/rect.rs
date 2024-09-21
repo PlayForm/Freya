@@ -1,19 +1,11 @@
 use freya_engine::prelude::*;
 use freya_native_core::real_dom::NodeImmutable;
 use freya_node_state::{
-    BorderAlignment,
-    BorderStyle,
-    CanvasRunnerContext,
-    Fill,
-    ReferencesState,
-    ShadowPosition,
+    BorderAlignment, BorderStyle, CanvasRunnerContext, Fill, ReferencesState, ShadowPosition,
     StyleState,
 };
 use torin::{
-    prelude::{
-        CursorPoint,
-        LayoutNode,
-    },
+    prelude::{CursorPoint, LayoutNode},
     scaled::Scaled,
 };
 

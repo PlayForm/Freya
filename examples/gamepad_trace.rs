@@ -4,26 +4,13 @@
 )]
 
 use std::{
-    thread::{
-        self,
-        sleep,
-    },
+    thread::{self, sleep},
     time::Duration,
 };
 
 use freya::prelude::*;
-use freya_core::prelude::{
-    EventName,
-    FreyaPlugin,
-    PlatformEvent,
-    PluginEvent,
-    PluginHandle,
-};
-use gilrs::{
-    Axis,
-    EventType,
-    Gilrs,
-};
+use freya_core::prelude::{EventName, FreyaPlugin, PlatformEvent, PluginEvent, PluginHandle};
+use gilrs::{Axis, EventType, Gilrs};
 
 fn main() {
     launch_cfg(

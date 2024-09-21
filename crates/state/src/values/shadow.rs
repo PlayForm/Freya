@@ -1,11 +1,6 @@
 use torin::scaled::Scaled;
 
-use crate::{
-    ExtSplit,
-    Fill,
-    Parse,
-    ParseError,
-};
+use crate::{ExtSplit, Fill, Parse, ParseError};
 
 #[derive(Default, Clone, Debug, PartialEq)]
 pub enum ShadowPosition {

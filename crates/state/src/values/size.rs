@@ -1,15 +1,9 @@
 use torin::{
     geometry::Length,
-    size::{
-        DynamicCalculation,
-        Size,
-    },
+    size::{DynamicCalculation, Size},
 };
 
-use crate::{
-    Parse,
-    ParseError,
-};
+use crate::{Parse, ParseError};
 
 impl Parse for Size {
     fn parse(value: &str) -> Result<Self, ParseError> {

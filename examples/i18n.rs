@@ -3,11 +3,7 @@
     windows_subsystem = "windows"
 )]
 
-use dioxus_i18n::{
-    prelude::*,
-    translate,
-    unic_langid::langid,
-};
+use dioxus_i18n::{prelude::*, translate, unic_langid::langid};
 use freya::prelude::*;
 
 fn main() {

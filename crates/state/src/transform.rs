@@ -1,22 +1,12 @@
 use freya_native_core::{
     exports::shipyard::Component,
     node_ref::NodeView,
-    prelude::{
-        AttributeMaskBuilder,
-        AttributeName,
-        Dependancy,
-        NodeMaskBuilder,
-        State,
-    },
+    prelude::{AttributeMaskBuilder, AttributeName, Dependancy, NodeMaskBuilder, State},
     SendAnyMap,
 };
 use freya_native_core_macro::partial_derive_state;
 
-use crate::{
-    CustomAttributeValues,
-    ParseAttribute,
-    ParseError,
-};
+use crate::{CustomAttributeValues, ParseAttribute, ParseError};
 
 #[derive(Default, Clone, Debug, Component, PartialEq)]
 pub struct TransformState {

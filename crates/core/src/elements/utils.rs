@@ -1,13 +1,6 @@
-use freya_engine::prelude::{
-    Canvas,
-    FontCollection,
-    FontMgr,
-};
+use freya_engine::prelude::{Canvas, FontCollection, FontMgr};
 use freya_native_core::tags::TagName;
-use torin::prelude::{
-    CursorPoint,
-    LayoutNode,
-};
+use torin::prelude::{CursorPoint, LayoutNode};
 
 use super::*;
 use crate::dom::DioxusNode;

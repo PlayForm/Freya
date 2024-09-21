@@ -5,25 +5,14 @@ use freya_native_core::{
     exports::shipyard::Component,
     node::OwnedAttributeValue,
     node_ref::NodeView,
-    prelude::{
-        AttributeMaskBuilder,
-        Dependancy,
-        NodeMaskBuilder,
-        OwnedAttributeView,
-        State,
-    },
+    prelude::{AttributeMaskBuilder, Dependancy, NodeMaskBuilder, OwnedAttributeView, State},
     tags::TagName,
     SendAnyMap,
 };
 use freya_native_core_macro::partial_derive_state;
 
 use crate::{
-    CursorMode,
-    CursorReference,
-    CustomAttributeValues,
-    HighlightMode,
-    Parse,
-    ParseAttribute,
+    CursorMode, CursorReference, CustomAttributeValues, HighlightMode, Parse, ParseAttribute,
     ParseError,
 };
 

@@ -2,10 +2,7 @@ use freya_common::CachedParagraph;
 use freya_engine::prelude::*;
 
 use super::utils::ElementUtils;
-use crate::prelude::{
-    align_main_align_paragraph,
-    DioxusNode,
-};
+use crate::prelude::{align_main_align_paragraph, DioxusNode};
 
 pub struct LabelElement;
 

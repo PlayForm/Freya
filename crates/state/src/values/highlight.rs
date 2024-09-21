@@ -1,7 +1,4 @@
-use crate::{
-    Parse,
-    ParseError,
-};
+use crate::{Parse, ParseError};
 
 #[derive(Default, Clone, Debug, PartialEq)]
 pub enum HighlightMode {

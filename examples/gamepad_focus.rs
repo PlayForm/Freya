@@ -7,17 +7,9 @@ use std::thread;
 
 use freya::prelude::*;
 use freya_core::prelude::{
-    EventMessage,
-    EventName,
-    FreyaPlugin,
-    PlatformEvent,
-    PluginEvent,
-    PluginHandle,
+    EventMessage, EventName, FreyaPlugin, PlatformEvent, PluginEvent, PluginHandle,
 };
-use gilrs::{
-    EventType,
-    Gilrs,
-};
+use gilrs::{EventType, Gilrs};
 
 fn main() {
     launch_cfg(

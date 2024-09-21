@@ -1,9 +1,6 @@
 use std::fmt;
 
-use crate::{
-    Parse,
-    ParseError,
-};
+use crate::{Parse, ParseError};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum CursorMode {

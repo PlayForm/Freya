@@ -1,9 +1,4 @@
-use crate::prelude::{
-    DirectionMode,
-    Gaps,
-    Node,
-    Size,
-};
+use crate::prelude::{DirectionMode, Gaps, Node, Size};
 
 #[derive(PartialEq)]
 pub struct Measure;

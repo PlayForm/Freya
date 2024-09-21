@@ -1,9 +1,6 @@
 use torin::gaps::Gaps;
 
-use crate::{
-    Parse,
-    ParseError,
-};
+use crate::{Parse, ParseError};
 
 impl Parse for Gaps {
     fn parse(value: &str) -> Result<Self, ParseError> {

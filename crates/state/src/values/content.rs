@@ -1,9 +1,6 @@
 use torin::content::Content;
 
-use crate::{
-    Parse,
-    ParseError,
-};
+use crate::{Parse, ParseError};
 
 impl Parse for Content {
     fn parse(value: &str) -> Result<Self, ParseError> {

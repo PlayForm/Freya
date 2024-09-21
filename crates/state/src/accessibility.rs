@@ -1,27 +1,15 @@
-use accesskit::{
-    NodeId as AccessibilityId,
-    Role,
-};
+use accesskit::{NodeId as AccessibilityId, Role};
 use freya_native_core::{
     attributes::AttributeName,
     exports::shipyard::Component,
     node::OwnedAttributeValue,
     node_ref::NodeView,
-    prelude::{
-        AttributeMaskBuilder,
-        Dependancy,
-        NodeMaskBuilder,
-        State,
-    },
+    prelude::{AttributeMaskBuilder, Dependancy, NodeMaskBuilder, State},
     SendAnyMap,
 };
 use freya_native_core_macro::partial_derive_state;
 
-use crate::{
-    CustomAttributeValues,
-    ParseAttribute,
-    ParseError,
-};
+use crate::{CustomAttributeValues, ParseAttribute, ParseError};
 
 #[derive(Clone, Debug, PartialEq, Eq, Default, Component)]
 pub struct AccessibilityNodeState {

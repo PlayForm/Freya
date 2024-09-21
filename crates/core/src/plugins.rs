@@ -1,20 +1,11 @@
-use freya_engine::prelude::{
-    Canvas,
-    FontCollection,
-};
+use freya_engine::prelude::{Canvas, FontCollection};
 use freya_native_core::NodeId;
 use torin::torin::Torin;
-use winit::{
-    event_loop::EventLoopProxy,
-    window::Window,
-};
+use winit::{event_loop::EventLoopProxy, window::Window};
 
 use crate::{
     dom::FreyaDOM,
-    prelude::{
-        EventMessage,
-        PlatformEvent,
-    },
+    prelude::{EventMessage, PlatformEvent},
 };
 
 #[derive(Clone)]

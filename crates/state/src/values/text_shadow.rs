@@ -1,9 +1,6 @@
 use freya_engine::prelude::*;
 
-use crate::{
-    Parse,
-    ParseError,
-};
+use crate::{Parse, ParseError};
 
 // Same as shadow, but no inset or spread.
 impl Parse for TextShadow {

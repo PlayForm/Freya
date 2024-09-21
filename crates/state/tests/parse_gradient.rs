@@ -1,11 +1,5 @@
 use freya_engine::prelude::*;
-use freya_node_state::{
-    ConicGradient,
-    GradientStop,
-    LinearGradient,
-    Parse,
-    RadialGradient,
-};
+use freya_node_state::{ConicGradient, GradientStop, LinearGradient, Parse, RadialGradient};
 
 #[test]
 fn parse_basic_linear_gradient() {
