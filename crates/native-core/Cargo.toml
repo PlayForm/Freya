@@ -22,7 +22,7 @@ smallvec = { workspace = true }
 rustc-hash = { workspace = true }
 anymap = "1.0.0-beta.2"
 parking_lot = { version = "0.12.3", features = ["send_guard"] }
-dashmap = "6.0.1"
+dashmap = "6.1.0"
 shipyard = { workspace = true }
 
 [dev-dependencies]

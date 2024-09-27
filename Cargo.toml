@@ -73,10 +73,10 @@ dioxus-hot-reload = { version = "0.5", features = [
 dioxus-router = { version = "0.5", default-features = false }
 dioxus-sdk = { version = "0.5", features = ["clipboard"] }
 
-skia-safe = { version = "0.75.0", features = ["gl", "textlayout", "svg"] }
+skia-safe = { version = "0.78.0", features = ["gl", "textlayout", "svg"] }
 
 gl = "0.14.0"
-glutin = "0.32.0"
+glutin = "0.32.1"
 glutin-winit = "0.5.0"
 raw-window-handle = "0.6.2"
 winit = "0.30.5"
@@ -86,9 +86,9 @@ tokio = { version = "1.40.0", features = [
 	"time",
 	"macros",
 ] }
-accesskit = { version = "0.16.0", features = ["serde"] }
-accesskit_winit = "0.22.0"
-shipyard = { version = "0.7.1", features = [
+accesskit = { version = "0.16.1", features = ["serde"] }
+accesskit_winit = "0.22.1"
+shipyard = { version = "0.7.2", features = [
 	"proc",
 	"std",
 	"parallel",
@@ -111,14 +111,14 @@ freya = { workspace = true }
 freya-core = { workspace = true }
 freya-testing = { workspace = true }
 reqwest = { version = "0.12.7", features = ["json"] }
-serde = "1.0.209"
-dioxus-i18n = "0.2.3"
+serde = "1.0.210"
+dioxus-i18n = "0.2.5"
 rand = "0.8.5"
 dioxus-router = { workspace = true }
 itertools = "0.13.0"
 home = "0.5.9"
 dioxus-query = "0.5.1"
-gilrs = "0.10.9"
+gilrs = "0.11.0"
 gl = { workspace = true }
 
 [profile.release]
