@@ -6,9 +6,10 @@ const { slug = "" } = Astro.params;
 const entry = await getEntry("blog", slug);
 
 if (entry === undefined) {
-    return Astro.redirect("/404");
+	return Astro.redirect("/404");
 }
 
 let { Content } = await entry.render();
 ---
-<Content/>
+
+<Content />

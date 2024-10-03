@@ -2,14 +2,16 @@
 const { headings } = Astro.props;
 ---
 
-<div class="w-1/4 h-screen overflow-auto sticky top-32 mx-4 text-sm hidden sm:block">
-  {headings.map((section: any) => (
-    <a
-      href={`#${section.slug}`}
-      class="block hover:bg-zinc-800 py-1 px-2 rounded-xl cursor-pointer no-underline"
-      style={{ marginLeft: `${(section.depth - 2) * 20}px` }}
-    >
-      {section.text} <br />
-    </a>
-  ))}
+<div
+	class="sticky top-32 mx-4 hidden h-screen w-1/4 overflow-auto text-sm sm:block">
+	{
+		headings.map((section: any) => (
+			<a
+				href={`#${section.slug}`}
+				class="block cursor-pointer rounded-xl px-2 py-1 no-underline hover:bg-zinc-800"
+				style={{ marginLeft: `${(section.depth - 2) * 20}px` }}>
+				{section.text} <br />
+			</a>
+		))
+	}
 </div>

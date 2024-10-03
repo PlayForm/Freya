@@ -1,6 +1,7 @@
 ---
-import { Code } from 'astro:components';
-import Layout from '../layouts/Layout.astro';
+import { Code } from "astro:components";
+
+import Layout from "../layouts/Layout.astro";
 
 const EXAMPLE_CODE = `
 fn app() -> Element {
@@ -38,35 +39,62 @@ fn app() -> Element {
         }
     )
 }
-`.trim()
+`.trim();
 ---
 
 <Layout title="Freya - GUI Library for Rust">
-    <div class="flex flex-col lg:flex-row justify-center items-center pb-8">
-        <img class="mx-auto mb-8 sm:m-0" src="/logo.svg" width="150">
-        <div class="inline-block sm:p-4">
-            <p>Build native & cross-platform GUI applications  using 🦀 <a href="https://www.rust-lang.org/" class="underline">Rust</a>. <br/>Powered by 🧬 <a href="https://dioxuslabs.com/" class="underline">Dioxus</a> and 🎨 <a href="https://skia.org/" rel="noreferrer"class="underline">Skia</a>.</p>
-            <br/>
-            <a class="sm:inline-block sm:my-0 block text-start sm:text-center px-6 my-2 mr-2 py-2 bg-sky-500 rounded-lg text-black hover:bg-sky-600 transition-colors delay-[10]" href="https://book.freyaui.dev/getting_started.html">Get Started</a>
-            <a class="sm:inline-block sm:my-0 block text-start sm:text-center px-6 my-2 mr-2 py-2 bg-orange-300 rounded-lg text-black hover:bg-orange-400 transition-colors delay-[10]" href="https://github.com/marc2332/freya">Source Code</a>
-            <a class="sm:inline-block sm:my-0 block text-start sm:text-center px-6 my-2 mr-2 py-2 bg-pink-300 rounded-lg text-black hover:bg-pink-400 transition-colors delay-[10]" href="https://github.com/sponsors/marc2332">Sponsor</a>
-        </div>
-    </div>
-    <div class="p-6 py-8 lg:w-[60rem] lg:flex gap-10 block  justify-evenly items-center mx-auto text-black border border-stone-800 m-2 rounded-2xl bg-custom-dark-gray">
-        <div class="text-xs">
-            <Code code={EXAMPLE_CODE} lang="rs" />
-        </div>
-        <div class="flex justify-center flex-col items-center">
-            <video muted autoplay playsinline loop >
-                <source src="/demo.mp4" type="video/mp4" >
-            </video>
-            <a class="w-36 bg-custom-purple p-2 text-center rounded-lg text-white hover:bg-custom-purple-dark transition-colors delay-[10]" href="https://github.com/marc2332/freya#want-to-try-it-">Run locally</a>
-        </div>
-    </div>
+	<div class="flex flex-col items-center justify-center pb-8 lg:flex-row">
+		<img class="mx-auto mb-8 sm:m-0" src="/logo.svg" width="150" />
+		<div class="inline-block sm:p-4">
+			<p>
+				Build native & cross-platform GUI applications using 🦀 <a
+					href="https://www.rust-lang.org/"
+					class="underline">Rust</a
+				>. <br />Powered by 🧬 <a
+					href="https://dioxuslabs.com/"
+					class="underline">Dioxus</a
+				> and 🎨 <a
+					href="https://skia.org/"
+					rel="noreferrer"
+					class="underline">Skia</a
+				>.
+			</p>
+			<br />
+			<a
+				class="my-2 mr-2 block rounded-lg bg-sky-500 px-6 py-2 text-start text-black transition-colors delay-[10] hover:bg-sky-600 sm:my-0 sm:inline-block sm:text-center"
+				href="https://book.freyaui.dev/getting_started.html"
+				>Get Started</a
+			>
+			<a
+				class="my-2 mr-2 block rounded-lg bg-orange-300 px-6 py-2 text-start text-black transition-colors delay-[10] hover:bg-orange-400 sm:my-0 sm:inline-block sm:text-center"
+				href="https://github.com/marc2332/freya">Source Code</a
+			>
+			<a
+				class="my-2 mr-2 block rounded-lg bg-pink-300 px-6 py-2 text-start text-black transition-colors delay-[10] hover:bg-pink-400 sm:my-0 sm:inline-block sm:text-center"
+				href="https://github.com/sponsors/marc2332">Sponsor</a
+			>
+		</div>
+	</div>
+	<div
+		class="bg-custom-dark-gray m-2 mx-auto block items-center justify-evenly gap-10 rounded-2xl border border-stone-800 p-6 py-8 text-black lg:flex lg:w-[60rem]">
+		<div class="text-xs">
+			<Code code={EXAMPLE_CODE} lang="rs" />
+		</div>
+		<div class="flex flex-col items-center justify-center">
+			<video muted autoplay playsinline loop>
+				<source src="/demo.mp4" type="video/mp4" />
+			</video>
+			<a
+				class="bg-custom-purple hover:bg-custom-purple-dark w-36 rounded-lg p-2 text-center text-white transition-colors delay-[10]"
+				href="https://github.com/marc2332/freya#want-to-try-it-"
+				>Run locally</a
+			>
+		</div>
+	</div>
 </Layout>
 
 <style>
-    video::-internal-media-controls-overlay-cast-button {
-        display: none;
-    }
+	video::-internal-media-controls-overlay-cast-button {
+		display: none;
+	}
 </style>
