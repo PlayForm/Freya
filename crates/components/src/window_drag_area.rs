@@ -24,22 +24,22 @@ use winit::event::MouseButton;
 #[allow(non_snake_case)]
 #[component]
 pub fn WindowDragArea(
-    /// The inner children for the WindowDragArea
-    children: Element,
+	/// The inner children for the WindowDragArea
+	children: Element,
 ) -> Element {
-    let platform = use_platform();
+	let platform = use_platform();
 
-    let onmousedown = move |e: MouseEvent| {
-        if let Some(MouseButton::Left) = e.trigger_button {
-            e.stop_propagation();
-            platform.drag_window();
-        }
-    };
+	let onmousedown = move |e: MouseEvent| {
+		if let Some(MouseButton::Left) = e.trigger_button {
+			e.stop_propagation();
+			platform.drag_window();
+		}
+	};
 
-    rsx!(
-        rect {
-            onmousedown,
-            {children}
-        }
-    )
+	rsx!(
+		rect {
+			onmousedown,
+			{children}
+		}
+	)
 }

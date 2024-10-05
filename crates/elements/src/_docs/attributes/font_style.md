@@ -2,9 +2,9 @@ You can choose a style for a text using the `font_style` attribute.
 
 Accepted values:
 
-- `upright` (default)
-- `italic`
-- `oblique`
+-   `upright` (default)
+-   `italic`
+-   `oblique`
 
 ### Example
 
@@ -20,9 +20,10 @@ fn app() -> Element {
 }
 ```
 
-You can also specify multiple fonts in order of priority, if one is not found it will fallback to the next one.
+You can also specify multiple fonts in order of priority, if one is not found it
+will fallback to the next one.
 
-Example: 
+Example:
 
 ```rust, no_run
 # use freya::prelude::*;

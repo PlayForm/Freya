@@ -2,9 +2,9 @@ Specify the decoration in a text.
 
 Accepted values:
 
-- `underline`
-- `line-through`
-- `overline`
+-   `underline`
+-   `line-through`
+-   `overline`
 
 ### Example
 

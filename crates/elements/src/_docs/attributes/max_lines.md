@@ -1,4 +1,5 @@
-Determines the amount of lines that the text can have. It has unlimited lines by default.
+Determines the amount of lines that the text can have. It has unlimited lines by
+default.
 
 ### Example
 

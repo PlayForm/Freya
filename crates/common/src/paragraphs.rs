@@ -6,35 +6,35 @@ use uuid::Uuid;
 
 #[derive(Default, Clone)]
 pub struct ParagraphElements {
-    pub paragraphs: Arc<Mutex<FxHashMap<Uuid, FxHashSet<NodeId>>>>,
+	pub paragraphs: Arc<Mutex<FxHashMap<Uuid, FxHashSet<NodeId>>>>,
 }
 
 impl ParagraphElements {
-    pub fn insert_paragraph(&self, node_id: NodeId, text_id: Uuid) {
-        let mut paragraphs = self.paragraphs.lock().unwrap();
-        let text_group = paragraphs.entry(text_id).or_default();
+	pub fn insert_paragraph(&self, node_id: NodeId, text_id: Uuid) {
+		let mut paragraphs = self.paragraphs.lock().unwrap();
+		let text_group = paragraphs.entry(text_id).or_default();
 
-        text_group.insert(node_id);
-    }
+		text_group.insert(node_id);
+	}
 
-    pub fn paragraphs(&self) -> MutexGuard<FxHashMap<Uuid, FxHashSet<NodeId>>> {
-        self.paragraphs.lock().unwrap()
-    }
+	pub fn paragraphs(&self) -> MutexGuard<FxHashMap<Uuid, FxHashSet<NodeId>>> {
+		self.paragraphs.lock().unwrap()
+	}
 
-    pub fn remove_paragraph(&self, node_id: NodeId, text_id: &Uuid) {
-        let mut paragraphs = self.paragraphs.lock().unwrap();
-        let text_group = paragraphs.get_mut(text_id);
+	pub fn remove_paragraph(&self, node_id: NodeId, text_id: &Uuid) {
+		let mut paragraphs = self.paragraphs.lock().unwrap();
+		let text_group = paragraphs.get_mut(text_id);
 
-        if let Some(text_group) = text_group {
-            text_group.retain(|id| *id != node_id);
+		if let Some(text_group) = text_group {
+			text_group.retain(|id| *id != node_id);
 
-            if text_group.is_empty() {
-                paragraphs.remove(text_id);
-            }
-        }
-    }
+			if text_group.is_empty() {
+				paragraphs.remove(text_id);
+			}
+		}
+	}
 
-    pub fn len_paragraphs(&self) -> usize {
-        self.paragraphs.lock().unwrap().len()
-    }
+	pub fn len_paragraphs(&self) -> usize {
+		self.paragraphs.lock().unwrap().len()
+	}
 }

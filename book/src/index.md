@@ -1,7 +1,8 @@
 # Overview
 
-**Freya** is a **work in progress** cross-platform native GUI library for 🦀 Rust, built on top of 🧬 [Dioxus](https://dioxuslabs.com) and using 🎨 [Skia](https://skia.org/) as a graphics library. 
-
+**Freya** is a **work in progress** cross-platform native GUI library for 🦀
+Rust, built on top of 🧬 [Dioxus](https://dioxuslabs.com) and using 🎨
+[Skia](https://skia.org/) as a graphics library.
 
 <table>
 <tr>
@@ -44,6 +45,7 @@ fn app() -> Element {
     )
 }
 ```
+
 </td>
 <td style="border:hidden; padding: 0;">
 <video width="400" loop autoplay>
@@ -52,26 +54,28 @@ fn app() -> Element {
 </td>
 </table>
 
-Check out the examples in the Freya [repository](https://github.com/marc2332/freya/tree/main/examples) to learn more.
-
+Check out the examples in the Freya
+[repository](https://github.com/marc2332/freya/tree/main/examples) to learn
+more.
 
 ### Features
-- ⛏️ Built-in **components** (button, scroll views, switch and more) 
-- 🚇 Built-in **hooks** library (animations, text editing and more)
-- 🔍 Built-in **devtools** panel (experimental ⚠️)
-- 🧰 Built-in **headless testing** runner for components
-- 🎨 **Theming** support (not extensible yet ⚠️)
-- 🛩️ Cross-platform (Windows, Linux, MacOS)
-- 🖼️ SKSL **Shaders** support
-- 🔄️ Dioxus **Hot-reload** support
-- 📒 Multi-line **text editing** (experimental ⚠️)
-- 🦾 Basic **Accessibility** Support
-- 🧩 Compatible with [Dioxus SDK](https://github.com/DioxusLabs/sdk) and other Dioxus renderer-agnostic libraries
+
+-   ⛏️ Built-in **components** (button, scroll views, switch and more)
+-   🚇 Built-in **hooks** library (animations, text editing and more)
+-   🔍 Built-in **devtools** panel (experimental ⚠️)
+-   🧰 Built-in **headless testing** runner for components
+-   🎨 **Theming** support (not extensible yet ⚠️)
+-   🛩️ Cross-platform (Windows, Linux, MacOS)
+-   🖼️ SKSL **Shaders** support
+-   🔄️ Dioxus **Hot-reload** support
+-   📒 Multi-line **text editing** (experimental ⚠️)
+-   🦾 Basic **Accessibility** Support
+-   🧩 Compatible with [Dioxus SDK](https://github.com/DioxusLabs/sdk) and other
+    Dioxus renderer-agnostic libraries
 
 ### Learn More
 
-- [Setup](./setup.html)
-- [API References](https://docs.rs/freya/latest/freya/)
-- [Main differences with Dioxus](./differences_with_dioxus.html)
-- [Discord](https://discord.gg/sYejxCdewG)
-
+-   [Setup](./setup.html)
+-   [API References](https://docs.rs/freya/latest/freya/)
+-   [Main differences with Dioxus](./differences_with_dioxus.html)
+-   [Discord](https://discord.gg/sYejxCdewG)

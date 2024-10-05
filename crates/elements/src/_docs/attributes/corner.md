@@ -1,6 +1,7 @@
 ### corner_radius & corner_smoothing
 
-The `corner_radius` attribute lets you smooth the corners of the element, with `corner_smoothing` you can give a "squircle" effect.
+The `corner_radius` attribute lets you smooth the corners of the element, with
+`corner_smoothing` you can give a "squircle" effect.
 
 ### Example
 

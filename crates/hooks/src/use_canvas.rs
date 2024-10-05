@@ -8,24 +8,24 @@ use freya_node_state::{CanvasReference, CanvasRunner, CustomAttributeValues};
 /// Holds a rendering hook callback that allows to render to the Canvas.
 #[derive(PartialEq, Clone)]
 pub struct UseCanvas {
-    runner: Memo<UseCanvasRunner>,
+	runner: Memo<UseCanvasRunner>,
 }
 
 #[derive(Clone)]
 pub struct UseCanvasRunner(pub Arc<Box<CanvasRunner>>);
 
 impl PartialEq for UseCanvasRunner {
-    fn eq(&self, other: &Self) -> bool {
-        Arc::ptr_eq(&self.0, &other.0)
-    }
+	fn eq(&self, other: &Self) -> bool {
+		Arc::ptr_eq(&self.0, &other.0)
+	}
 }
 
 impl UseCanvas {
-    pub fn attribute(&self) -> AttributeValue {
-        AttributeValue::any_value(CustomAttributeValues::Canvas(CanvasReference {
-            runner: self.runner.read().0.clone(),
-        }))
-    }
+	pub fn attribute(&self) -> AttributeValue {
+		AttributeValue::any_value(CustomAttributeValues::Canvas(
+			CanvasReference { runner: self.runner.read().0.clone() },
+		))
+	}
 }
 
 /// Register a rendering hook to gain access to the Canvas.
@@ -48,10 +48,12 @@ impl UseCanvas {
 ///     rsx!(Canvas { canvas })
 /// }
 /// ```
-pub fn use_canvas(renderer_cb: impl Fn() -> Box<CanvasRunner> + 'static) -> UseCanvas {
-    let runner = use_memo(move || UseCanvasRunner(Arc::new(renderer_cb())));
+pub fn use_canvas(
+	renderer_cb: impl Fn() -> Box<CanvasRunner> + 'static,
+) -> UseCanvas {
+	let runner = use_memo(move || UseCanvasRunner(Arc::new(renderer_cb())));
 
-    UseCanvas { runner }
+	UseCanvas { runner }
 }
 
 /// Register a rendering hook to gain access to the Canvas.
@@ -74,15 +76,15 @@ pub fn use_canvas(renderer_cb: impl Fn() -> Box<CanvasRunner> + 'static) -> UseC
 /// }
 /// ```
 pub fn use_canvas_with_deps<D: Dependency>(
-    dependencies: D,
-    renderer_cb: impl Fn(D::Out) -> Box<CanvasRunner> + 'static,
+	dependencies: D,
+	renderer_cb: impl Fn(D::Out) -> Box<CanvasRunner> + 'static,
 ) -> UseCanvas
 where
-    D::Out: 'static,
+	D::Out: 'static,
 {
-    let runner = use_memo(use_reactive(dependencies, move |dependencies| {
-        UseCanvasRunner(Arc::new(renderer_cb(dependencies)))
-    }));
+	let runner = use_memo(use_reactive(dependencies, move |dependencies| {
+		UseCanvasRunner(Arc::new(renderer_cb(dependencies)))
+	}));
 
-    UseCanvas { runner }
+	UseCanvas { runner }
 }

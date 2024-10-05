@@ -32,19 +32,19 @@ use freya_renderer::{DesktopRenderer, LaunchConfig, WindowConfig};
 /// }
 /// ```
 pub fn launch(app: AppComponent) {
-    launch_cfg(
-        app,
-        LaunchConfig::<()> {
-            window_config: WindowConfig {
-                size: (600.0, 600.0),
-                decorations: true,
-                transparent: false,
-                title: "Freya",
-                ..Default::default()
-            },
-            ..Default::default()
-        },
-    )
+	launch_cfg(
+		app,
+		LaunchConfig::<()> {
+			window_config: WindowConfig {
+				size: (600.0, 600.0),
+				decorations: true,
+				transparent: false,
+				title: "Freya",
+				..Default::default()
+			},
+			..Default::default()
+		},
+	)
 }
 
 /// Launch a new window with a custom title and the default config.
@@ -77,19 +77,19 @@ pub fn launch(app: AppComponent) {
 /// }
 /// ```
 pub fn launch_with_title(app: AppComponent, title: &'static str) {
-    launch_cfg(
-        app,
-        LaunchConfig::<()> {
-            window_config: WindowConfig {
-                size: (400.0, 300.0),
-                decorations: true,
-                transparent: false,
-                title,
-                ..Default::default()
-            },
-            ..Default::default()
-        },
-    )
+	launch_cfg(
+		app,
+		LaunchConfig::<()> {
+			window_config: WindowConfig {
+				size: (400.0, 300.0),
+				decorations: true,
+				transparent: false,
+				title,
+				..Default::default()
+			},
+			..Default::default()
+		},
+	)
 }
 
 /// Launch a new window with a custom title, width and height and the default config.
@@ -119,20 +119,24 @@ pub fn launch_with_title(app: AppComponent, title: &'static str) {
 ///     )
 /// }
 /// ```
-pub fn launch_with_props(app: AppComponent, title: &'static str, (width, height): (f64, f64)) {
-    launch_cfg(
-        app,
-        LaunchConfig::<()> {
-            window_config: WindowConfig {
-                size: (width, height),
-                decorations: true,
-                transparent: false,
-                title,
-                ..Default::default()
-            },
-            ..Default::default()
-        },
-    )
+pub fn launch_with_props(
+	app: AppComponent,
+	title: &'static str,
+	(width, height): (f64, f64),
+) {
+	launch_cfg(
+		app,
+		LaunchConfig::<()> {
+			window_config: WindowConfig {
+				size: (width, height),
+				decorations: true,
+				transparent: false,
+				title,
+				..Default::default()
+			},
+			..Default::default()
+		},
+	)
 }
 
 /// Launch a new window with a custom config.
@@ -173,89 +177,96 @@ pub fn launch_with_props(app: AppComponent, title: &'static str, (width, height)
 ///     )
 /// }
 /// ```
-pub fn launch_cfg<T: 'static + Clone>(app: AppComponent, config: LaunchConfig<T>) {
-    #[cfg(feature = "performance-overlay")]
-    let config = config.with_plugin(crate::plugins::PerformanceOverlayPlugin::default());
+pub fn launch_cfg<T: 'static + Clone>(
+	app: AppComponent,
+	config: LaunchConfig<T>,
+) {
+	#[cfg(feature = "performance-overlay")]
+	let config =
+		config.with_plugin(crate::plugins::PerformanceOverlayPlugin::default());
 
-    use freya_core::prelude::{FreyaDOM, SafeDOM};
+	use freya_core::prelude::{FreyaDOM, SafeDOM};
 
-    let fdom = FreyaDOM::default();
-    let sdom = SafeDOM::new(fdom);
+	let fdom = FreyaDOM::default();
+	let sdom = SafeDOM::new(fdom);
 
-    #[cfg(feature = "log")]
-    {
-        use tracing::Level;
-        use tracing_subscriber::FmtSubscriber;
+	#[cfg(feature = "log")]
+	{
+		use tracing::Level;
+		use tracing_subscriber::FmtSubscriber;
 
-        let subscriber = FmtSubscriber::builder()
-            .with_max_level(Level::TRACE)
-            .finish();
+		let subscriber =
+			FmtSubscriber::builder().with_max_level(Level::TRACE).finish();
 
-        tracing::subscriber::set_global_default(subscriber)
-            .expect("Setting default subscriber failed");
-    }
+		tracing::subscriber::set_global_default(subscriber)
+			.expect("Setting default subscriber failed");
+	}
 
-    let (vdom, devtools, hovered_node) = {
-        #[cfg(feature = "devtools")]
-        #[cfg(debug_assertions)]
-        {
-            use std::sync::{Arc, Mutex};
+	let (vdom, devtools, hovered_node) = {
+		#[cfg(feature = "devtools")]
+		#[cfg(debug_assertions)]
+		{
+			use std::sync::{Arc, Mutex};
 
-            use freya_devtools::with_devtools;
-            use freya_renderer::devtools::Devtools;
+			use freya_devtools::with_devtools;
+			use freya_renderer::devtools::Devtools;
 
-            let hovered_node = Some(Arc::new(Mutex::new(None)));
-            let (devtools, devtools_receiver) = Devtools::new();
-            let vdom = with_devtools(app, devtools_receiver.clone(), hovered_node.clone());
-            (vdom, Some(devtools), hovered_node)
-        }
+			let hovered_node = Some(Arc::new(Mutex::new(None)));
+			let (devtools, devtools_receiver) = Devtools::new();
+			let vdom = with_devtools(
+				app,
+				devtools_receiver.clone(),
+				hovered_node.clone(),
+			);
+			(vdom, Some(devtools), hovered_node)
+		}
 
-        #[cfg(any(not(feature = "devtools"), not(debug_assertions)))]
-        {
-            let vdom = with_accessibility(app);
-            (vdom, None, None)
-        }
-    };
-    #[cfg(not(feature = "custom-tokio-rt"))]
-    {
-        let rt = tokio::runtime::Builder::new_multi_thread()
-            .enable_all()
-            .build()
-            .unwrap();
-        let _guard = rt.enter();
+		#[cfg(any(not(feature = "devtools"), not(debug_assertions)))]
+		{
+			let vdom = with_accessibility(app);
+			(vdom, None, None)
+		}
+	};
+	#[cfg(not(feature = "custom-tokio-rt"))]
+	{
+		let rt = tokio::runtime::Builder::new_multi_thread()
+			.enable_all()
+			.build()
+			.unwrap();
+		let _guard = rt.enter();
 
-        DesktopRenderer::launch(vdom, sdom, config, devtools, hovered_node);
-    }
+		DesktopRenderer::launch(vdom, sdom, config, devtools, hovered_node);
+	}
 
-    #[cfg(feature = "custom-tokio-rt")]
-    DesktopRenderer::launch(vdom, sdom, config, devtools, hovered_node);
+	#[cfg(feature = "custom-tokio-rt")]
+	DesktopRenderer::launch(vdom, sdom, config, devtools, hovered_node);
 }
 
 #[cfg(any(not(feature = "devtools"), not(debug_assertions)))]
 use dioxus_core::VirtualDom;
 #[cfg(any(not(feature = "devtools"), not(debug_assertions)))]
 fn with_accessibility(app: AppComponent) -> VirtualDom {
-    use dioxus::prelude::Props;
-    use dioxus_core::fc_to_builder;
-    use dioxus_core_macro::rsx;
-    use freya_components::NativeContainer;
+	use dioxus::prelude::Props;
+	use dioxus_core::fc_to_builder;
+	use dioxus_core_macro::rsx;
+	use freya_components::NativeContainer;
 
-    #[derive(Props, Clone, PartialEq)]
-    struct RootProps {
-        app: AppComponent,
-    }
+	#[derive(Props, Clone, PartialEq)]
+	struct RootProps {
+		app: AppComponent,
+	}
 
-    #[allow(non_snake_case)]
-    fn Root(props: RootProps) -> Element {
-        #[allow(non_snake_case)]
-        let App = props.app;
+	#[allow(non_snake_case)]
+	fn Root(props: RootProps) -> Element {
+		#[allow(non_snake_case)]
+		let App = props.app;
 
-        rsx!(NativeContainer {
-            App {}
-        })
-    }
+		rsx!(NativeContainer {
+			App {}
+		})
+	}
 
-    VirtualDom::new_with_props(Root, RootProps { app })
+	VirtualDom::new_with_props(Root, RootProps { app })
 }
 
 type AppComponent = fn() -> Element;

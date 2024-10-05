@@ -1,4 +1,5 @@
-The `globalpointerup` event fires when the user releases the point anywhere in the app.
+The `globalpointerup` event fires when the user releases the point anywhere in
+the app.
 
 Event Data: [`PointerData`](crate::events::PointerData)
 

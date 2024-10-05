@@ -2,8 +2,8 @@ Control how the inner elements stack.
 
 Accepted values:
 
-- `vertical` (default)
-- `horizontal`
+-   `vertical` (default)
+-   `horizontal`
 
 ##### Usage
 

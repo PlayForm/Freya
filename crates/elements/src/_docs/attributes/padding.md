@@ -1,4 +1,5 @@
-Specify the inner paddings of an element. You can do so by four different ways, just like in CSS.
+Specify the inner paddings of an element. You can do so by four different ways,
+just like in CSS.
 
 ### Example
 

@@ -1,4 +1,5 @@
-The `wheel` event fires when the user scrolls the mouse wheel while hovering over the element.
+The `wheel` event fires when the user scrolls the mouse wheel while hovering
+over the element.
 
 Event Data: [`TouchData`](crate::events::TouchData)
 

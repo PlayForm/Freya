@@ -1,9 +1,11 @@
-Determines how text is treated when it exceeds its [`max_lines`](#max_lines) count. By default uses the `clip` mode, which will cut off any overflowing text, with `ellipsis` mode it will show `...` at the end.
+Determines how text is treated when it exceeds its [`max_lines`](#max_lines)
+count. By default uses the `clip` mode, which will cut off any overflowing text,
+with `ellipsis` mode it will show `...` at the end.
 
 Accepted values:
 
-- `clip` (default)
-- `ellipsis`
+-   `clip` (default)
+-   `ellipsis`
 
 ### Example
 

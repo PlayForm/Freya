@@ -4,5 +4,5 @@ use freya_core::prelude::PreferredTheme;
 
 /// Access the preferred theme selected by the user.
 pub fn use_preferred_theme() -> ReadOnlySignal<PreferredTheme> {
-    use_context::<Signal<PreferredTheme>>().into()
+	use_context::<Signal<PreferredTheme>>().into()
 }

@@ -1,19 +1,19 @@
 #![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
+	all(not(debug_assertions), target_os = "windows"),
+	windows_subsystem = "windows"
 )]
 
 use dioxus_router::prelude::{Outlet, Routable, Router};
 use freya::prelude::*;
 
 fn main() {
-    launch(app);
+	launch(app);
 }
 
 fn app() -> Element {
-    rsx! {
-        Router::<Route> {}
-    }
+	rsx! {
+		Router::<Route> {}
+	}
 }
 
 #[derive(Routable, Clone)]
@@ -33,84 +33,84 @@ enum Route {
 #[allow(non_snake_case)]
 #[component]
 fn Layout() -> Element {
-    rsx! {
-        rect {
-            direction: "horizontal",
-            Link {
-                to: Route::Cats,
-                Button {
-                    label { "Cats 🐱" }
-                }
-            }
-            Link {
-                to: Route::Dogs,
-                Button {
-                    label { "Dogs 🐶" }
-                }
-            }
-            Link {
-                to: Route::Bears,
-                Button {
-                    label { "Bears 🐻" }
-                }
-            }
-        }
-        rect {
-            Outlet::<Route> {}
-        }
-    }
+	rsx! {
+		rect {
+			direction: "horizontal",
+			Link {
+				to: Route::Cats,
+				Button {
+					label { "Cats 🐱" }
+				}
+			}
+			Link {
+				to: Route::Dogs,
+				Button {
+					label { "Dogs 🐶" }
+				}
+			}
+			Link {
+				to: Route::Bears,
+				Button {
+					label { "Bears 🐻" }
+				}
+			}
+		}
+		rect {
+			Outlet::<Route> {}
+		}
+	}
 }
 
 #[allow(non_snake_case)]
 #[component]
 fn Cats() -> Element {
-    rsx! {
-        label {
-            "Search for cats with DuckDuckGo: "
-        }
-        Link {
-            to: "https://duckduckgo.com/?q=cat",
-            tooltip: LinkTooltip::Custom("Cats!".to_string()),
-            label { "DuckDuckGo search (custom tooltip)" }
-        }
-    }
+	rsx! {
+		label {
+			"Search for cats with DuckDuckGo: "
+		}
+		Link {
+			to: "https://duckduckgo.com/?q=cat",
+			tooltip: LinkTooltip::Custom("Cats!".to_string()),
+			label { "DuckDuckGo search (custom tooltip)" }
+		}
+	}
 }
 
 #[allow(non_snake_case)]
 #[component]
 fn Dogs() -> Element {
-    rsx! {
-        label {
-            "Search for dogs with DuckDuckGo: "
-        }
-        Link {
-            to: "https://duckduckgo.com/?q=dog",
-            label { "DuckDuckGo search (default tooltip)" }
-        }
-    }
+	rsx! {
+		label {
+			"Search for dogs with DuckDuckGo: "
+		}
+		Link {
+			to: "https://duckduckgo.com/?q=dog",
+			label { "DuckDuckGo search (default tooltip)" }
+		}
+	}
 }
 
 #[allow(non_snake_case)]
 #[component]
 fn Bears() -> Element {
-    rsx! {
-        label {
-            "Search for bears with DuckDuckGo: "
-        }
-        Link {
-            to: "https://duckduckgo.com/?q=bear",
-            tooltip: LinkTooltip::None,
-            label { "DuckDuckGo search (no tooltip)" }
-        }
-    }
+	rsx! {
+		label {
+			"Search for bears with DuckDuckGo: "
+		}
+		Link {
+			to: "https://duckduckgo.com/?q=bear",
+			tooltip: LinkTooltip::None,
+			label { "DuckDuckGo search (no tooltip)" }
+		}
+	}
 }
 
 #[allow(non_snake_case)]
 #[component]
 fn NotFound() -> Element {
-    rsx! {
-        label {
-            "404!! 😵"
-        }
-    }
+	rsx! {
+		label {
+			"404!! 😵"
+		}
+	}
 }

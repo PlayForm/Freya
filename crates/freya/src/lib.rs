@@ -1,6 +1,6 @@
 #![doc(
-    html_logo_url = "https://freyaui.dev/logo.svg",
-    html_favicon_url = "https://freyaui.dev/logo.svg"
+	html_logo_url = "https://freyaui.dev/logo.svg",
+	html_favicon_url = "https://freyaui.dev/logo.svg"
 )]
 //! # Freya
 //!
@@ -64,22 +64,22 @@ pub mod launch;
 
 /// Collection of basic components.
 pub mod components {
-    pub use freya_components::*;
+	pub use freya_components::*;
 }
 
 /// Useful utilities.
 pub mod hooks {
-    pub use freya_hooks::*;
+	pub use freya_hooks::*;
 }
 
 /// Common data structures and utils.
 pub mod common {
-    pub use freya_common::*;
+	pub use freya_common::*;
 }
 
 /// Core APIs.
 pub mod core {
-    pub use freya_core::*;
+	pub use freya_core::*;
 }
 
 /// Elements, attributes and events definitions.
@@ -89,7 +89,7 @@ pub use freya_elements::events;
 
 /// Hot reload configuration.
 pub mod hotreload {
-    pub use freya_elements::elements::FreyaCtx;
+	pub use freya_elements::elements::FreyaCtx;
 }
 
 pub use torin;
@@ -98,21 +98,23 @@ pub mod plugins;
 
 /// Useful imports.
 pub mod prelude {
-    pub use dioxus_core::{
-        prelude::*,
-        {self},
-    };
-    pub use dioxus_core_macro::*;
-    pub use dioxus_hooks::*;
-    pub use dioxus_hot_reload::{self, hot_reload_init, Config};
-    pub use dioxus_signals::*;
-    pub use freya_components::*;
-    pub use freya_core::prelude::PreferredTheme;
-    pub use freya_elements::{elements as dioxus_elements, events::*};
-    pub use freya_hooks::*;
-    pub use freya_node_state::{dynamic_bytes, static_bytes, CustomAttributeValues};
-    pub use freya_renderer::*;
-    pub use torin::prelude::*;
+	pub use dioxus_core::{
+		prelude::*,
+		{self},
+	};
+	pub use dioxus_core_macro::*;
+	pub use dioxus_hooks::*;
+	pub use dioxus_hot_reload::{self, hot_reload_init, Config};
+	pub use dioxus_signals::*;
+	pub use freya_components::*;
+	pub use freya_core::prelude::PreferredTheme;
+	pub use freya_elements::{elements as dioxus_elements, events::*};
+	pub use freya_hooks::*;
+	pub use freya_node_state::{
+		dynamic_bytes, static_bytes, CustomAttributeValues,
+	};
+	pub use freya_renderer::*;
+	pub use torin::prelude::*;
 
-    pub use crate::{launch::*, plugins::*};
+	pub use crate::{launch::*, plugins::*};
 }

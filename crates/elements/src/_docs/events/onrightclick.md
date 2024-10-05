@@ -1,4 +1,5 @@
-The `click` event fires when the user clicks an element with the right button of the mouse.
+The `click` event fires when the user clicks an element with the right button of
+the mouse.
 
 Event Data: [`MouseData`](crate::events::MouseData)
 

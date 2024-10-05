@@ -1,11 +1,14 @@
-Specify how you want the automatic (e.g `width: auto`) bounds in the cross axis to be constrained for the inner elements.
+Specify how you want the automatic (e.g `width: auto`) bounds in the cross axis
+to be constrained for the inner elements.
 
 Accepted values:
 
-- `normal` (default): Uses parent bounds.
-- `fit`: Uses parent bounds but later shrunks to the size of the biggest element inside.
+-   `normal` (default): Uses parent bounds.
+-   `fit`: Uses parent bounds but later shrunks to the size of the biggest
+    element inside.
 
-The `fit` mode will allow the inner elements using `width: fill-min` to expand to the biggest element inside this element.
+The `fit` mode will allow the inner elements using `width: fill-min` to expand
+to the biggest element inside this element.
 
 ### Example
 

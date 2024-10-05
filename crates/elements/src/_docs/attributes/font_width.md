@@ -4,14 +4,14 @@ You can choose a width for a text using the `font_width` attribute.
 
 Accepted values:
 
-- `ultra-condensed`
-- `extra-condensed`
-- `condensed`
-- `normal` (default)
-- `semi-expanded`
-- `expanded`
-- `extra-expanded`
-- `ultra-expanded`
+-   `ultra-condensed`
+-   `extra-condensed`
+-   `condensed`
+-   `normal` (default)
+-   `semi-expanded`
+-   `expanded`
+-   `extra-expanded`
+-   `ultra-expanded`
 
 ### Example
 

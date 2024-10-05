@@ -1,24 +1,15 @@
 #![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
+	all(not(debug_assertions), target_os = "windows"),
+	windows_subsystem = "windows"
 )]
 
-use std::{
-    sync::Arc,
-    time::Instant,
-};
+use std::{sync::Arc, time::Instant};
 
 use freya::prelude::*;
-use skia_safe::{
-    Color,
-    Data,
-    Paint,
-    Rect,
-    RuntimeEffect,
-};
+use skia_safe::{Color, Data, Paint, Rect, RuntimeEffect};
 
 fn main() {
-    launch(app);
+	launch(app);
 }
 
 const SHADER: &str = "
@@ -39,68 +30,72 @@ const SHADER: &str = "
  ";
 
 fn app() -> Element {
-    let platform = use_platform();
+	let platform = use_platform();
 
-    use_hook(|| {
-        let mut ticker = platform.new_ticker();
+	use_hook(|| {
+		let mut ticker = platform.new_ticker();
 
-        spawn(async move {
-            loop {
-                ticker.tick().await;
-                platform.request_animation_frame();
-            }
-        });
-    });
+		spawn(async move {
+			loop {
+				ticker.tick().await;
+				platform.request_animation_frame();
+			}
+		});
+	});
 
-    let canvas = use_canvas(|| {
-        let shader = RuntimeEffect::make_for_shader(SHADER, None).unwrap();
-        let shader_wrapper = Arc::new(ShaderWrapper(shader));
-        let instant = Instant::now();
+	let canvas = use_canvas(|| {
+		let shader = RuntimeEffect::make_for_shader(SHADER, None).unwrap();
+		let shader_wrapper = Arc::new(ShaderWrapper(shader));
+		let instant = Instant::now();
 
-        Box::new(move |ctx| {
-            let mut builder = UniformsBuilder::default();
-            builder.set(
-                "u_resolution",
-                UniformValue::FloatVec(vec![ctx.area.width(), ctx.area.height()]),
-            );
-            builder.set(
-                "u_time",
-                UniformValue::Float(instant.elapsed().as_secs_f32()),
-            );
+		Box::new(move |ctx| {
+			let mut builder = UniformsBuilder::default();
+			builder.set(
+				"u_resolution",
+				UniformValue::FloatVec(vec![
+					ctx.area.width(),
+					ctx.area.height(),
+				]),
+			);
+			builder.set(
+				"u_time",
+				UniformValue::Float(instant.elapsed().as_secs_f32()),
+			);
 
-            let uniforms = Data::new_copy(&builder.build(&shader_wrapper.0));
+			let uniforms = Data::new_copy(&builder.build(&shader_wrapper.0));
 
-            let shader = shader_wrapper.0.make_shader(uniforms, &[], None).unwrap();
+			let shader =
+				shader_wrapper.0.make_shader(uniforms, &[], None).unwrap();
 
-            let mut paint = Paint::default();
-            paint.set_anti_alias(true);
-            paint.set_color(Color::WHITE);
-            paint.set_shader(shader);
+			let mut paint = Paint::default();
+			paint.set_anti_alias(true);
+			paint.set_color(Color::WHITE);
+			paint.set_shader(shader);
 
-            ctx.canvas.draw_rect(
-                Rect::new(
-                    ctx.area.min_x(),
-                    ctx.area.min_y(),
-                    ctx.area.max_x(),
-                    ctx.area.max_y(),
-                ),
-                &paint,
-            );
-        })
-    });
+			ctx.canvas.draw_rect(
+				Rect::new(
+					ctx.area.min_x(),
+					ctx.area.min_y(),
+					ctx.area.max_x(),
+					ctx.area.max_y(),
+				),
+				&paint,
+			);
+		})
+	});
 
-    rsx!(
-        rect {
-            Canvas {
-                canvas,
-                theme: theme_with!(CanvasTheme {
-                    background: "black".into(),
-                    width: "100%".into(),
-                    height: "100%".into(),
-                })
-            }
-        }
-    )
+	rsx!(
+		rect {
+			Canvas {
+				canvas,
+				theme: theme_with!(CanvasTheme {
+					background: "black".into(),
+					width: "100%".into(),
+					height: "100%".into(),
+				})
+			}
+		}
+	)
 }
 
 struct ShaderWrapper(RuntimeEffect);

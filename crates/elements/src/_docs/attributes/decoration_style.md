@@ -2,11 +2,11 @@ Specify the decoration's style in a text.
 
 Accepted values:
 
-- `solid` (default)
-- `double`
-- `dotted`
-- `dashed`
-- `wavy`
+-   `solid` (default)
+-   `double`
+-   `dotted`
+-   `dashed`
+-   `wavy`
 
 ### Example
 

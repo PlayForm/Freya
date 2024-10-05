@@ -8,4 +8,6 @@
 
 [Website](https://freyaui.dev) | [Discord](https://discord.gg/sYejxCdewG)
 
-**Torin** 📐 is a pure Rust 🦀 layout library I made for **Freya** 🟣, a native GUI library for Rust. But it can work with other libraries too, see a Demo in the `demo.rs` example.
+**Torin** 📐 is a pure Rust 🦀 layout library I made for **Freya** 🟣, a native
+GUI library for Rust. But it can work with other libraries too, see a Demo in
+the `demo.rs` example.

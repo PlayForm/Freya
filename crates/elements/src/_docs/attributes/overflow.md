@@ -2,8 +2,8 @@ Specify how overflow should be handled.
 
 Accepted values:
 
-- `clip`
-- `none`
+-   `clip`
+-   `none`
 
 ### Example
 

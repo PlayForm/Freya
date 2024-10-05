@@ -6,11 +6,16 @@
 [![Github Sponsors](https://img.shields.io/github/sponsors/marc2332?style=social)](https://github.com/sponsors/marc2332)
 [![codecov](https://codecov.io/github/marc2332/freya/branch/main/graph/badge.svg?token=APSGEC84B8)](https://codecov.io/github/marc2332/freya)
 
-[Website](https://freyaui.dev) | [Nightly Docs](https://docs.freyaui.dev/freya) | [Stable Docs](https://docs.rs/freya/latest/freya) | [Book](https://book.freyaui.dev) | [Discord](https://discord.gg/sYejxCdewG)
+[Website](https://freyaui.dev) | [Nightly Docs](https://docs.freyaui.dev/freya)
+| [Stable Docs](https://docs.rs/freya/latest/freya) |
+[Book](https://book.freyaui.dev) | [Discord](https://discord.gg/sYejxCdewG)
 
-**Freya** is a cross-paltform GUI library for Rust powered by 🧬 [Dioxus](https://dioxuslabs.com) and 🎨 [Skia](https://skia.org/). 
+**Freya** is a cross-paltform GUI library for Rust powered by 🧬
+[Dioxus](https://dioxuslabs.com) and 🎨 [Skia](https://skia.org/).
 
-⚠️ It's currently work in progress, but you can already play with it! You can join the [Discord](https://discord.gg/sYejxCdewG) server if you have any question or issue. 
+⚠️ It's currently work in progress, but you can already play with it! You can
+join the [Discord](https://discord.gg/sYejxCdewG) server if you have any
+question or issue.
 
 <br/>
 <br/>
@@ -56,6 +61,7 @@ fn app() -> Element {
     )
 }
 ```
+
 </td>
 <td style="border:hidden;">
 
@@ -72,9 +78,11 @@ Thanks to my sponsors for supporting this project! 😄
 
 ### Want to try it? 🤔
 
-👋 Make sure to check the [Setup guide](https://book.freyaui.dev/setup.html) first.
+👋 Make sure to check the [Setup guide](https://book.freyaui.dev/setup.html)
+first.
 
-> ⚠️ If you happen to be on Windows using `windows-gnu` and get compile errors, maybe go check this [issue](https://github.com/marc2332/freya/issues/794).
+> ⚠️ If you happen to be on Windows using `windows-gnu` and get compile errors,
+> maybe go check this [issue](https://github.com/marc2332/freya/issues/794).
 
 Clone this repo and run:
 
@@ -85,37 +93,44 @@ cargo run --example counter
 You can also try [`freya-template`](https://github.com/marc2332/freya-template)
 
 ### Usage 📜
+
 Add Freya and Dioxus as dependencies:
 
 ```toml
 freya = "0.2"
-dioxus = { version = "0.5", features = ["macro", "hooks"], default-features = false }
+dioxus = { version = "0.5", features = [
+	"macro",
+	"hooks",
+], default-features = false }
 ```
 
 ### Features ✨
-- ⛏️ Built-in **components** (button, scroll views, switch and more) 
-- 🚇 Built-in **hooks** library (animations, text editing and more)
-- 🔍 Built-in **devtools** panel
-- 🧰 Built-in **headless runner** to test UI
-- 🎨 **Theming** support (not extensible yet ⚠️)
-- 🛩️ **Cross-platform** (Windows, Linux, MacOS)
-- 🖼️ SKSL **Shaders** support
-- 🔄️ Dioxus **Hot-reload** support
-- 📒 Multi-line **text editing**
-- 🦾 Basic **Accessibility** Support (experimental ⚠️)
-- 🧩Compatible with dioxus-sdk and other Dioxus renderer-agnostic libraries
+
+-   ⛏️ Built-in **components** (button, scroll views, switch and more)
+-   🚇 Built-in **hooks** library (animations, text editing and more)
+-   🔍 Built-in **devtools** panel
+-   🧰 Built-in **headless runner** to test UI
+-   🎨 **Theming** support (not extensible yet ⚠️)
+-   🛩️ **Cross-platform** (Windows, Linux, MacOS)
+-   🖼️ SKSL **Shaders** support
+-   🔄️ Dioxus **Hot-reload** support
+-   📒 Multi-line **text editing**
+-   🦾 Basic **Accessibility** Support (experimental ⚠️)
+-   🧩Compatible with dioxus-sdk and other Dioxus renderer-agnostic libraries
 
 ### Goals 😁
-- Performant and low memory usage
-- Good developer experience
-- Cross-platform support
-- Decent Accessibility support 
-- Useful testing APIs
-- Useful and extensible built-in components and hooks
+
+-   Performant and low memory usage
+-   Good developer experience
+-   Cross-platform support
+-   Decent Accessibility support
+-   Useful testing APIs
+-   Useful and extensible built-in components and hooks
 
 ### 🤠 Projects
 
-[Valin](https://github.com/marc2332/valin) ⚒️ is a Work-In-Progress cross-platform code editor, made with Freya 🦀 and Rust, by me.
+[Valin](https://github.com/marc2332/valin) ⚒️ is a Work-In-Progress
+cross-platform code editor, made with Freya 🦀 and Rust, by me.
 
 ![Valin](https://github.com/marc2332/valin/raw/main/demo.png)
 

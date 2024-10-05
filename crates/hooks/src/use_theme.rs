@@ -6,26 +6,26 @@ use crate::theming::*;
 
 /// Provide a custom [`Theme`].
 pub fn use_init_theme(theme_cb: impl FnOnce() -> Theme) -> Signal<Theme> {
-    use_context_provider(|| Signal::new(theme_cb()))
+	use_context_provider(|| Signal::new(theme_cb()))
 }
 
 /// Provide the default [`Theme`].
 pub fn use_init_default_theme() -> Signal<Theme> {
-    use_context_provider(|| Signal::new(Theme::default()))
+	use_context_provider(|| Signal::new(Theme::default()))
 }
 
 /// Subscribe to [`Theme`] changes.
 pub fn use_theme() -> Signal<Theme> {
-    use_context::<Signal<Theme>>()
+	use_context::<Signal<Theme>>()
 }
 
 /// Subscribe to [`Theme`] changes, default theme will be used if there is no provided [`Theme`].
 ///
 /// Primarily used by built-in components that have no control of whether they will inherit a [`Theme`] or not.
 pub fn use_get_theme() -> Theme {
-    try_consume_context::<Signal<Theme>>()
-        .map(|v| v.read().clone())
-        .unwrap_or_default()
+	try_consume_context::<Signal<Theme>>()
+		.map(|v| v.read().clone())
+		.unwrap_or_default()
 }
 
 /// This macro has three arguments separator by commas.
@@ -59,13 +59,13 @@ pub fn use_get_theme() -> Theme {
 /// ```
 #[macro_export]
 macro_rules! use_applied_theme {
-    ($theme_prop:expr, $theme_name:ident) => {{
-        let mut theme = ::freya_hooks::use_get_theme().$theme_name;
+	($theme_prop:expr, $theme_name:ident) => {{
+		let mut theme = ::freya_hooks::use_get_theme().$theme_name;
 
-        if let Some(theme_override) = $theme_prop {
-            theme.apply_optional(theme_override);
-        }
+		if let Some(theme_override) = $theme_prop {
+			theme.apply_optional(theme_override);
+		}
 
-        theme
-    }};
+		theme
+	}};
 }

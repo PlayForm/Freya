@@ -1,5 +1,5 @@
-Specify the margin of an element.
-You can do so by four different ways, just like in CSS.
+Specify the margin of an element. You can do so by four different ways, just
+like in CSS.
 
 ### Example
 

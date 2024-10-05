@@ -14,9 +14,9 @@ pub use std::borrow::Cow;
 /// Makes the code more readable.
 #[macro_export]
 macro_rules! cow_borrowed {
-    ($val:expr) => {
-        $crate::Cow::Borrowed($val)
-    };
+	($val:expr) => {
+		$crate::Cow::Borrowed($val)
+	};
 }
 
 /// Example usage:
@@ -221,393 +221,393 @@ macro_rules! theme_with {
 }
 
 define_theme! {
-    %[component]
-    pub Dropdown {
-        %[cows]
-        width: str,
-        dropdown_background: str,
-        background_button: str,
-        hover_background: str,
-        border_fill: str,
-        arrow_fill: str,
-        %[subthemes]
-        font_theme: FontTheme,
-    }
+	%[component]
+	pub Dropdown {
+		%[cows]
+		width: str,
+		dropdown_background: str,
+		background_button: str,
+		hover_background: str,
+		border_fill: str,
+		arrow_fill: str,
+		%[subthemes]
+		font_theme: FontTheme,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub DropdownItem {
-        %[cows]
-        background: str,
-        select_background: str,
-        hover_background: str,
-        %[subthemes]
-        font_theme: FontTheme,
-    }
+	%[component]
+	pub DropdownItem {
+		%[cows]
+		background: str,
+		select_background: str,
+		hover_background: str,
+		%[subthemes]
+		font_theme: FontTheme,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Button {
-        %[cows]
-        background: str,
-        hover_background: str,
-        border_fill: str,
-        focus_border_fill: str,
-        shadow: str,
-        margin: str,
-        corner_radius: str,
-        width: str,
-        height: str,
-        padding: str,
-        %[subthemes]
-        font_theme: FontTheme,
-    }
+	%[component]
+	pub Button {
+		%[cows]
+		background: str,
+		hover_background: str,
+		border_fill: str,
+		focus_border_fill: str,
+		shadow: str,
+		margin: str,
+		corner_radius: str,
+		width: str,
+		height: str,
+		padding: str,
+		%[subthemes]
+		font_theme: FontTheme,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Input {
-        %[cows]
-        background: str,
-        hover_background: str,
-        border_fill: str,
-        shadow: str,
-        width: str,
-        margin: str,
-        corner_radius: str,
-        %[subthemes]
-        font_theme: FontTheme,
-        placeholder_font_theme: FontTheme,
-    }
+	%[component]
+	pub Input {
+		%[cows]
+		background: str,
+		hover_background: str,
+		border_fill: str,
+		shadow: str,
+		width: str,
+		margin: str,
+		corner_radius: str,
+		%[subthemes]
+		font_theme: FontTheme,
+		placeholder_font_theme: FontTheme,
+	}
 }
 
 define_theme! {
-    /// Theming properties for Fonts.
-    pub Font {
-        %[cows]
-        color: str,
-    }
+	/// Theming properties for Fonts.
+	pub Font {
+		%[cows]
+		color: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Switch {
-        %[cows]
-        background: str,
-        thumb_background: str,
-        enabled_background: str,
-        enabled_thumb_background: str,
-        focus_border_fill: str,
-        enabled_focus_border_fill: str,
-    }
+	%[component]
+	pub Switch {
+		%[cows]
+		background: str,
+		thumb_background: str,
+		enabled_background: str,
+		enabled_thumb_background: str,
+		focus_border_fill: str,
+		enabled_focus_border_fill: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub ScrollBar {
-        %[cows]
-        background: str,
-        thumb_background: str,
-        hover_thumb_background: str,
-        active_thumb_background: str,
-        size: str,
-    }
+	%[component]
+	pub ScrollBar {
+		%[cows]
+		background: str,
+		thumb_background: str,
+		hover_thumb_background: str,
+		active_thumb_background: str,
+		size: str,
+	}
 }
 
 define_theme! {
-    /// Also used by `VirtualScrollView`.
-    %[component]
-    pub ScrollView {
-        %[cows]
-        height: str,
-        width: str,
-        padding: str,
-    }
+	/// Also used by `VirtualScrollView`.
+	%[component]
+	pub ScrollView {
+		%[cows]
+		height: str,
+		width: str,
+		padding: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Body {
-        %[cows]
-        background: str,
-        color: str,
-        padding: str,
-    }
+	%[component]
+	pub Body {
+		%[cows]
+		background: str,
+		color: str,
+		padding: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Slider {
-        %[cows]
-        background: str,
-        thumb_background: str,
-        thumb_inner_background: str,
-        border_fill: str,
-    }
+	%[component]
+	pub Slider {
+		%[cows]
+		background: str,
+		thumb_background: str,
+		thumb_inner_background: str,
+		border_fill: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Tooltip {
-        %[cows]
-        background: str,
-        color: str,
-        border_fill: str,
-    }
+	%[component]
+	pub Tooltip {
+		%[cows]
+		background: str,
+		color: str,
+		border_fill: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Accordion {
-        %[cows]
-        color: str,
-        background: str,
-        border_fill: str,
-    }
+	%[component]
+	pub Accordion {
+		%[cows]
+		color: str,
+		background: str,
+		border_fill: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Loader {
-        %[cows]
-        primary_color: str,
-    }
+	%[component]
+	pub Loader {
+		%[cows]
+		primary_color: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Link {
-        %[cows]
-        highlight_color: str,
-    }
+	%[component]
+	pub Link {
+		%[cows]
+		highlight_color: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub ProgressBar {
-        %[cows]
-        color: str,
-        background: str,
-        progress_background: str,
-        width: str,
-        height: str,
-    }
+	%[component]
+	pub ProgressBar {
+		%[cows]
+		color: str,
+		background: str,
+		progress_background: str,
+		width: str,
+		height: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Table {
-        %[cows]
-        background: str,
-        arrow_fill: str,
-        alternate_row_background: str,
-        row_background: str,
-        divider_fill: str,
-        height: str,
-        corner_radius: str,
-        shadow: str,
-        %[subthemes]
-        font_theme: FontTheme,
-    }
+	%[component]
+	pub Table {
+		%[cows]
+		background: str,
+		arrow_fill: str,
+		alternate_row_background: str,
+		row_background: str,
+		divider_fill: str,
+		height: str,
+		corner_radius: str,
+		shadow: str,
+		%[subthemes]
+		font_theme: FontTheme,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Canvas {
-        %[cows]
-        width: str,
-        height: str,
-        background: str,
-    }
+	%[component]
+	pub Canvas {
+		%[cows]
+		width: str,
+		height: str,
+		background: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Graph {
-        %[cows]
-        width: str,
-        height: str,
-    }
+	%[component]
+	pub Graph {
+		%[cows]
+		width: str,
+		height: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub NetworkImage {
-        %[cows]
-        width: str,
-        height: str,
-    }
+	%[component]
+	pub NetworkImage {
+		%[cows]
+		width: str,
+		height: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Icon {
-        %[cows]
-        margin: str,
-        width: str,
-        height: str,
-    }
+	%[component]
+	pub Icon {
+		%[cows]
+		margin: str,
+		width: str,
+		height: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Sidebar {
-        %[cows]
-        background: str,
-        %[subthemes]
-        font_theme: FontTheme,
-    }
+	%[component]
+	pub Sidebar {
+		%[cows]
+		background: str,
+		%[subthemes]
+		font_theme: FontTheme,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub SidebarItem {
-        %[cows]
-        background: str,
-        hover_background: str,
-        %[subthemes]
-        font_theme: FontTheme,
-    }
+	%[component]
+	pub SidebarItem {
+		%[cows]
+		background: str,
+		hover_background: str,
+		%[subthemes]
+		font_theme: FontTheme,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Tile {
-        %[cows]
-        padding: str,
-    }
+	%[component]
+	pub Tile {
+		%[cows]
+		padding: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub MenuItem {
-        %[cows]
-        hover_background: str,
-        corner_radius: str,
-        %[subthemes]
-        font_theme: FontTheme,
-    }
+	%[component]
+	pub MenuItem {
+		%[cows]
+		hover_background: str,
+		corner_radius: str,
+		%[subthemes]
+		font_theme: FontTheme,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub MenuContainer {
-        %[cows]
-        background: str,
-        padding: str,
-        shadow: str,
-    }
+	%[component]
+	pub MenuContainer {
+		%[cows]
+		background: str,
+		padding: str,
+		shadow: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub SnackBar {
-        %[cows]
-        background: str,
-        color: str,
-     }
+	%[component]
+	pub SnackBar {
+		%[cows]
+		background: str,
+		color: str,
+	 }
 }
 
 define_theme! {
-    %[component]
-    pub Radio {
-        %[cows]
-        unselected_fill: str,
-        selected_fill: str,
-    }
+	%[component]
+	pub Radio {
+		%[cows]
+		unselected_fill: str,
+		selected_fill: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Checkbox {
-        %[cows]
-        unselected_fill: str,
-        selected_fill: str,
-        selected_icon_fill: str,
-    }
+	%[component]
+	pub Checkbox {
+		%[cows]
+		unselected_fill: str,
+		selected_fill: str,
+		selected_icon_fill: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Popup {
-        %[cows]
-        background: str,
-        color: str,
-        cross_fill: str,
-        width: str,
-        height: str,
-    }
+	%[component]
+	pub Popup {
+		%[cows]
+		background: str,
+		color: str,
+		cross_fill: str,
+		width: str,
+		height: str,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub Tab {
-        %[cows]
-        background: str,
-        hover_background: str,
-        border_fill: str,
-        focus_border_fill: str,
-        width: str,
-        height: str,
-        padding: str,
-        %[subthemes]
-        font_theme: FontTheme,
-    }
+	%[component]
+	pub Tab {
+		%[cows]
+		background: str,
+		hover_background: str,
+		border_fill: str,
+		focus_border_fill: str,
+		width: str,
+		height: str,
+		padding: str,
+		%[subthemes]
+		font_theme: FontTheme,
+	}
 }
 
 define_theme! {
-    %[component]
-    pub BottomTab {
-        %[cows]
-        background: str,
-        hover_background: str,
-        width: str,
-        height: str,
-        padding: str,
-        %[subthemes]
-        font_theme: FontTheme,
-    }
+	%[component]
+	pub BottomTab {
+		%[cows]
+		background: str,
+		hover_background: str,
+		width: str,
+		height: str,
+		padding: str,
+		%[subthemes]
+		font_theme: FontTheme,
+	}
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Theme {
-    pub name: &'static str,
-    pub body: BodyTheme,
-    pub button: ButtonTheme,
-    pub switch: SwitchTheme,
-    pub scroll_bar: ScrollBarTheme,
-    pub scroll_view: ScrollViewTheme,
-    pub slider: SliderTheme,
-    pub tooltip: TooltipTheme,
-    pub dropdown: DropdownTheme,
-    pub dropdown_item: DropdownItemTheme,
-    pub accordion: AccordionTheme,
-    pub loader: LoaderTheme,
-    pub link: LinkTheme,
-    pub progress_bar: ProgressBarTheme,
-    pub table: TableTheme,
-    pub input: InputTheme,
-    pub canvas: CanvasTheme,
-    pub graph: GraphTheme,
-    pub network_image: NetworkImageTheme,
-    pub icon: IconTheme,
-    pub sidebar: SidebarTheme,
-    pub sidebar_item: SidebarItemTheme,
-    pub tile: TileTheme,
-    pub radio: RadioTheme,
-    pub checkbox: CheckboxTheme,
-    pub menu_item: MenuItemTheme,
-    pub menu_container: MenuContainerTheme,
-    pub snackbar: SnackBarTheme,
-    pub popup: PopupTheme,
-    pub tab: TabTheme,
-    pub bottom_tab: BottomTabTheme,
+	pub name: &'static str,
+	pub body: BodyTheme,
+	pub button: ButtonTheme,
+	pub switch: SwitchTheme,
+	pub scroll_bar: ScrollBarTheme,
+	pub scroll_view: ScrollViewTheme,
+	pub slider: SliderTheme,
+	pub tooltip: TooltipTheme,
+	pub dropdown: DropdownTheme,
+	pub dropdown_item: DropdownItemTheme,
+	pub accordion: AccordionTheme,
+	pub loader: LoaderTheme,
+	pub link: LinkTheme,
+	pub progress_bar: ProgressBarTheme,
+	pub table: TableTheme,
+	pub input: InputTheme,
+	pub canvas: CanvasTheme,
+	pub graph: GraphTheme,
+	pub network_image: NetworkImageTheme,
+	pub icon: IconTheme,
+	pub sidebar: SidebarTheme,
+	pub sidebar_item: SidebarItemTheme,
+	pub tile: TileTheme,
+	pub radio: RadioTheme,
+	pub checkbox: CheckboxTheme,
+	pub menu_item: MenuItemTheme,
+	pub menu_container: MenuContainerTheme,
+	pub snackbar: SnackBarTheme,
+	pub popup: PopupTheme,
+	pub tab: TabTheme,
+	pub bottom_tab: BottomTabTheme,
 }
 
 impl Default for Theme {
-    fn default() -> Self {
-        LIGHT_THEME
-    }
+	fn default() -> Self {
+		LIGHT_THEME
+	}
 }

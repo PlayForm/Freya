@@ -7,33 +7,34 @@ use crate::dom::FreyaDOM;
 
 /// Call the render function for the nodes that should be rendered.
 pub fn process_render(
-    fdom: &FreyaDOM,
-    mut render_fn: impl FnMut(&FreyaDOM, &NodeId, &LayoutNode, &Torin<NodeId>),
+	fdom: &FreyaDOM,
+	mut render_fn: impl FnMut(&FreyaDOM, &NodeId, &LayoutNode, &Torin<NodeId>),
 ) {
-    let layout = fdom.layout();
-    let rdom = fdom.rdom();
-    let layers = fdom.layers();
+	let layout = fdom.layout();
+	let rdom = fdom.rdom();
+	let layers = fdom.layers();
 
-    // Render all the layers from the bottom to the top
-    for (_, layer) in sorted(layers.layers().iter()) {
-        'elements: for node_id in layer {
-            let node = rdom.get(*node_id).unwrap();
-            let node_viewports = node.get::<ViewportState>().unwrap();
+	// Render all the layers from the bottom to the top
+	for (_, layer) in sorted(layers.layers().iter()) {
+		'elements: for node_id in layer {
+			let node = rdom.get(*node_id).unwrap();
+			let node_viewports = node.get::<ViewportState>().unwrap();
 
-            let layout_node = layout.get(*node_id);
+			let layout_node = layout.get(*node_id);
 
-            if let Some(layout_node) = layout_node {
-                // Skip elements that are completely out of any their parent's viewport
-                for viewport_id in &node_viewports.viewports {
-                    let viewport = layout.get(*viewport_id).unwrap().visible_area();
-                    if !viewport.intersects(&layout_node.area) {
-                        continue 'elements;
-                    }
-                }
+			if let Some(layout_node) = layout_node {
+				// Skip elements that are completely out of any their parent's viewport
+				for viewport_id in &node_viewports.viewports {
+					let viewport =
+						layout.get(*viewport_id).unwrap().visible_area();
+					if !viewport.intersects(&layout_node.area) {
+						continue 'elements;
+					}
+				}
 
-                // Render the element
-                render_fn(fdom, node_id, layout_node, &layout)
-            }
-        }
-    }
+				// Render the element
+				render_fn(fdom, node_id, layout_node, &layout)
+			}
+		}
+	}
 }

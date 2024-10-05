@@ -1,16 +1,20 @@
 # Setup
 
-Make sure you have [Rust](https://www.rust-lang.org/) and your OS dependencies installed.
+Make sure you have [Rust](https://www.rust-lang.org/) and your OS dependencies
+installed.
 
 ### Windows
 
-You will need C++ build tools which you can get through Visual Studio 2022, learn more [here](https://learn.microsoft.com/en-us/windows/dev-environment/rust/setup#install-visual-studio-recommended-or-the-microsoft-c-build-tools).
+You will need C++ build tools which you can get through Visual Studio 2022,
+learn more
+[here](https://learn.microsoft.com/en-us/windows/dev-environment/rust/setup#install-visual-studio-recommended-or-the-microsoft-c-build-tools).
 
 ### Linux
 
 #### Debian-based (Ubuntu, PopOS, etc)
 
 Install these packages:
+
 ```sh
 sudo apt install build-essential libssl-dev pkg-config cmake libgtk-3-dev libclang-dev
 ```
@@ -18,6 +22,7 @@ sudo apt install build-essential libssl-dev pkg-config cmake libgtk-3-dev libcla
 #### Arch Linux
 
 Install these packages:
+
 ```sh
 sudo pacman -S base-devel openssl cmake gtk3 clang
 ```
@@ -41,6 +46,6 @@ No setup required. But feel free to add more if we miss something.
 
 The following custom linkers are not supported at the moment:
 
-- `mold`
+-   `mold`
 
 If there is another one not supported don't hesitate to add it here.

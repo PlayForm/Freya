@@ -2,15 +2,16 @@ Specify how you want the element to be positioned inside it's parent area.
 
 Accepted values:
 
-- `stacked` (default)
-- `absolute`
+-   `stacked` (default)
+-   `absolute`
 
-When using the `absolute` mode, you can also combine it with the following attributes:
+When using the `absolute` mode, you can also combine it with the following
+attributes:
 
-- `position_top`
-- `position_right`
-- `position_bottom`
-- `position_left`
+-   `position_top`
+-   `position_right`
+-   `position_bottom`
+-   `position_left`
 
 These only support pixels.
 
