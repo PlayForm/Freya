@@ -1,8 +1,13 @@
 use freya_engine::prelude::*;
 use freya_native_core::real_dom::NodeImmutable;
 use freya_node_state::{
-	BorderAlignment, BorderStyle, CanvasRunnerContext, Fill, ReferencesState,
-	ShadowPosition, StyleState,
+	BorderAlignment,
+	BorderStyle,
+	CanvasRunnerContext,
+	Fill,
+	ReferencesState,
+	ShadowPosition,
+	StyleState,
 };
 use torin::{
 	prelude::{CursorPoint, LayoutNode},
@@ -17,9 +22,9 @@ pub struct RectElement;
 impl RectElement {
 	fn get_rounded_rect(
 		&self,
-		layout_node: &LayoutNode,
-		node_ref: &DioxusNode,
-		scale_factor: f32,
+		layout_node:&LayoutNode,
+		node_ref:&DioxusNode,
+		scale_factor:f32,
 	) -> RRect {
 		let area = layout_node.visible_area().to_f32();
 		let node_style = &*node_ref.get::<StyleState>().unwrap();
@@ -41,44 +46,37 @@ impl RectElement {
 impl ElementUtils for RectElement {
 	fn is_point_inside_area(
 		&self,
-		point: &CursorPoint,
-		node_ref: &DioxusNode,
-		layout_node: &LayoutNode,
-		scale_factor: f32,
+		point:&CursorPoint,
+		node_ref:&DioxusNode,
+		layout_node:&LayoutNode,
+		scale_factor:f32,
 	) -> bool {
-		let rounded_rect =
-			self.get_rounded_rect(layout_node, node_ref, scale_factor);
+		let rounded_rect = self.get_rounded_rect(layout_node, node_ref, scale_factor);
 		let point = point.to_f32();
-		rounded_rect.contains(Rect::new(
-			point.x,
-			point.y,
-			point.x + 1.,
-			point.y + 1.,
-		))
+		rounded_rect.contains(Rect::new(point.x, point.y, point.x + 1., point.y + 1.))
 	}
 
 	fn clip(
 		&self,
-		layout_node: &LayoutNode,
-		node_ref: &DioxusNode,
-		canvas: &Canvas,
-		scale_factor: f32,
+		layout_node:&LayoutNode,
+		node_ref:&DioxusNode,
+		canvas:&Canvas,
+		scale_factor:f32,
 	) {
-		let rounded_rect =
-			self.get_rounded_rect(layout_node, node_ref, scale_factor);
+		let rounded_rect = self.get_rounded_rect(layout_node, node_ref, scale_factor);
 
 		canvas.clip_rrect(rounded_rect, ClipOp::Intersect, true);
 	}
 
 	fn render(
 		self,
-		layout_node: &LayoutNode,
-		node_ref: &DioxusNode,
-		canvas: &Canvas,
-		font_collection: &mut FontCollection,
-		_font_manager: &FontMgr,
-		_default_fonts: &[String],
-		scale_factor: f32,
+		layout_node:&LayoutNode,
+		node_ref:&DioxusNode,
+		canvas:&Canvas,
+		font_collection:&mut FontCollection,
+		_font_manager:&FontMgr,
+		_default_fonts:&[String],
+		scale_factor:f32,
 	) {
 		let node_style = &*node_ref.get::<StyleState>().unwrap();
 
@@ -118,11 +116,7 @@ impl ElementUtils for RectElement {
 		);
 
 		if radius.smoothing > 0.0 {
-			path.add_path(
-				&radius.smoothed_path(rounded_rect),
-				(area.min_x(), area.min_y()),
-				None,
-			);
+			path.add_path(&radius.smoothed_path(rounded_rect), (area.min_x(), area.min_y()), None);
 		} else {
 			path.add_rrect(rounded_rect, None);
 		}
@@ -152,18 +146,18 @@ impl ElementUtils for RectElement {
 				}
 
 				// Shadows can be either outset or inset
-				// If they are outset, we fill a copy of the path outset by spread_radius, and blur it.
-				// Otherwise, we draw a stroke with the inner portion being spread_radius width, and the outer portion being blur_radius width.
-				let outset: Point = match shadow.position {
+				// If they are outset, we fill a copy of the path outset by
+				// spread_radius, and blur it. Otherwise, we draw a stroke
+				// with the inner portion being spread_radius width, and the
+				// outer portion being blur_radius width.
+				let outset:Point = match shadow.position {
 					ShadowPosition::Normal => {
 						shadow_paint.set_style(PaintStyle::Fill);
 						(shadow.spread, shadow.spread).into()
 					},
 					ShadowPosition::Inset => {
 						shadow_paint.set_style(PaintStyle::Stroke);
-						shadow_paint.set_stroke_width(
-							shadow.blur / 2.0 + shadow.spread,
-						);
+						shadow_paint.set_stroke_width(shadow.blur / 2.0 + shadow.spread);
 						(-shadow.spread / 2.0, -shadow.spread / 2.0).into()
 					},
 				};
@@ -177,24 +171,23 @@ impl ElementUtils for RectElement {
 					));
 				}
 
-				// Add either the RRect or smoothed path based on whether smoothing is used.
+				// Add either the RRect or smoothed path based on whether
+				// smoothing is used.
 				if radius.smoothing > 0.0 {
 					shadow_path.add_path(
-						&node_style
-							.corner_radius
-							.smoothed_path(rounded_rect.with_outset(outset)),
+						&node_style.corner_radius.smoothed_path(rounded_rect.with_outset(outset)),
 						Point::new(area.min_x(), area.min_y()) - outset,
 						None,
 					);
 				} else {
-					shadow_path
-						.add_rrect(rounded_rect.with_outset(outset), None);
+					shadow_path.add_rrect(rounded_rect.with_outset(outset), None);
 				}
 
 				// Offset our path by the shadow's x and y coordinates.
 				shadow_path.offset((shadow.x, shadow.y));
 
-				// Exclude the original path bounds from the shadow using a clip, then draw the shadow.
+				// Exclude the original path bounds from the shadow using a
+				// clip, then draw the shadow.
 				canvas.save();
 				canvas.clip_path(
 					&path,
@@ -210,9 +203,7 @@ impl ElementUtils for RectElement {
 		}
 
 		// Borders
-		if node_style.border.width > 0.0
-			&& node_style.border.style != BorderStyle::None
-		{
+		if node_style.border.width > 0.0 && node_style.border.style != BorderStyle::None {
 			let mut border_with = node_style.border.width;
 			border_with *= scale_factor;
 
@@ -239,8 +230,10 @@ impl ElementUtils for RectElement {
 			}
 			border_paint.set_stroke_width(border_with);
 
-			// Skia draws strokes centered on the edge of the path. This means that half of the stroke is inside the path, and half outside.
-			// For Inner and Outer borders, we need to grow or shrink the stroke path by half the border width.
+			// Skia draws strokes centered on the edge of the path. This means
+			// that half of the stroke is inside the path, and half outside.
+			// For Inner and Outer borders, we need to grow or shrink the stroke
+			// path by half the border width.
 			let outset = Point::new(border_with / 2.0, border_with / 2.0)
 				* match node_style.border.alignment {
 					BorderAlignment::Center => 0.0,
@@ -248,12 +241,11 @@ impl ElementUtils for RectElement {
 					BorderAlignment::Outer => 1.0,
 				};
 
-			// Add either the RRect or smoothed path based on whether smoothing is used.
+			// Add either the RRect or smoothed path based on whether smoothing
+			// is used.
 			if radius.smoothing > 0.0 {
 				border_path.add_path(
-					&node_style
-						.corner_radius
-						.smoothed_path(rounded_rect.with_outset(outset)),
+					&node_style.corner_radius.smoothed_path(rounded_rect.with_outset(outset)),
 					Point::new(area.min_x(), area.min_y()) - outset,
 					None,
 				);
@@ -267,12 +259,7 @@ impl ElementUtils for RectElement {
 		let references = node_ref.get::<ReferencesState>().unwrap();
 
 		if let Some(canvas_ref) = &references.canvas_ref {
-			let mut ctx = CanvasRunnerContext {
-				canvas,
-				font_collection,
-				area,
-				scale_factor,
-			};
+			let mut ctx = CanvasRunnerContext { canvas, font_collection, area, scale_factor };
 			(canvas_ref.runner)(&mut ctx);
 		}
 	}

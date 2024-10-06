@@ -5,11 +5,11 @@ use winit::window::Window;
 /// State consumed by components and updated by the platform.
 #[derive(Clone, Debug)]
 pub struct NativePlatformState {
-	pub focused_id: AccessibilityId,
-	pub preferred_theme: PreferredTheme,
-	pub navigation_mode: NavigationMode,
-	pub information: PlatformInformation,
-	pub scale_factor: f64,
+	pub focused_id:AccessibilityId,
+	pub preferred_theme:PreferredTheme,
+	pub navigation_mode:NavigationMode,
+	pub information:PlatformInformation,
+	pub scale_factor:f64,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
@@ -23,7 +23,7 @@ pub enum PreferredTheme {
 }
 
 impl From<winit::window::Theme> for PreferredTheme {
-	fn from(value: winit::window::Theme) -> Self {
+	fn from(value:winit::window::Theme) -> Self {
 		match value {
 			winit::window::Theme::Light => Self::Light,
 			winit::window::Theme::Dark => Self::Dark,
@@ -42,31 +42,28 @@ pub enum NavigationMode {
 /// Information about the platform.
 #[derive(Clone, PartialEq, Debug, Copy)]
 pub struct PlatformInformation {
-	pub viewport_size: Size2D,
-	pub is_minimized: bool,
-	pub is_maximized: bool,
-	pub is_fullscreen: bool,
+	pub viewport_size:Size2D,
+	pub is_minimized:bool,
+	pub is_maximized:bool,
+	pub is_fullscreen:bool,
 }
 
 impl PlatformInformation {
-	pub fn from_winit(winit: &Window) -> Self {
+	pub fn from_winit(winit:&Window) -> Self {
 		let window_size = winit.inner_size();
 		Self {
-			viewport_size: Size2D::new(
-				window_size.width as f32,
-				window_size.height as f32,
-			),
-			is_minimized: winit.is_minimized().unwrap_or_default(),
-			is_maximized: winit.is_maximized(),
-			is_fullscreen: winit.fullscreen().is_some(),
+			viewport_size:Size2D::new(window_size.width as f32, window_size.height as f32),
+			is_minimized:winit.is_minimized().unwrap_or_default(),
+			is_maximized:winit.is_maximized(),
+			is_fullscreen:winit.fullscreen().is_some(),
 		}
 	}
 
 	pub fn new(
-		viewport_size: Size2D,
-		is_minimized: bool,
-		is_maximized: bool,
-		is_fullscreen: bool,
+		viewport_size:Size2D,
+		is_minimized:bool,
+		is_maximized:bool,
+		is_fullscreen:bool,
 	) -> Self {
 		Self { viewport_size, is_minimized, is_maximized, is_fullscreen }
 	}

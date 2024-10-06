@@ -1,14 +1,9 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::{core::prelude::EventMessage, prelude::*};
 use skia_safe::{Color, Font, FontStyle, Paint};
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	let platform = use_platform();
@@ -26,13 +21,10 @@ fn app() -> Element {
 			let mut text_paint = Paint::default();
 			text_paint.set_anti_alias(true);
 			text_paint.set_color(Color::WHITE);
-			let typefaces = ctx
-				.font_collection
-				.find_typefaces(&["Times New Roman"], FontStyle::default());
-			let font = Font::new(
-				typefaces.first().expect("'Times New Roman' font not found."),
-				50.0,
-			);
+			let typefaces =
+				ctx.font_collection.find_typefaces(&["Times New Roman"], FontStyle::default());
+			let font =
+				Font::new(typefaces.first().expect("'Times New Roman' font not found."), 50.0);
 
 			ctx.canvas.draw_str(
 				format!("value is {}", state),

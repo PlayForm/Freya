@@ -45,12 +45,11 @@ use freya_hooks::{use_applied_theme, RadioTheme, RadioThemeWith};
 #[component]
 pub fn Radio(
 	/// Indicate whether this radio is selected or not.
-	selected: bool,
+	selected:bool,
 	/// Theme override.
-	theme: Option<RadioThemeWith>,
+	theme:Option<RadioThemeWith>,
 ) -> Element {
-	let RadioTheme { unselected_fill, selected_fill } =
-		use_applied_theme!(&theme, radio);
+	let RadioTheme { unselected_fill, selected_fill } = use_applied_theme!(&theme, radio);
 	let fill = if selected { selected_fill } else { unselected_fill };
 
 	rsx!(
@@ -127,15 +126,16 @@ mod test {
 		let root = utils.root();
 		utils.wait_for_update().await;
 
-		// If the inner circle exists it means that the Radio is activated, otherwise it isn't
+		// If the inner circle exists it means that the Radio is activated,
+		// otherwise it isn't
 		assert!(root.get(0).get(0).get(0).get(0).is_element());
 		assert!(root.get(1).get(0).get(0).get(0).is_placeholder());
 		assert!(root.get(2).get(0).get(0).get(0).is_placeholder());
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (20.0, 50.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(20.0, 50.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -144,9 +144,9 @@ mod test {
 		assert!(root.get(2).get(0).get(0).get(0).is_placeholder());
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (10.0, 90.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(10.0, 90.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -155,9 +155,9 @@ mod test {
 		assert!(root.get(2).get(0).get(0).get(0).is_element());
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (10.0, 10.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(10.0, 10.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 

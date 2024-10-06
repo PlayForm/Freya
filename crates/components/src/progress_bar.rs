@@ -6,15 +6,16 @@ use freya_hooks::{use_applied_theme, ProgressBarTheme, ProgressBarThemeWith};
 #[derive(Props, Clone, PartialEq)]
 pub struct ProgressBarProps {
 	/// Theme override.
-	pub theme: Option<ProgressBarThemeWith>,
+	pub theme:Option<ProgressBarThemeWith>,
 	/// Show a label with the current progress. Default to false.
 	#[props(default = false)]
-	pub show_progress: bool,
+	pub show_progress:bool,
 	/// Percentage of the progress bar.
-	pub progress: f32,
+	pub progress:f32,
 }
 
-/// Display the progress of something visually. For example: downloading files, fetching data, etc.
+/// Display the progress of something visually. For example: downloading files,
+/// fetching data, etc.
 ///
 /// # Styling
 /// Inherits the [`ProgressBarTheme`](freya_hooks::ProgressBarTheme) theme.
@@ -23,21 +24,14 @@ pub struct ProgressBarProps {
 ///
 /// ```no_run
 /// # use freya::prelude::*;
-/// fn app() -> Element {
-///     rsx!(ProgressBar { progress: 75.0 })
-/// }
+/// fn app() -> Element { rsx!(ProgressBar { progress:75.0 }) }
 /// ```
 #[allow(non_snake_case)]
 pub fn ProgressBar(
-	ProgressBarProps { theme, show_progress, progress }: ProgressBarProps,
+	ProgressBarProps { theme, show_progress, progress }:ProgressBarProps,
 ) -> Element {
-	let ProgressBarTheme {
-		color,
-		background,
-		progress_background,
-		width,
-		height,
-	} = use_applied_theme!(&theme, progress_bar);
+	let ProgressBarTheme { color, background, progress_background, width, height } =
+		use_applied_theme!(&theme, progress_bar);
 
 	rsx!(
 		rect {

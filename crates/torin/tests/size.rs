@@ -10,11 +10,7 @@ pub fn unsized_parent_with_child_with_margin() {
 		0,
 		None,
 		vec![1],
-		Node::from_size_and_direction(
-			Size::Inner,
-			Size::Inner,
-			DirectionMode::Vertical,
-		),
+		Node::from_size_and_direction(Size::Inner, Size::Inner, DirectionMode::Vertical),
 	);
 	mocked_dom.add(
 		1,
@@ -54,11 +50,7 @@ pub fn unsized_parent_with_padding() {
 		0,
 		None,
 		vec![1],
-		Node::from_size_and_padding(
-			Size::Inner,
-			Size::Inner,
-			Gaps::new(10.0, 20.0, 30.0, 40.0),
-		),
+		Node::from_size_and_padding(Size::Inner, Size::Inner, Gaps::new(10.0, 20.0, 30.0, 40.0)),
 	);
 	mocked_dom.add(
 		1,
@@ -241,11 +233,7 @@ pub fn sibling_increments_area() {
 		0,
 		None,
 		vec![1, 2],
-		Node::from_size_and_direction(
-			Size::Inner,
-			Size::Inner,
-			DirectionMode::Vertical,
-		),
+		Node::from_size_and_direction(Size::Inner, Size::Inner, DirectionMode::Vertical),
 	);
 	mocked_dom.add(
 		1,

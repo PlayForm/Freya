@@ -1,8 +1,6 @@
 use dioxus::prelude::*;
 use freya_elements::elements as dioxus_elements;
-use freya_hooks::{
-	use_applied_theme, use_focus, use_platform, TileTheme, TileThemeWith,
-};
+use freya_hooks::{use_applied_theme, use_focus, use_platform, TileTheme, TileThemeWith};
 use winit::window::CursorIcon;
 
 /// Indicates the current status of the Tile.
@@ -21,18 +19,20 @@ pub enum TileStatus {
 ///
 /// # Example
 ///
-/// Tile is meant to be used with other components, take a look at [`Radio`](crate::Radio) for instance.
+/// Tile is meant to be used with other components, take a look at
+/// [`Radio`](crate::Radio) for instance.
 #[allow(non_snake_case)]
 #[component]
 pub fn Tile(
 	/// Inner children for the Tile.
-	children: Element,
-	/// Optional element to be placed before the inner children of the Tile. Such as a [`Radio`](crate::Radio)
-	leading: Option<Element>,
+	children:Element,
+	/// Optional element to be placed before the inner children of the Tile.
+	/// Such as a [`Radio`](crate::Radio)
+	leading:Option<Element>,
 	/// Event handler for when the Tile is selected, e.g when clicking on it.
-	onselect: Option<EventHandler<()>>,
+	onselect:Option<EventHandler<()>>,
 	/// Theme override.
-	theme: Option<TileThemeWith>,
+	theme:Option<TileThemeWith>,
 ) -> Element {
 	let mut focus = use_focus();
 	let mut status = use_signal(TileStatus::default);

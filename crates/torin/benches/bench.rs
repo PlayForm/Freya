@@ -9,85 +9,70 @@ struct TestingMeasurer;
 impl LayoutMeasurer<usize> for TestingMeasurer {
 	fn measure(
 		&mut self,
-		_node_id: usize,
-		_node: &Node,
-		_size: &Size2D,
+		_node_id:usize,
+		_node:&Node,
+		_size:&Size2D,
 	) -> Option<(Size2D, Arc<SendAnyMap>)> {
 		None
 	}
 
-	fn should_measure_inner_children(&mut self, _node_id: usize) -> bool {
-		true
-	}
+	fn should_measure_inner_children(&mut self, _node_id:usize) -> bool { true }
 }
 
 #[derive(Default)]
 struct TestingDOM {
-	mapper: HashMap<usize, (Option<usize>, Vec<usize>, u16, Node)>,
+	mapper:HashMap<usize, (Option<usize>, Vec<usize>, u16, Node)>,
 }
 
 impl TestingDOM {
-	fn add(
-		&mut self,
-		node_id: usize,
-		parent: Option<usize>,
-		children: Vec<usize>,
-		node: Node,
-	) {
-		let depth =
-			parent.map(|p| self.mapper.get(&p).unwrap().2).unwrap_or(0) + 1;
+	fn add(&mut self, node_id:usize, parent:Option<usize>, children:Vec<usize>, node:Node) {
+		let depth = parent.map(|p| self.mapper.get(&p).unwrap().2).unwrap_or(0) + 1;
 		self.mapper.insert(node_id, (parent, children, depth, node));
 	}
 
 	fn add_with_depth(
 		&mut self,
-		node_id: usize,
-		parent: Option<usize>,
-		children: Vec<usize>,
-		node: Node,
-		depth: u16,
+		node_id:usize,
+		parent:Option<usize>,
+		children:Vec<usize>,
+		node:Node,
+		depth:u16,
 	) {
 		self.mapper.insert(node_id, (parent, children, depth, node));
 	}
 
-	fn set_node(&mut self, node_id: usize, node: Node) {
+	fn set_node(&mut self, node_id:usize, node:Node) {
 		self.mapper.get_mut(&node_id).unwrap().3 = node;
 	}
 }
 
 impl DOMAdapter<usize> for TestingDOM {
-	fn children_of(&mut self, node_id: &usize) -> Vec<usize> {
+	fn children_of(&mut self, node_id:&usize) -> Vec<usize> {
 		self.mapper.get(node_id).map(|c| c.1.clone()).unwrap_or_default()
 	}
 
-	fn parent_of(&self, node_id: &usize) -> Option<usize> {
+	fn parent_of(&self, node_id:&usize) -> Option<usize> {
 		self.mapper.get(node_id).and_then(|c| c.0)
 	}
 
-	fn height(&self, node_id: &usize) -> Option<u16> {
-		self.mapper.get(node_id).map(|c| c.2)
-	}
+	fn height(&self, node_id:&usize) -> Option<u16> { self.mapper.get(node_id).map(|c| c.2) }
 
-	fn get_node(&self, node_id: &usize) -> Option<Node> {
+	fn get_node(&self, node_id:&usize) -> Option<Node> {
 		self.mapper.get(node_id).map(|c| c.3.clone())
 	}
 
-	fn is_node_valid(&mut self, _node_id: &usize) -> bool {
-		true
-	}
+	fn is_node_valid(&mut self, _node_id:&usize) -> bool { true }
 
-	fn root_id(&self) -> usize {
-		0
-	}
+	fn root_id(&self) -> usize { 0 }
 }
 
 struct BenchmarkConfig {
-	depth: usize,
-	wide: usize,
-	mode: BenchmarkMode,
-	sample: usize,
-	prefix: String,
-	node_generator: fn(depth: usize) -> Node,
+	depth:usize,
+	wide:usize,
+	mode:BenchmarkMode,
+	sample:usize,
+	prefix:String,
+	node_generator:fn(depth:usize) -> Node,
 }
 
 impl BenchmarkConfig {
@@ -122,7 +107,7 @@ enum BenchmarkMode {
 }
 
 impl Display for BenchmarkMode {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
 			Self::NoCache => f.write_str("not cached"),
 			Self::InvalidatedCache => f.write_str("cached"),
@@ -130,10 +115,10 @@ impl Display for BenchmarkMode {
 	}
 }
 
-fn criterion_benchmark(c: &mut Criterion) {
+fn criterion_benchmark(c:&mut Criterion) {
 	let mut g = c.benchmark_group("benchmarks");
 
-	fn simple_node_generator(_depth: usize) -> Node {
+	fn simple_node_generator(_depth:usize) -> Node {
 		Node::from_size_and_direction(
 			Size::Pixels(Length::new(100.0)),
 			Size::Pixels(Length::new(100.0)),
@@ -143,91 +128,91 @@ fn criterion_benchmark(c: &mut Criterion) {
 
 	let benchmarks = [
 		BenchmarkConfig {
-			depth: 2,
-			wide: 1000,
-			mode: BenchmarkMode::NoCache,
-			sample: 500,
-			node_generator: simple_node_generator,
-			prefix: String::default(),
+			depth:2,
+			wide:1000,
+			mode:BenchmarkMode::NoCache,
+			sample:500,
+			node_generator:simple_node_generator,
+			prefix:String::default(),
 		},
 		BenchmarkConfig {
-			depth: 2,
-			wide: 10000,
-			mode: BenchmarkMode::NoCache,
-			sample: 500,
-			node_generator: simple_node_generator,
-			prefix: String::default(),
+			depth:2,
+			wide:10000,
+			mode:BenchmarkMode::NoCache,
+			sample:500,
+			node_generator:simple_node_generator,
+			prefix:String::default(),
 		},
 		BenchmarkConfig {
-			depth: 2,
-			wide: 100000,
-			mode: BenchmarkMode::NoCache,
-			sample: 500,
-			node_generator: simple_node_generator,
-			prefix: String::default(),
+			depth:2,
+			wide:100000,
+			mode:BenchmarkMode::NoCache,
+			sample:500,
+			node_generator:simple_node_generator,
+			prefix:String::default(),
 		},
 		BenchmarkConfig {
-			depth: 12,
-			wide: 2,
-			mode: BenchmarkMode::NoCache,
-			sample: 500,
-			node_generator: simple_node_generator,
-			prefix: String::default(),
+			depth:12,
+			wide:2,
+			mode:BenchmarkMode::NoCache,
+			sample:500,
+			node_generator:simple_node_generator,
+			prefix:String::default(),
 		},
 		BenchmarkConfig {
-			depth: 14,
-			wide: 2,
-			mode: BenchmarkMode::NoCache,
-			sample: 100,
-			node_generator: simple_node_generator,
-			prefix: String::default(),
+			depth:14,
+			wide:2,
+			mode:BenchmarkMode::NoCache,
+			sample:100,
+			node_generator:simple_node_generator,
+			prefix:String::default(),
 		},
 		BenchmarkConfig {
-			depth: 17,
-			wide: 2,
-			mode: BenchmarkMode::NoCache,
-			sample: 100,
-			node_generator: simple_node_generator,
-			prefix: String::default(),
+			depth:17,
+			wide:2,
+			mode:BenchmarkMode::NoCache,
+			sample:100,
+			node_generator:simple_node_generator,
+			prefix:String::default(),
 		},
 		BenchmarkConfig {
-			depth: 5,
-			wide: 15,
-			mode: BenchmarkMode::NoCache,
-			sample: 500,
-			node_generator: simple_node_generator,
-			prefix: String::default(),
+			depth:5,
+			wide:15,
+			mode:BenchmarkMode::NoCache,
+			sample:500,
+			node_generator:simple_node_generator,
+			prefix:String::default(),
 		},
 		BenchmarkConfig {
-			depth: 5,
-			wide: 15,
-			mode: BenchmarkMode::InvalidatedCache,
-			sample: 500,
-			node_generator: simple_node_generator,
-			prefix: String::default(),
+			depth:5,
+			wide:15,
+			mode:BenchmarkMode::InvalidatedCache,
+			sample:500,
+			node_generator:simple_node_generator,
+			prefix:String::default(),
 		},
 		BenchmarkConfig {
-			depth: 7,
-			wide: 5,
-			mode: BenchmarkMode::NoCache,
-			sample: 100,
-			node_generator: simple_node_generator,
-			prefix: String::default(),
+			depth:7,
+			wide:5,
+			mode:BenchmarkMode::NoCache,
+			sample:100,
+			node_generator:simple_node_generator,
+			prefix:String::default(),
 		},
 		BenchmarkConfig {
-			depth: 7,
-			wide: 5,
-			mode: BenchmarkMode::InvalidatedCache,
-			sample: 100,
-			node_generator: simple_node_generator,
-			prefix: String::default(),
+			depth:7,
+			wide:5,
+			mode:BenchmarkMode::InvalidatedCache,
+			sample:100,
+			node_generator:simple_node_generator,
+			prefix:String::default(),
 		},
 		BenchmarkConfig {
-			depth: 8,
-			wide: 4,
-			mode: BenchmarkMode::NoCache,
-			sample: 70,
-			node_generator: |depth: usize| {
+			depth:8,
+			wide:4,
+			mode:BenchmarkMode::NoCache,
+			sample:70,
+			node_generator:|depth:usize| {
 				if depth % 2 == 0 {
 					Node::from_size_and_alignments_and_direction_and_padding(
 						Size::Pixels(Length::new(100.0)),
@@ -248,21 +233,18 @@ fn criterion_benchmark(c: &mut Criterion) {
 					)
 				}
 			},
-			prefix: "alignments=true ".to_string(),
+			prefix:"alignments=true ".to_string(),
 		},
 	];
 
 	for bench in benchmarks {
 		let name = bench.name();
-		let BenchmarkConfig {
-			depth, mode, wide, sample, node_generator, ..
-		} = bench;
+		let BenchmarkConfig { depth, mode, wide, sample, node_generator, .. } = bench;
 
 		g.significance_level(0.05).sample_size(sample);
 
 		g.bench_function(name, |b| {
-			let root_area =
-				Rect::new(Point2D::new(0.0, 0.0), Size2D::new(1000.0, 1000.0));
+			let root_area = Rect::new(Point2D::new(0.0, 0.0), Size2D::new(1000.0, 1000.0));
 			b.iter_batched(
 				|| {
 					let mut measurer = Some(TestingMeasurer);
@@ -280,15 +262,15 @@ fn criterion_benchmark(c: &mut Criterion) {
 					);
 
 					fn build_branch(
-						mocked_dom: &mut TestingDOM,
-						node_generator: fn(depth: usize) -> Node,
-						root: usize,
-						level: usize,
+						mocked_dom:&mut TestingDOM,
+						node_generator:fn(depth:usize) -> Node,
+						root:usize,
+						level:usize,
 
-						depth: usize,
-						wide: usize,
+						depth:usize,
+						wide:usize,
 
-						mid_node: &mut usize,
+						mid_node:&mut usize,
 					) -> Vec<usize> {
 						if level == depth - 1 {
 							return vec![];
@@ -337,12 +319,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 
 					if mode == BenchmarkMode::InvalidatedCache {
 						layout.find_best_root(&mut mocked_dom);
-						layout.measure(
-							0,
-							root_area,
-							&mut measurer,
-							&mut mocked_dom,
-						);
+						layout.measure(0, root_area, &mut measurer, &mut mocked_dom);
 						mocked_dom.set_node(
 							invalidate_node,
 							Node::from_size_and_direction(

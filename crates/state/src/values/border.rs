@@ -13,10 +13,10 @@ pub enum BorderStyle {
 
 #[derive(Default, Clone, Debug, PartialEq)]
 pub struct Border {
-	pub fill: Fill,
-	pub style: BorderStyle,
-	pub width: f32,
-	pub alignment: BorderAlignment,
+	pub fill:Fill,
+	pub style:BorderStyle,
+	pub width:f32,
+	pub alignment:BorderAlignment,
 }
 
 #[derive(Default, Clone, Copy, Debug, PartialEq)]
@@ -28,7 +28,7 @@ pub enum BorderAlignment {
 }
 
 impl Parse for BorderAlignment {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		Ok(match value {
 			"inner" => BorderAlignment::Inner,
 			"outer" => BorderAlignment::Outer,
@@ -39,7 +39,7 @@ impl Parse for BorderAlignment {
 }
 
 impl fmt::Display for BorderAlignment {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
 		f.write_str(match self {
 			BorderAlignment::Inner => "inner",
 			BorderAlignment::Outer => "outer",
@@ -49,7 +49,7 @@ impl fmt::Display for BorderAlignment {
 }
 
 impl fmt::Display for BorderStyle {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
 		f.write_str(match self {
 			BorderStyle::Solid => "solid",
 			BorderStyle::None => "none",
@@ -58,7 +58,7 @@ impl fmt::Display for BorderStyle {
 }
 
 impl Parse for Border {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		if value == "none" {
 			return Ok(Self::default());
 		}
@@ -66,24 +66,18 @@ impl Parse for Border {
 		let mut border_values = value.split_ascii_whitespace();
 
 		Ok(Border {
-			width: border_values
-				.next()
-				.ok_or(ParseError)?
-				.parse::<f32>()
-				.map_err(|_| ParseError)?,
-			style: match border_values.next().ok_or(ParseError)? {
+			width:border_values.next().ok_or(ParseError)?.parse::<f32>().map_err(|_| ParseError)?,
+			style:match border_values.next().ok_or(ParseError)? {
 				"solid" => BorderStyle::Solid,
 				_ => BorderStyle::None,
 			},
-			fill: Fill::parse(&border_values.collect::<Vec<&str>>().join(" "))
+			fill:Fill::parse(&border_values.collect::<Vec<&str>>().join(" "))
 				.map_err(|_| ParseError)?,
-			alignment: BorderAlignment::default(),
+			alignment:BorderAlignment::default(),
 		})
 	}
 }
 
 impl Scaled for Border {
-	fn scale(&mut self, scale_factor: f32) {
-		self.width *= scale_factor;
-	}
+	fn scale(&mut self, scale_factor:f32) { self.width *= scale_factor; }
 }

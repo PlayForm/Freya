@@ -6,10 +6,10 @@ use winit::window::{CursorIcon, Window};
 use crate::prelude::PlatformEvent;
 
 pub struct TextGroupMeasurement {
-	pub text_id: Uuid,
-	pub cursor_id: usize,
-	pub cursor_position: Option<CursorPoint>,
-	pub cursor_selection: Option<(CursorPoint, CursorPoint)>,
+	pub text_id:Uuid,
+	pub cursor_id:usize,
+	pub cursor_position:Option<CursorPoint>,
+	pub cursor_selection:Option<(CursorPoint, CursorPoint)>,
 }
 
 /// Custom EventLoop messages
@@ -43,7 +43,5 @@ pub enum EventMessage {
 }
 
 impl From<accesskit_winit::Event> for EventMessage {
-	fn from(value: accesskit_winit::Event) -> Self {
-		Self::Accessibility(value.window_event)
-	}
+	fn from(value:accesskit_winit::Event) -> Self { Self::Accessibility(value.window_event) }
 }

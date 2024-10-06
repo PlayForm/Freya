@@ -1,14 +1,9 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 use rand::Rng;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	let mut elements = use_signal(Vec::new);

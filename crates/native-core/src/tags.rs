@@ -12,9 +12,7 @@ pub enum TagName {
 }
 
 impl TagName {
-	pub fn has_intrinsic_layout(&self) -> bool {
-		*self != Self::Text
-	}
+	pub fn has_intrinsic_layout(&self) -> bool { *self != Self::Text }
 
 	pub fn has_children_with_intrinsic_layout(&self) -> bool {
 		*self != Self::Paragraph && *self != Self::Label
@@ -28,7 +26,7 @@ impl TagName {
 impl FromStr for TagName {
 	type Err = ();
 
-	fn from_str(txt: &str) -> Result<Self, Self::Err> {
+	fn from_str(txt:&str) -> Result<Self, Self::Err> {
 		match txt {
 			"rect" => Ok(TagName::Rect),
 			"paragraph" => Ok(TagName::Paragraph),
@@ -42,7 +40,7 @@ impl FromStr for TagName {
 }
 
 impl Display for TagName {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
 			TagName::Root => f.write_str("root"),
 			TagName::Rect => f.write_str("rect"),

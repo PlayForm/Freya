@@ -1,16 +1,14 @@
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 #[allow(non_snake_case)]
 fn StatefulSwitch() -> Element {
 	let mut enabled = use_signal(|| false);
 
 	rsx!(Switch {
-		enabled: *enabled.read(),
-		ontoggled: move |_| {
+		enabled:*enabled.read(),
+		ontoggled:move |_| {
 			enabled.toggle();
 		}
 	})

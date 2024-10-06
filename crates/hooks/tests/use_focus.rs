@@ -37,10 +37,7 @@ pub async fn track_focus() {
 
 	let mut utils = launch_test_with_config(
 		use_focus_app,
-		TestingConfig {
-			size: (100.0, 100.0).into(),
-			..TestingConfig::default()
-		},
+		TestingConfig { size:(100.0, 100.0).into(), ..TestingConfig::default() },
 	);
 
 	// Initial state
@@ -51,9 +48,9 @@ pub async fn track_focus() {
 
 	// Click on the first rect
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (5.0, 5.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(5.0, 5.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	// First rect is now focused
@@ -63,9 +60,9 @@ pub async fn track_focus() {
 
 	// Click on the second rect
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (5.0, 75.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(5.0, 75.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	// Second rect is now focused
@@ -129,10 +126,7 @@ pub async fn block_focus() {
 
 	let mut utils = launch_test_with_config(
 		use_focus_app,
-		TestingConfig {
-			size: (100.0, 100.0).into(),
-			..TestingConfig::default()
-		},
+		TestingConfig { size:(100.0, 100.0).into(), ..TestingConfig::default() },
 	);
 
 	// Initial state
@@ -143,9 +137,9 @@ pub async fn block_focus() {
 
 	// Click on the first rect
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (5.0, 5.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(5.0, 5.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	// First rect is now focused
@@ -155,10 +149,10 @@ pub async fn block_focus() {
 
 	// Navigate to the second rect
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Tab,
-		code: Code::Tab,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		key:Key::Tab,
+		code:Code::Tab,
+		modifiers:Modifiers::default(),
 	});
 
 	// Second rect is now focused
@@ -169,10 +163,10 @@ pub async fn block_focus() {
 
 	// Try to navigate to the first rect again
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Tab,
-		code: Code::Tab,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		key:Key::Tab,
+		code:Code::Tab,
+		modifiers:Modifiers::default(),
 	});
 
 	// Second rect is still focused

@@ -1,7 +1,4 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use std::{
 	ffi::CString,
@@ -13,11 +10,9 @@ use freya::prelude::*;
 use freya_testing::prelude::CanvasRunnerContext;
 use gl::types::*;
 use skia_safe::Image;
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
-fn compile_shader(src: &str, ty: GLenum) -> GLuint {
+fn compile_shader(src:&str, ty:GLenum) -> GLuint {
 	let shader;
 	unsafe {
 		shader = gl::CreateShader(ty);
@@ -35,7 +30,7 @@ fn compile_shader(src: &str, ty: GLenum) -> GLuint {
 	shader
 }
 
-fn link_program(vs: GLuint, fs: GLuint) -> GLuint {
+fn link_program(vs:GLuint, fs:GLuint) -> GLuint {
 	let program;
 	unsafe {
 		program = gl::CreateProgram();
@@ -53,7 +48,7 @@ fn link_program(vs: GLuint, fs: GLuint) -> GLuint {
 	program
 }
 
-const VERTEX_SHADER_SOURCE: &str = r#"
+const VERTEX_SHADER_SOURCE:&str = r#"
 #version 330 core
 
 layout (location = 0) in vec3 aPos;
@@ -64,7 +59,7 @@ void main() {
 }
 "#;
 
-const FRAGMENT_SHADER_SOURCE: &str = r#"
+const FRAGMENT_SHADER_SOURCE:&str = r#"
 #version 330 core
 out vec4 FragColor;
 
@@ -77,42 +72,43 @@ void main() {
 }
 "#;
 
-/// Stores saved opengl state to safely mess with native rendering and restore it back.
+/// Stores saved opengl state to safely mess with native rendering and restore
+/// it back.
 struct GLStateGuard {
-	old_framebuffer: i32,
-	old_texture: i32,
-	old_vao: i32,
-	old_buffer: i32,
-	old_unpack_alignment: i32,
-	old_unpack_row_length: i32,
-	old_unpack_skip_pixels: i32,
-	old_unpack_skip_rows: i32,
-	old_viewport: [i32; 4],
-	old_scissor_box: [i32; 4],
-	old_program: i32,
-	old_blend: bool,
-	old_blend_src_rgb: i32,
-	old_blend_dst_rgb: i32,
-	old_blend_src_alpha: i32,
-	old_blend_dst_alpha: i32,
-	old_depth_test: bool,
-	old_stencil_test: bool,
-	old_stencil_func: i32,
-	old_stencil_ref: i32,
-	old_stencil_value_mask: i32,
-	old_stencil_fail: i32,
-	old_stencil_pass_depth_fail: i32,
-	old_stencil_pass_depth_pass: i32,
-	old_stencil_writemask: i32,
-	old_cull_face: bool,
-	old_cull_face_mode: i32,
-	old_polygon_mode: [i32; 2],
+	old_framebuffer:i32,
+	old_texture:i32,
+	old_vao:i32,
+	old_buffer:i32,
+	old_unpack_alignment:i32,
+	old_unpack_row_length:i32,
+	old_unpack_skip_pixels:i32,
+	old_unpack_skip_rows:i32,
+	old_viewport:[i32; 4],
+	old_scissor_box:[i32; 4],
+	old_program:i32,
+	old_blend:bool,
+	old_blend_src_rgb:i32,
+	old_blend_dst_rgb:i32,
+	old_blend_src_alpha:i32,
+	old_blend_dst_alpha:i32,
+	old_depth_test:bool,
+	old_stencil_test:bool,
+	old_stencil_func:i32,
+	old_stencil_ref:i32,
+	old_stencil_value_mask:i32,
+	old_stencil_fail:i32,
+	old_stencil_pass_depth_fail:i32,
+	old_stencil_pass_depth_pass:i32,
+	old_stencil_writemask:i32,
+	old_cull_face:bool,
+	old_cull_face_mode:i32,
+	old_polygon_mode:[i32; 2],
 }
 
 impl GLStateGuard {
 	/// Capture current opengl context and save it for further restoring.
-	/// It definitely captures more than required for this example, so you can adjust it to your
-	/// needs.
+	/// It definitely captures more than required for this example, so you can
+	/// adjust it to your needs.
 	fn new() -> GLStateGuard {
 		unsafe {
 			// Save framebuffer binding
@@ -137,10 +133,7 @@ impl GLStateGuard {
 			let mut old_unpack_row_length = 0;
 			gl::GetIntegerv(gl::UNPACK_ROW_LENGTH, &mut old_unpack_row_length);
 			let mut old_unpack_skip_pixels = 0;
-			gl::GetIntegerv(
-				gl::UNPACK_SKIP_PIXELS,
-				&mut old_unpack_skip_pixels,
-			);
+			gl::GetIntegerv(gl::UNPACK_SKIP_PIXELS, &mut old_unpack_skip_pixels);
 			let mut old_unpack_skip_rows = 0;
 			gl::GetIntegerv(gl::UNPACK_SKIP_ROWS, &mut old_unpack_skip_rows);
 
@@ -175,22 +168,13 @@ impl GLStateGuard {
 			let mut old_stencil_ref = 0;
 			gl::GetIntegerv(gl::STENCIL_REF, &mut old_stencil_ref);
 			let mut old_stencil_value_mask = 0;
-			gl::GetIntegerv(
-				gl::STENCIL_VALUE_MASK,
-				&mut old_stencil_value_mask,
-			);
+			gl::GetIntegerv(gl::STENCIL_VALUE_MASK, &mut old_stencil_value_mask);
 			let mut old_stencil_fail = 0;
 			gl::GetIntegerv(gl::STENCIL_FAIL, &mut old_stencil_fail);
 			let mut old_stencil_pass_depth_fail = 0;
-			gl::GetIntegerv(
-				gl::STENCIL_PASS_DEPTH_FAIL,
-				&mut old_stencil_pass_depth_fail,
-			);
+			gl::GetIntegerv(gl::STENCIL_PASS_DEPTH_FAIL, &mut old_stencil_pass_depth_fail);
 			let mut old_stencil_pass_depth_pass = 0;
-			gl::GetIntegerv(
-				gl::STENCIL_PASS_DEPTH_PASS,
-				&mut old_stencil_pass_depth_pass,
-			);
+			gl::GetIntegerv(gl::STENCIL_PASS_DEPTH_PASS, &mut old_stencil_pass_depth_pass);
 			let mut old_stencil_writemask = 0;
 			gl::GetIntegerv(gl::STENCIL_WRITEMASK, &mut old_stencil_writemask);
 
@@ -253,10 +237,7 @@ impl Drop for GLStateGuard {
 			// Restore pixel store parameters
 			gl::PixelStorei(gl::UNPACK_ALIGNMENT, self.old_unpack_alignment);
 			gl::PixelStorei(gl::UNPACK_ROW_LENGTH, self.old_unpack_row_length);
-			gl::PixelStorei(
-				gl::UNPACK_SKIP_PIXELS,
-				self.old_unpack_skip_pixels,
-			);
+			gl::PixelStorei(gl::UNPACK_SKIP_PIXELS, self.old_unpack_skip_pixels);
 			gl::PixelStorei(gl::UNPACK_SKIP_ROWS, self.old_unpack_skip_rows);
 
 			// Restore viewport and scissor box
@@ -323,24 +304,21 @@ impl Drop for GLStateGuard {
 			gl::CullFace(self.old_cull_face_mode as u32);
 
 			// Restore polygon mode
-			gl::PolygonMode(
-				gl::FRONT_AND_BACK,
-				self.old_polygon_mode[0] as u32,
-			);
+			gl::PolygonMode(gl::FRONT_AND_BACK, self.old_polygon_mode[0] as u32);
 		}
 	}
 }
 
 struct TriangleRenderer {
-	fbo: GLuint,
-	program: GLuint,
-	texture: GLuint,
-	texture_image: Option<Image>,
-	vao: GLuint,
-	vbo: GLuint,
-	width: i32,
-	height: i32,
-	color_location: GLint,
+	fbo:GLuint,
+	program:GLuint,
+	texture:GLuint,
+	texture_image:Option<Image>,
+	vao:GLuint,
+	vbo:GLuint,
+	width:i32,
+	height:i32,
+	color_location:GLint,
 }
 
 impl Drop for TriangleRenderer {
@@ -359,18 +337,19 @@ impl Drop for TriangleRenderer {
 impl TriangleRenderer {
 	fn new() -> TriangleRenderer {
 		TriangleRenderer {
-			fbo: 0,
-			program: 0,
-			texture: 0,
-			texture_image: None,
-			vao: 0,
-			vbo: 0,
-			width: 0,
-			height: 0,
-			color_location: 0,
+			fbo:0,
+			program:0,
+			texture:0,
+			texture_image:None,
+			vao:0,
+			vbo:0,
+			width:0,
+			height:0,
+			color_location:0,
 		}
 	}
-	fn allocate_texture(&mut self, ctx: &mut CanvasRunnerContext) {
+
+	fn allocate_texture(&mut self, ctx:&mut CanvasRunnerContext) {
 		let current_width = ctx.area.width().round() as i32;
 		let current_height = ctx.area.height().round() as i32;
 		let mut create_image = false;
@@ -389,23 +368,14 @@ impl TriangleRenderer {
 					gl::UNSIGNED_BYTE,
 					ptr::null(),
 				);
-				gl::TexParameteri(
-					gl::TEXTURE_2D,
-					gl::TEXTURE_MIN_FILTER,
-					gl::LINEAR as GLint,
-				);
-				gl::TexParameteri(
-					gl::TEXTURE_2D,
-					gl::TEXTURE_MAG_FILTER,
-					gl::LINEAR as GLint,
-				);
+				gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as GLint);
+				gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as GLint);
 				self.width = current_width;
 				self.height = current_height;
 				create_image = true;
 			} else {
 				// resize texture before rendering if required
-				if self.width != current_width || self.height != current_height
-				{
+				if self.width != current_width || self.height != current_height {
 					gl::BindTexture(gl::TEXTURE_2D, self.texture);
 					gl::TexImage2D(
 						gl::TEXTURE_2D,
@@ -429,10 +399,10 @@ impl TriangleRenderer {
 					(self.width, self.height),
 					skia_safe::gpu::Mipmapped::No,
 					skia_safe::gpu::gl::TextureInfo {
-						target: gl::TEXTURE_2D,
-						format: gl::RGBA8,
-						protected: skia_safe::gpu::Protected::No,
-						id: self.texture,
+						target:gl::TEXTURE_2D,
+						format:gl::RGBA8,
+						protected:skia_safe::gpu::Protected::No,
+						id:self.texture,
 					},
 					"rtt",
 				);
@@ -449,15 +419,12 @@ impl TriangleRenderer {
 			}
 		}
 	}
-	fn render(
-		&mut self,
-		color: (f64, f64, f64),
-		ctx: &mut CanvasRunnerContext,
-	) {
+
+	fn render(&mut self, color:(f64, f64, f64), ctx:&mut CanvasRunnerContext) {
 		unsafe {
 			if self.fbo == 0 {
 				// create framebuffer and texture
-				let mut framebuffer: GLuint = 0;
+				let mut framebuffer:GLuint = 0;
 				gl::GenFramebuffers(1, &mut framebuffer);
 				gl::BindFramebuffer(gl::FRAMEBUFFER, framebuffer);
 				self.allocate_texture(ctx);
@@ -469,9 +436,7 @@ impl TriangleRenderer {
 					0,
 				);
 
-				if gl::CheckFramebufferStatus(gl::FRAMEBUFFER)
-					!= gl::FRAMEBUFFER_COMPLETE
-				{
+				if gl::CheckFramebufferStatus(gl::FRAMEBUFFER) != gl::FRAMEBUFFER_COMPLETE {
 					panic!("Framebuffer is not complete!");
 				}
 
@@ -480,28 +445,25 @@ impl TriangleRenderer {
 				self.fbo = framebuffer;
 
 				// create shader program
-				let vertex_shader =
-					compile_shader(VERTEX_SHADER_SOURCE, gl::VERTEX_SHADER);
-				let fragment_shader =
-					compile_shader(FRAGMENT_SHADER_SOURCE, gl::FRAGMENT_SHADER);
+				let vertex_shader = compile_shader(VERTEX_SHADER_SOURCE, gl::VERTEX_SHADER);
+				let fragment_shader = compile_shader(FRAGMENT_SHADER_SOURCE, gl::FRAGMENT_SHADER);
 				let program = link_program(vertex_shader, fragment_shader);
 
 				gl::DeleteShader(vertex_shader);
 				gl::DeleteShader(fragment_shader);
 				let color_loc_name = CString::new("u_color").unwrap();
-				self.color_location =
-					gl::GetUniformLocation(program, color_loc_name.as_ptr());
+				self.color_location = gl::GetUniformLocation(program, color_loc_name.as_ptr());
 				self.program = program;
 
 				// create buffers
-				let vertices: [f32; 9] = [
+				let vertices:[f32; 9] = [
 					-0.5, -0.5, 0.0, // Bottom-left
 					0.5, -0.5, 0.0, // Bottom-right
 					0.0, 0.5, 0.0, // Top
 				];
 
-				let mut vao: GLuint = 0;
-				let mut vbo: GLuint = 0;
+				let mut vao:GLuint = 0;
+				let mut vbo:GLuint = 0;
 
 				gl::GenVertexArrays(1, &mut vao);
 				gl::GenBuffers(1, &mut vbo);
@@ -511,8 +473,7 @@ impl TriangleRenderer {
 				gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
 				gl::BufferData(
 					gl::ARRAY_BUFFER,
-					(vertices.len() * std::mem::size_of::<GLfloat>())
-						as GLsizeiptr,
+					(vertices.len() * std::mem::size_of::<GLfloat>()) as GLsizeiptr,
 					vertices.as_ptr() as *const _,
 					gl::STATIC_DRAW,
 				);
@@ -557,11 +518,10 @@ impl TriangleRenderer {
 
 fn app() -> Element {
 	let mut r = use_signal(|| 100.0);
-	let mut g: Signal<f64> = use_signal(|| 0.0);
+	let mut g:Signal<f64> = use_signal(|| 0.0);
 	let mut b = use_signal(|| 0.0);
 
-	let triangle_renderer =
-		use_hook(|| Arc::new(Mutex::new(TriangleRenderer::new())));
+	let triangle_renderer = use_hook(|| Arc::new(Mutex::new(TriangleRenderer::new())));
 
 	let canvas = use_canvas(move || {
 		let color = (*r.read(), *g.read(), *b.read());

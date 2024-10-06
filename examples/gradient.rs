@@ -1,13 +1,8 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 enum GradientExample {
 	Linear,
@@ -19,16 +14,16 @@ fn app() -> Element {
 	let mut gradient = use_signal(|| GradientExample::Linear);
 
 	let background = match *gradient.read() {
-        GradientExample::Linear => {
-            "linear-gradient(250deg, orange 15%, rgb(255, 0, 0) 50%, rgb(255, 192, 203) 80%)"
-        }
-        GradientExample::Radial => {
-            "radial-gradient(orange 15%, rgb(255, 0, 0) 50%, rgb(255, 192, 203) 80%)"
-        }
-        GradientExample::Conic => {
-            "conic-gradient(250deg, orange 15%, rgb(255, 0, 0) 50%, rgb(255, 192, 203) 80%)"
-        }
-    };
+		GradientExample::Linear => {
+			"linear-gradient(250deg, orange 15%, rgb(255, 0, 0) 50%, rgb(255, 192, 203) 80%)"
+		},
+		GradientExample::Radial => {
+			"radial-gradient(orange 15%, rgb(255, 0, 0) 50%, rgb(255, 192, 203) 80%)"
+		},
+		GradientExample::Conic => {
+			"conic-gradient(250deg, orange 15%, rgb(255, 0, 0) 50%, rgb(255, 192, 203) 80%)"
+		},
+	};
 
 	rsx!(rect {
 		height: "100%",

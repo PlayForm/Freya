@@ -1,31 +1,25 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	let mut positions = use_signal(|| (0.0f64, 0.0f64));
 	let mut clicking = use_signal::<Option<CursorPoint>>(|| None);
 
-	let onglobalmouseover = move |e: MouseEvent| {
+	let onglobalmouseover = move |e:MouseEvent| {
 		if let Some(clicked) = *clicking.read() {
 			let coordinates = e.get_screen_coordinates();
-			positions
-				.set((coordinates.x - clicked.x, coordinates.y - clicked.y));
+			positions.set((coordinates.x - clicked.x, coordinates.y - clicked.y));
 		}
 	};
 
-	let onmousedown = move |e: MouseEvent| {
+	let onmousedown = move |e:MouseEvent| {
 		clicking.set(Some(e.get_element_coordinates()));
 	};
 
-	let onglobalclick = move |_: MouseEvent| {
+	let onglobalclick = move |_:MouseEvent| {
 		clicking.set(None);
 	};
 

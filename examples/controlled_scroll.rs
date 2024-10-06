@@ -1,28 +1,20 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch_with_props(app, "Controlled Example", (600.0, 600.0));
-}
+fn main() { launch_with_props(app, "Controlled Example", (600.0, 600.0)); }
 
 fn app() -> Element {
-	let mut scroll_controller = use_scroll_controller(|| ScrollConfig {
-		default_vertical_position: ScrollPosition::End,
-		..Default::default()
+	let mut scroll_controller = use_scroll_controller(|| {
+		ScrollConfig { default_vertical_position:ScrollPosition::End, ..Default::default() }
 	});
 
 	let scroll_to_top = move |_| {
-		scroll_controller
-			.scroll_to(ScrollPosition::Start, ScrollDirection::Vertical);
+		scroll_controller.scroll_to(ScrollPosition::Start, ScrollDirection::Vertical);
 	};
 
 	let scroll_to_bottom = move |_| {
-		scroll_controller
-			.scroll_to(ScrollPosition::End, ScrollDirection::Vertical);
+		scroll_controller.scroll_to(ScrollPosition::End, ScrollDirection::Vertical);
 	};
 
 	rsx!(

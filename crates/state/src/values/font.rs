@@ -3,7 +3,7 @@ use freya_engine::prelude::*;
 use crate::{Parse, ParseError};
 
 impl Parse for TextAlign {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		Ok(match value {
 			"center" => TextAlign::Center,
 			"justify" => TextAlign::Justify,
@@ -17,7 +17,7 @@ impl Parse for TextAlign {
 }
 
 impl Parse for Slant {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		Ok(match value {
 			"upright" => Slant::Upright,
 			"italic" => Slant::Italic,
@@ -28,7 +28,7 @@ impl Parse for Slant {
 }
 
 impl Parse for Width {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		Ok(match value {
 			"ultra-condensed" => Width::ULTRA_CONDENSED,
 			"extra-condensed" => Width::EXTRA_CONDENSED,
@@ -47,10 +47,11 @@ impl Parse for Width {
 impl Parse for Weight {
 	// NOTES:
 	// This is mostly taken from the OpenType specification (https://learn.microsoft.com/en-us/typography/opentype/spec/os2#usweightclass)
-	// CSS has one deviation from this spec, which uses the value "950" for extra_black.
-	// skia_safe also has an "invisible" weight smaller than the thin weight, which could fall under CSS's interpretation of OpenType's
+	// CSS has one deviation from this spec, which uses the value "950" for
+	// extra_black. skia_safe also has an "invisible" weight smaller than the
+	// thin weight, which could fall under CSS's interpretation of OpenType's
 	// version. In this case it would be font_weight: "50".
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		Ok(match value {
 			"invisible" => Weight::INVISIBLE,
 			"thin" => Weight::THIN,
@@ -106,7 +107,7 @@ impl TextOverflow {
 }
 
 impl Parse for TextOverflow {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		Ok(match value {
 			"ellipsis" => TextOverflow::Ellipsis,
 			"clip" => TextOverflow::Clip,

@@ -3,9 +3,7 @@ use freya_elements::{
 	elements as dioxus_elements,
 	events::{KeyboardEvent, PointerEvent, PointerType},
 };
-use freya_hooks::{
-	use_applied_theme, use_focus, use_platform, ButtonTheme, ButtonThemeWith,
-};
+use freya_hooks::{use_applied_theme, use_focus, use_platform, ButtonTheme, ButtonThemeWith};
 use winit::{
 	event::{MouseButton, TouchPhase},
 	window::CursorIcon,
@@ -29,13 +27,14 @@ impl PressEvent {
 #[derive(Props, Clone, PartialEq)]
 pub struct ButtonProps {
 	/// Theme override.
-	pub theme: Option<ButtonThemeWith>,
+	pub theme:Option<ButtonThemeWith>,
 	/// Inner children for the Button.
-	pub children: Element,
+	pub children:Element,
 	/// Event handler for when the button is pressed.
-	pub onpress: Option<EventHandler<PressEvent>>,
-	/// Event handler for when the button is clicked. Not recommended, use `onpress` instead.
-	pub onclick: Option<EventHandler<()>>,
+	pub onpress:Option<EventHandler<PressEvent>>,
+	/// Event handler for when the button is clicked. Not recommended, use
+	/// `onpress` instead.
+	pub onclick:Option<EventHandler<()>>,
 }
 
 /// Identifies the current status of the Button.
@@ -69,9 +68,7 @@ pub enum ButtonStatus {
 /// }
 /// ```
 #[allow(non_snake_case)]
-pub fn Button(
-	ButtonProps { onpress, children, theme, onclick }: ButtonProps,
-) -> Element {
+pub fn Button(ButtonProps { onpress, children, theme, onclick }:ButtonProps) -> Element {
 	let mut focus = use_focus();
 	let mut status = use_signal(ButtonStatus::default);
 	let platform = use_platform();
@@ -94,26 +91,20 @@ pub fn Button(
 
 	let onpointerup = {
 		to_owned![onpress, onclick];
-		move |ev: PointerEvent| {
+		move |ev:PointerEvent| {
 			focus.focus();
 			if let Some(onpress) = &onpress {
 				let is_valid = match ev.data.pointer_type {
-					PointerType::Mouse {
-						trigger_button: Some(MouseButton::Left),
-					} => true,
-					PointerType::Touch { phase, .. } => {
-						phase == TouchPhase::Ended
-					},
+					PointerType::Mouse { trigger_button: Some(MouseButton::Left) } => true,
+					PointerType::Touch { phase, .. } => phase == TouchPhase::Ended,
 					_ => false,
 				};
 				if is_valid {
 					onpress.call(PressEvent::Pointer(ev))
 				}
 			} else if let Some(onclick) = onclick {
-				if let PointerType::Mouse {
-					trigger_button: Some(MouseButton::Left),
-					..
-				} = ev.data.pointer_type
+				if let PointerType::Mouse { trigger_button: Some(MouseButton::Left), .. } =
+					ev.data.pointer_type
 				{
 					onclick.call(())
 				}
@@ -137,7 +128,7 @@ pub fn Button(
 		status.set(ButtonStatus::default());
 	};
 
-	let onkeydown = move |ev: KeyboardEvent| {
+	let onkeydown = move |ev:KeyboardEvent| {
 		if focus.validate_keydown(&ev) {
 			if let Some(onpress) = &onpress {
 				onpress.call(PressEvent::Key(ev))
@@ -211,9 +202,9 @@ mod test {
 		assert_eq!(label.get(0).text(), Some("false"));
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 15.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 15.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
@@ -221,11 +212,11 @@ mod test {
 		assert_eq!(label.get(0).text(), Some("true"));
 
 		utils.push_event(PlatformEvent::Touch {
-			name: EventName::TouchEnd,
-			location: (15.0, 15.0).into(),
-			finger_id: 1,
-			phase: TouchPhase::Ended,
-			force: None,
+			name:EventName::TouchEnd,
+			location:(15.0, 15.0).into(),
+			finger_id:1,
+			phase:TouchPhase::Ended,
+			force:None,
 		});
 
 		utils.wait_for_update().await;

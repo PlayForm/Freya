@@ -203,11 +203,7 @@ pub fn node_removal() {
 		1,
 		Some(0),
 		vec![2, 3],
-		Node::from_size_and_direction(
-			Size::Inner,
-			Size::Inner,
-			DirectionMode::Vertical,
-		),
+		Node::from_size_and_direction(Size::Inner, Size::Inner, DirectionMode::Vertical),
 	);
 	mocked_dom.add(
 		2,

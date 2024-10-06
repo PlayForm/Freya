@@ -12,19 +12,17 @@ use crate::{CanvasReference, CustomAttributeValues, ImageReference};
 
 #[derive(Default, PartialEq, Clone, Debug, Component)]
 pub struct ReferencesState {
-	pub image_ref: Option<ImageReference>,
-	pub canvas_ref: Option<CanvasReference>,
+	pub image_ref:Option<ImageReference>,
+	pub canvas_ref:Option<CanvasReference>,
 }
 
 #[partial_derive_state]
 impl State<CustomAttributeValues> for ReferencesState {
+	type ChildDependencies = ();
+	type NodeDependencies = ();
 	type ParentDependencies = ();
 
-	type ChildDependencies = ();
-
-	type NodeDependencies = ();
-
-	const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new()
+	const NODE_MASK:NodeMaskBuilder<'static> = NodeMaskBuilder::new()
 		.with_attrs(AttributeMaskBuilder::Some(&[
 			AttributeName::ImageReference,
 			AttributeName::CanvasReference,
@@ -33,15 +31,11 @@ impl State<CustomAttributeValues> for ReferencesState {
 
 	fn update<'a>(
 		&mut self,
-		node_view: NodeView<CustomAttributeValues>,
-		_node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-		_parent: Option<
-			<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		_children: Vec<
-			<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		_context: &SendAnyMap,
+		node_view:NodeView<CustomAttributeValues>,
+		_node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+		_parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+		_children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+		_context:&SendAnyMap,
 	) -> bool {
 		let mut references = ReferencesState::default();
 
@@ -49,17 +43,17 @@ impl State<CustomAttributeValues> for ReferencesState {
 			for attr in attributes {
 				match attr.attribute {
 					AttributeName::ImageReference => {
-						if let OwnedAttributeValue::Custom(
-							CustomAttributeValues::ImageReference(reference),
-						) = attr.value
+						if let OwnedAttributeValue::Custom(CustomAttributeValues::ImageReference(
+							reference,
+						)) = attr.value
 						{
 							references.image_ref = Some(reference.clone());
 						}
 					},
 					AttributeName::CanvasReference => {
-						if let OwnedAttributeValue::Custom(
-							CustomAttributeValues::Canvas(new_canvas),
-						) = attr.value
+						if let OwnedAttributeValue::Custom(CustomAttributeValues::Canvas(
+							new_canvas,
+						)) = attr.value
 						{
 							references.canvas_ref = Some(new_canvas.clone());
 						}

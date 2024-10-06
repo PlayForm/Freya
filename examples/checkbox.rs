@@ -1,15 +1,10 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use std::collections::HashSet;
 
 use freya::prelude::*;
 
-fn main() {
-	launch_with_title(app, "Checkbox");
-}
+fn main() { launch_with_title(app, "Checkbox"); }
 
 #[derive(PartialEq, Eq, Hash)]
 enum Choice {

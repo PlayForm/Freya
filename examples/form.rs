@@ -1,13 +1,8 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch_with_props(app, "Form", (300.0, 250.0));
-}
+fn main() { launch_with_props(app, "Form", (300.0, 250.0)); }
 
 #[derive(Hash, PartialEq, Eq, Clone, Debug)]
 enum FormEntry {
@@ -16,7 +11,7 @@ enum FormEntry {
 }
 
 impl std::fmt::Display for FormEntry {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
 			Self::Description => f.write_str("Description"),
 			Self::Name => f.write_str("Name"),

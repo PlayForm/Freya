@@ -1,18 +1,11 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use dioxus_router::prelude::{Outlet, Routable, Router};
 use freya::prelude::*;
 
-fn main() {
-	launch_with_props(app, "Animated Tabs Router", (650.0, 500.0));
-}
+fn main() { launch_with_props(app, "Animated Tabs Router", (650.0, 500.0)); }
 
-fn app() -> Element {
-	rsx!(Router::<Route> {})
-}
+fn app() -> Element { rsx!(Router::<Route> {}) }
 
 #[derive(Routable, Clone, PartialEq)]
 #[rustfmt::skip]
@@ -30,21 +23,13 @@ pub enum Route {
 }
 
 #[component]
-fn FromRouteToCurrent(from: Element, left_to_right: bool) -> Element {
+fn FromRouteToCurrent(from:Element, left_to_right:bool) -> Element {
 	let mut animated_router = use_animated_router::<Route>();
 	let (reference, node_size) = use_node();
-	let animations = use_animation_with_dependencies(
-		&left_to_right,
-		move |ctx, left_to_right| {
-			let (start, end) = if left_to_right { (1., 0.) } else { (0., 1.) };
-			ctx.with(
-				AnimNum::new(start, end)
-					.time(400)
-					.ease(Ease::Out)
-					.function(Function::Expo),
-			)
-		},
-	);
+	let animations = use_animation_with_dependencies(&left_to_right, move |ctx, left_to_right| {
+		let (start, end) = if left_to_right { (1., 0.) } else { (0., 1.) };
+		ctx.with(AnimNum::new(start, end).time(400).ease(Ease::Out).function(Function::Expo))
+	});
 
 	// Only render the destination route once the animation has finished
 	use_memo(move || {
@@ -79,7 +64,7 @@ fn FromRouteToCurrent(from: Element, left_to_right: bool) -> Element {
 }
 
 #[component]
-fn Expand(children: Element) -> Element {
+fn Expand(children:Element) -> Element {
 	rsx!(
 		rect {
 			height: "100%",
@@ -92,28 +77,16 @@ fn Expand(children: Element) -> Element {
 }
 
 #[component]
-fn AnimatedOutlet(children: Element) -> Element {
+fn AnimatedOutlet(children:Element) -> Element {
 	let animated_router = use_context::<Signal<AnimatedRouterContext<Route>>>();
 
 	let from_route = match animated_router() {
-		AnimatedRouterContext::FromTo(Route::Home, Route::Wow) => {
-			Some((rsx!(Home {}), true))
-		},
-		AnimatedRouterContext::FromTo(Route::Home, Route::Crab) => {
-			Some((rsx!(Home {}), true))
-		},
-		AnimatedRouterContext::FromTo(Route::Wow, Route::Home) => {
-			Some((rsx!(Wow {}), false))
-		},
-		AnimatedRouterContext::FromTo(Route::Wow, Route::Crab) => {
-			Some((rsx!(Wow {}), true))
-		},
-		AnimatedRouterContext::FromTo(Route::Crab, Route::Home) => {
-			Some((rsx!(Crab {}), false))
-		},
-		AnimatedRouterContext::FromTo(Route::Crab, Route::Wow) => {
-			Some((rsx!(Crab {}), false))
-		},
+		AnimatedRouterContext::FromTo(Route::Home, Route::Wow) => Some((rsx!(Home {}), true)),
+		AnimatedRouterContext::FromTo(Route::Home, Route::Crab) => Some((rsx!(Home {}), true)),
+		AnimatedRouterContext::FromTo(Route::Wow, Route::Home) => Some((rsx!(Wow {}), false)),
+		AnimatedRouterContext::FromTo(Route::Wow, Route::Crab) => Some((rsx!(Wow {}), true)),
+		AnimatedRouterContext::FromTo(Route::Crab, Route::Home) => Some((rsx!(Crab {}), false)),
+		AnimatedRouterContext::FromTo(Route::Crab, Route::Wow) => Some((rsx!(Crab {}), false)),
 		_ => None,
 	};
 
@@ -166,16 +139,16 @@ fn AppSidebar() -> Element {
 }
 
 #[derive(Props, PartialEq, Clone)]
-struct BottomTabProps<R: Routable + PartialEq> {
-	children: Element,
-	route: R,
+struct BottomTabProps<R:Routable + PartialEq> {
+	children:Element,
+	route:R,
 	#[props(default = false)]
-	exact: bool,
+	exact:bool,
 }
 
 #[allow(non_snake_case)]
-fn BottomTab<R: Routable + PartialEq>(
-	BottomTabProps { exact, children, route }: BottomTabProps<R>,
+fn BottomTab<R:Routable + PartialEq>(
+	BottomTabProps { exact, children, route }:BottomTabProps<R>,
 ) -> Element {
 	rsx!(
 		Link {

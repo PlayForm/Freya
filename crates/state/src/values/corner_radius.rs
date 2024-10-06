@@ -7,27 +7,27 @@ use crate::{Parse, ParseError};
 
 #[derive(PartialEq, Clone, Debug, Default, Copy)]
 pub struct CornerRadius {
-	pub top_left: f32,
-	pub top_right: f32,
-	pub bottom_left: f32,
-	pub bottom_right: f32,
-	pub smoothing: f32,
+	pub top_left:f32,
+	pub top_right:f32,
+	pub bottom_left:f32,
+	pub bottom_right:f32,
+	pub smoothing:f32,
 }
 
 // https://www.figma.com/blog/desperately-seeking-squircles/
 fn compute_smooth_corner(
-	corner_radius: f32,
-	smoothing: f32,
-	width: f32,
-	height: f32,
+	corner_radius:f32,
+	smoothing:f32,
+	width:f32,
+	height:f32,
 ) -> (f32, f32, f32, f32, f32, f32, f32) {
 	let max_p = f32::min(width, height) / 2.0;
 	let corner_radius = f32::min(corner_radius, max_p);
 
 	let p = f32::min((1.0 + smoothing) * corner_radius, max_p);
 
-	let angle_alpha: f32;
-	let angle_beta: f32;
+	let angle_alpha:f32;
+	let angle_beta:f32;
 
 	if corner_radius <= max_p / 2.0 {
 		angle_alpha = 45.0 * smoothing;
@@ -52,23 +52,23 @@ fn compute_smooth_corner(
 }
 
 impl CornerRadius {
-	pub fn fill_top(&mut self, value: f32) {
+	pub fn fill_top(&mut self, value:f32) {
 		self.top_left = value;
 		self.top_right = value;
 	}
 
-	pub fn fill_bottom(&mut self, value: f32) {
+	pub fn fill_bottom(&mut self, value:f32) {
 		self.bottom_left = value;
 		self.bottom_right = value;
 	}
 
-	pub fn fill_all(&mut self, value: f32) {
+	pub fn fill_all(&mut self, value:f32) {
 		self.fill_bottom(value);
 		self.fill_top(value);
 	}
 
 	// https://github.com/aloisdeniel/figma_squircle/blob/main/lib/src/path_smooth_corners.dart
-	pub fn smoothed_path(&self, rect: RRect) -> Path {
+	pub fn smoothed_path(&self, rect:RRect) -> Path {
 		let mut path = Path::new();
 
 		let width = rect.width();
@@ -85,18 +85,8 @@ impl CornerRadius {
 					(width - (p - a - b), 0.0),
 					(width - (p - a - b - c), d),
 				)
-				.r_arc_to_rotated(
-					(radius, radius),
-					0.0,
-					ArcSize::Small,
-					PathDirection::CW,
-					(l, l),
-				)
-				.cubic_to(
-					(width, p - a - b),
-					(width, p - a),
-					(width, f32::min(height / 2.0, p)),
-				);
+				.r_arc_to_rotated((radius, radius), 0.0, ArcSize::Small, PathDirection::CW, (l, l))
+				.cubic_to((width, p - a - b), (width, p - a), (width, f32::min(height / 2.0, p)));
 		} else {
 			path.move_to((width / 2.0, 0.0))
 				.line_to((width, 0.0))
@@ -105,12 +95,8 @@ impl CornerRadius {
 
 		let bottom_right = rect.radii(Corner::LowerRight).x;
 		if bottom_right > 0.0 {
-			let (a, b, c, d, l, p, radius) = compute_smooth_corner(
-				bottom_right,
-				self.smoothing,
-				width,
-				height,
-			);
+			let (a, b, c, d, l, p, radius) =
+				compute_smooth_corner(bottom_right, self.smoothing, width, height);
 
 			path.line_to((width, f32::max(height / 2.0, height - p)))
 				.cubic_to(
@@ -118,13 +104,7 @@ impl CornerRadius {
 					(width, height - (p - a - b)),
 					(width - d, height - (p - a - b - c)),
 				)
-				.r_arc_to_rotated(
-					(radius, radius),
-					0.0,
-					ArcSize::Small,
-					PathDirection::CW,
-					(-l, l),
-				)
+				.r_arc_to_rotated((radius, radius), 0.0, ArcSize::Small, PathDirection::CW, (-l, l))
 				.cubic_to(
 					(width - (p - a - b), height),
 					(width - (p - a), height),
@@ -136,19 +116,11 @@ impl CornerRadius {
 
 		let bottom_left = rect.radii(Corner::LowerLeft).x;
 		if bottom_left > 0.0 {
-			let (a, b, c, d, l, p, radius) = compute_smooth_corner(
-				bottom_left,
-				self.smoothing,
-				width,
-				height,
-			);
+			let (a, b, c, d, l, p, radius) =
+				compute_smooth_corner(bottom_left, self.smoothing, width, height);
 
 			path.line_to((f32::min(width / 2.0, p), height))
-				.cubic_to(
-					(p - a, height),
-					(p - a - b, height),
-					(p - a - b - c, height - d),
-				)
+				.cubic_to((p - a, height), (p - a - b, height), (p - a - b - c, height - d))
 				.r_arc_to_rotated(
 					(radius, radius),
 					0.0,
@@ -172,18 +144,8 @@ impl CornerRadius {
 
 			path.line_to((0.0, f32::min(height / 2.0, p)))
 				.cubic_to((0.0, p - a), (0.0, p - a - b), (d, p - a - b - c))
-				.r_arc_to_rotated(
-					(radius, radius),
-					0.0,
-					ArcSize::Small,
-					PathDirection::CW,
-					(l, -l),
-				)
-				.cubic_to(
-					(p - a - b, 0.0),
-					(p - a, 0.0),
-					(f32::min(width / 2.0, p), 0.0),
-				);
+				.r_arc_to_rotated((radius, radius), 0.0, ArcSize::Small, PathDirection::CW, (l, -l))
+				.cubic_to((p - a - b, 0.0), (p - a, 0.0), (f32::min(width / 2.0, p), 0.0));
 		} else {
 			path.line_to((0.0, 0.0));
 		}
@@ -201,7 +163,7 @@ impl CornerRadius {
 }
 
 impl Parse for CornerRadius {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		let mut radius = CornerRadius::default();
 		let mut values = value.split_ascii_whitespace();
 
@@ -209,52 +171,40 @@ impl Parse for CornerRadius {
 			// Same in all corners
 			1 => {
 				radius.fill_all(
-					values
-						.next()
-						.ok_or(ParseError)?
-						.parse::<f32>()
-						.map_err(|_| ParseError)?,
+					values.next().ok_or(ParseError)?.parse::<f32>().map_err(|_| ParseError)?,
 				);
 			},
 			// By Top and Bottom
 			2 => {
 				// Top
 				radius.fill_top(
-					values
-						.next()
-						.ok_or(ParseError)?
-						.parse::<f32>()
-						.map_err(|_| ParseError)?,
+					values.next().ok_or(ParseError)?.parse::<f32>().map_err(|_| ParseError)?,
 				);
 
 				// Bottom
 				radius.fill_bottom(
-					values
-						.next()
-						.ok_or(ParseError)?
-						.parse::<f32>()
-						.map_err(|_| ParseError)?,
+					values.next().ok_or(ParseError)?.parse::<f32>().map_err(|_| ParseError)?,
 				)
 			},
 			// Each corner
 			4 => {
 				radius = CornerRadius {
-					top_left: values
+					top_left:values
 						.next()
 						.ok_or(ParseError)?
 						.parse::<f32>()
 						.map_err(|_| ParseError)?,
-					top_right: values
+					top_right:values
 						.next()
 						.ok_or(ParseError)?
 						.parse::<f32>()
 						.map_err(|_| ParseError)?,
-					bottom_left: values
+					bottom_left:values
 						.next()
 						.ok_or(ParseError)?
 						.parse::<f32>()
 						.map_err(|_| ParseError)?,
-					bottom_right: values
+					bottom_right:values
 						.next()
 						.ok_or(ParseError)?
 						.parse::<f32>()
@@ -270,7 +220,7 @@ impl Parse for CornerRadius {
 }
 
 impl fmt::Display for CornerRadius {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
 		write!(
 			f,
 			"{} {} {} {}",
@@ -280,7 +230,7 @@ impl fmt::Display for CornerRadius {
 }
 
 impl Scaled for CornerRadius {
-	fn scale(&mut self, scale: f32) {
+	fn scale(&mut self, scale:f32) {
 		self.top_left *= scale;
 		self.top_right *= scale;
 		self.bottom_left *= scale;

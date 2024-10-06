@@ -5,7 +5,7 @@ use freya_node_state::{Border, Fill, Shadow};
 
 #[allow(non_snake_case)]
 #[component]
-pub fn Property(name: String, value: String) -> Element {
+pub fn Property(name:String, value:String) -> Element {
 	rsx!(
 		rect {
 			overflow: "clip",
@@ -37,7 +37,7 @@ pub fn Property(name: String, value: String) -> Element {
 
 #[allow(non_snake_case)]
 #[component]
-pub fn GradientProperty(name: String, fill: Fill) -> Element {
+pub fn GradientProperty(name:String, fill:Fill) -> Element {
 	rsx!(
 		rect {
 			padding: "5 10",
@@ -65,7 +65,7 @@ pub fn GradientProperty(name: String, fill: Fill) -> Element {
 
 #[allow(non_snake_case)]
 #[component]
-pub fn ColorProperty(name: String, fill: Fill) -> Element {
+pub fn ColorProperty(name:String, fill:Fill) -> Element {
 	rsx!(
 		rect {
 			overflow: "clip",
@@ -113,7 +113,7 @@ pub fn ColorProperty(name: String, fill: Fill) -> Element {
 
 #[allow(non_snake_case)]
 #[component]
-pub fn ShadowProperty(name: String, shadow: Shadow) -> Element {
+pub fn ShadowProperty(name:String, shadow:Shadow) -> Element {
 	rsx!(
 		rect {
 			overflow: "clip",
@@ -169,7 +169,7 @@ pub fn ShadowProperty(name: String, shadow: Shadow) -> Element {
 
 #[allow(non_snake_case)]
 #[component]
-pub fn BorderProperty(name: String, border: Border) -> Element {
+pub fn BorderProperty(name:String, border:Border) -> Element {
 	rsx!(
 		rect {
 			overflow: "clip",
@@ -224,7 +224,7 @@ pub fn BorderProperty(name: String, border: Border) -> Element {
 
 #[allow(non_snake_case)]
 #[component]
-pub fn TextShadowProperty(name: String, text_shadow: TextShadow) -> Element {
+pub fn TextShadowProperty(name:String, text_shadow:TextShadow) -> Element {
 	let color = text_shadow.color.to_rgb();
 	rsx!(
 		rect {

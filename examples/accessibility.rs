@@ -1,16 +1,11 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use std::str::FromStr;
 
 use freya::prelude::*;
 use reqwest::Url;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	let mut focus_a = use_focus();
@@ -18,10 +13,8 @@ fn app() -> Element {
 	let mut focus_c = use_focus();
 	let mut focus_d = use_focus();
 
-	let url = Url::from_str(
-		"https://www.rustacean.net/assets/rustacean-orig-noshadow.png",
-	)
-	.unwrap();
+	let url =
+		Url::from_str("https://www.rustacean.net/assets/rustacean-orig-noshadow.png").unwrap();
 
 	rsx!(
 		rect {

@@ -100,8 +100,8 @@ pub fn same_height_different_parent() {
 		&mut mocked_dom,
 	);
 
-	// 5 get 7 get invalidated, which will force Torin to find a root candidate that
-	// is ascendant of both Nodes, in this case, Node 1
+	// 5 get 7 get invalidated, which will force Torin to find a root candidate
+	// that is ascendant of both Nodes, in this case, Node 1
 	//       0
 	//      (1)
 	//      / \
@@ -217,8 +217,8 @@ pub fn same_height_same_parent() {
 		&mut mocked_dom,
 	);
 
-	// 6 and 7 get invalidated, which will force Torin to find a root candidate that
-	// is ascendant of both Nodes, in this case, Node 3
+	// 6 and 7 get invalidated, which will force Torin to find a root candidate
+	// that is ascendant of both Nodes, in this case, Node 3
 	//       0
 	//       1
 	//      / \

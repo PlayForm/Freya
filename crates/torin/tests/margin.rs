@@ -46,10 +46,7 @@ pub fn margin() {
 
 	let layout_node = layout.get(1).unwrap();
 
-	assert_eq!(
-		layout_node.area,
-		Rect::new(Point2D::new(0.0, 0.0), Size2D::new(210.0, 210.0)),
-	);
+	assert_eq!(layout_node.area, Rect::new(Point2D::new(0.0, 0.0), Size2D::new(210.0, 210.0)),);
 
 	assert_eq!(
 		layout_node.visible_area(),

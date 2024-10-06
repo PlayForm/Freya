@@ -1,7 +1,10 @@
 use freya_engine::prelude::*;
 use freya_native_core::{
-	node::NodeType, prelude::ElementNode, real_dom::NodeImmutable,
-	tags::TagName, NodeId,
+	node::NodeType,
+	prelude::ElementNode,
+	real_dom::NodeImmutable,
+	tags::TagName,
+	NodeId,
 };
 use freya_node_state::{StyleState, TransformState, ViewportState};
 use torin::prelude::{Area, LayoutNode, Torin};
@@ -14,25 +17,25 @@ use crate::{
 };
 
 pub struct SkiaRenderer<'a> {
-	pub canvas_area: Area,
-	pub canvas: &'a Canvas,
-	pub font_collection: &'a mut FontCollection,
-	pub font_manager: &'a FontMgr,
-	pub matrices: Vec<(Matrix, Vec<NodeId>)>,
-	pub opacities: Vec<(f32, Vec<NodeId>)>,
-	pub default_fonts: &'a [String],
-	pub scale_factor: f32,
+	pub canvas_area:Area,
+	pub canvas:&'a Canvas,
+	pub font_collection:&'a mut FontCollection,
+	pub font_manager:&'a FontMgr,
+	pub matrices:Vec<(Matrix, Vec<NodeId>)>,
+	pub opacities:Vec<(f32, Vec<NodeId>)>,
+	pub default_fonts:&'a [String],
+	pub scale_factor:f32,
 }
 
 impl SkiaRenderer<'_> {
 	/// Render a node into the Skia canvas
 	pub fn render(
 		&mut self,
-		rdom: &DioxusDOM,
-		layout_node: &LayoutNode,
-		node_ref: &DioxusNode,
-		render_wireframe: bool,
-		layout: &Torin<NodeId>,
+		rdom:&DioxusDOM,
+		layout_node:&LayoutNode,
+		node_ref:&DioxusNode,
+		render_wireframe:bool,
+		layout:&Torin<NodeId>,
 	) {
 		let area = layout_node.visible_area();
 		let node_type = &*node_ref.node_type();
@@ -52,8 +55,8 @@ impl SkiaRenderer<'_> {
 				matrix.set_rotate(
 					rotate_degs,
 					Some(Point {
-						x: area.min_x() + area.width() / 2.0,
-						y: area.min_y() + area.height() / 2.0,
+						x:area.min_x() + area.width() / 2.0,
+						y:area.min_y() + area.height() / 2.0,
 					}),
 				);
 
@@ -94,34 +97,21 @@ impl SkiaRenderer<'_> {
 			// Clip all elements with their corresponding viewports
 			let node_viewports = node_ref.get::<ViewportState>().unwrap();
 			// Only clip the element iself when it's paragraph because
-			// it will render the inner text spans on it's own, so if these spans overflow the paragraph,
-			// It is the paragraph job to make sure they are clipped
-			if !node_viewports.viewports.is_empty()
-				&& *tag == TagName::Paragraph
-			{
-				element_utils.clip(
-					layout_node,
-					node_ref,
-					self.canvas,
-					self.scale_factor,
-				);
+			// it will render the inner text spans on it's own, so if these
+			// spans overflow the paragraph, It is the paragraph job to make
+			// sure they are clipped
+			if !node_viewports.viewports.is_empty() && *tag == TagName::Paragraph {
+				element_utils.clip(layout_node, node_ref, self.canvas, self.scale_factor);
 			}
 
 			for node_id in &node_viewports.viewports {
 				let node_ref = rdom.get(*node_id).unwrap();
 				let node_type = node_ref.node_type();
-				let Some(element_utils) =
-					node_type.tag().and_then(|tag| tag.utils())
-				else {
+				let Some(element_utils) = node_type.tag().and_then(|tag| tag.utils()) else {
 					continue;
 				};
 				let layout_node = layout.get(*node_id).unwrap();
-				element_utils.clip(
-					layout_node,
-					&node_ref,
-					self.canvas,
-					self.scale_factor,
-				);
+				element_utils.clip(layout_node, &node_ref, self.canvas, self.scale_factor);
 			}
 
 			element_utils.render(

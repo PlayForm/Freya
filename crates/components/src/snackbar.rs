@@ -1,7 +1,12 @@
 use dioxus::prelude::*;
 use freya_elements::elements as dioxus_elements;
 use freya_hooks::{
-	use_animation, use_applied_theme, AnimNum, Ease, Function, SnackBarTheme,
+	use_animation,
+	use_applied_theme,
+	AnimNum,
+	Ease,
+	Function,
+	SnackBarTheme,
 	SnackBarThemeWith,
 };
 
@@ -39,19 +44,14 @@ use freya_hooks::{
 #[component]
 pub fn SnackBar(
 	/// Inner children of the SnackBar.
-	children: Element,
+	children:Element,
 	/// Signal to show the snackbar or not.
-	show: Signal<bool>,
+	show:Signal<bool>,
 	/// Theme override.
-	theme: Option<SnackBarThemeWith>,
+	theme:Option<SnackBarThemeWith>,
 ) -> Element {
 	let animation = use_animation(|ctx| {
-		ctx.with(
-			AnimNum::new(50., 0.)
-				.time(200)
-				.ease(Ease::Out)
-				.function(Function::Expo),
-		)
+		ctx.with(AnimNum::new(50., 0.).time(200).ease(Ease::Out).function(Function::Expo))
 	});
 
 	use_effect(move || {
@@ -83,12 +83,8 @@ pub fn SnackBar(
 #[doc(hidden)]
 #[allow(non_snake_case)]
 #[component]
-pub fn SnackBarBox(
-	children: Element,
-	theme: Option<SnackBarThemeWith>,
-) -> Element {
-	let SnackBarTheme { background, color } =
-		use_applied_theme!(&theme, snackbar);
+pub fn SnackBarBox(children:Element, theme:Option<SnackBarThemeWith>) -> Element {
+	let SnackBarTheme { background, color } = use_applied_theme!(&theme, snackbar);
 
 	rsx!(
 		rect {
@@ -146,9 +142,9 @@ mod test {
 
 		// Open the snackbar by clicking at the button
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 15.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 15.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		// Wait a bit for the snackbar to show up

@@ -8,18 +8,18 @@ use crate::hooks::use_node_info;
 #[allow(non_snake_case)]
 #[component]
 pub fn NodeElement(
-	node_id: NodeId,
-	is_selected: bool,
-	is_open: Option<bool>,
-	onselected: EventHandler<()>,
-	onarrow: EventHandler<()>,
+	node_id:NodeId,
+	is_selected:bool,
+	is_open:Option<bool>,
+	onselected:EventHandler<()>,
+	onarrow:EventHandler<()>,
 ) -> Element {
 	let mut status = use_signal(ButtonStatus::default);
 	let node = use_node_info(node_id)?;
 
 	let onmousedown = move |_| onselected.call(());
 
-	let onarrowmousedown = move |e: MouseEvent| {
+	let onarrowmousedown = move |e:MouseEvent| {
 		if is_open.is_some() {
 			onarrow.call(());
 			e.stop_propagation();

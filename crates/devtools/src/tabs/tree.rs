@@ -7,22 +7,20 @@ use freya_components::*;
 use freya_hooks::{theme_with, ScrollViewThemeWith};
 use freya_native_core::NodeId;
 
-use crate::{
-	node::NodeElement, state::DevtoolsChannel, NodeIdSerializer, Route,
-};
+use crate::{node::NodeElement, state::DevtoolsChannel, NodeIdSerializer, Route};
 
 #[derive(Clone, PartialEq)]
 struct NodeTreeItem {
-	is_open: Option<bool>,
-	node_id: NodeId,
+	is_open:Option<bool>,
+	node_id:NodeId,
 }
 
 #[allow(non_snake_case)]
 #[component]
 pub fn NodesTree(
-	height: String,
-	selected_node_id: Option<NodeId>,
-	onselected: EventHandler<NodeId>,
+	height:String,
+	selected_node_id:Option<NodeId>,
+	onselected:EventHandler<NodeId>,
 ) -> Element {
 	let navigator = use_navigator();
 	let mut radio = use_radio(DevtoolsChannel::UpdatedDOM);
@@ -37,17 +35,14 @@ pub fn NodesTree(
 			.filter_map(|(i, node)| {
 				let parent_is_open = node
 					.parent_id
-					.map(|id| {
-						allowed_nodes.contains(&id)
-							&& radio.devtools_tree.contains(&id)
-					})
+					.map(|id| allowed_nodes.contains(&id) && radio.devtools_tree.contains(&id))
 					.unwrap_or(true);
 				let is_root = i == 0;
 				if parent_is_open || is_root {
 					allowed_nodes.insert(node.id);
-					let is_open = (node.children_len != 0)
-						.then_some(radio.devtools_tree.contains(&node.id));
-					Some(NodeTreeItem { is_open, node_id: node.id })
+					let is_open =
+						(node.children_len != 0).then_some(radio.devtools_tree.contains(&node.id));
+					Some(NodeTreeItem { is_open, node_id:node.id })
 				} else {
 					None
 				}
@@ -56,19 +51,15 @@ pub fn NodesTree(
 	};
 
 	rsx!(VirtualScrollView {
-		show_scrollbar: true,
-		length: items.len(),
-		item_size: 27.0,
-		theme: theme_with!(ScrollViewTheme {
-			height: height.to_string().into(),
-			padding: "15".into(),
+		show_scrollbar:true,
+		length:items.len(),
+		item_size:27.0,
+		theme:theme_with!(ScrollViewTheme {
+			height:height.to_string().into(),
+			padding:"15".into(),
 		}),
-		builder_args: (selected_node_id, items),
-		builder: move |i,
-		               options: &Option<(
-			Option<NodeId>,
-			Vec<NodeTreeItem>
-		)>| {
+		builder_args:(selected_node_id, items),
+		builder:move |i, options:&Option<(Option<NodeId>, Vec<NodeTreeItem>)>| {
 			let (selected_node_id, items) = options.as_ref().unwrap();
 			let item = &items[i];
 			let node_id = item.node_id;

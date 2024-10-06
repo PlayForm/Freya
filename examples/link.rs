@@ -1,14 +1,9 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use dioxus_router::prelude::{Outlet, Routable, Router};
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	rsx! {

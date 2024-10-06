@@ -1,14 +1,16 @@
 //! # Testing
 //!
-//! `freya-testing` is a headless renderer for freya components, which means you can simulate a graphical environment
-//! with no need to actually draw anything, a perfect fit for testing.
+//! `freya-testing` is a headless renderer for freya components, which means you
+//! can simulate a graphical environment with no need to actually draw anything,
+//! a perfect fit for testing.
 //!
 //! You can use the `launch_test` function to run the tests of the component.
 //! It returns a set of utilities to interact with the component.
 //!
 //! ## Stateless example
 //!
-//! Simply asserts that the component renders a label with the text `"Hello World!"`.
+//! Simply asserts that the component renders a label with the text `"Hello
+//! World!"`.
 //!
 //! ```rust, no_run
 //! #[tokio::test]
@@ -33,10 +35,12 @@
 //!
 //! ## Stateful example
 //!
-//! If the component has logic that might execute asynchronously, you need to wait for the component
-//! to update using the `wait_for_update` function before asserting the result.
+//! If the component has logic that might execute asynchronously, you need to
+//! wait for the component to update using the `wait_for_update` function before
+//! asserting the result.
 //!
-//! Here, the component has a state that is `false` by default, but once mounted, it updates the state to `true`.
+//! Here, the component has a state that is `false` by default, but once
+//! mounted, it updates the state to `true`.
 //!
 //! ```rust, no_run
 //! #[tokio::test]
@@ -71,7 +75,8 @@
 //!
 //! ## Events example
 //!
-//! You can simulate events on the component, for example, simulate a click event on a `rect` and assert that the state was updated.
+//! You can simulate events on the component, for example, simulate a click
+//! event on a `rect` and assert that the state was updated.
 //!
 //! ```rust, no_run
 //! #[tokio::test]
@@ -122,7 +127,8 @@
 //!
 //! ## Configuration example
 //!
-//! The `launch_test` comes with a default configuration, but you can pass your own config with the `launch_test_with_config` function.
+//! The `launch_test` comes with a default configuration, but you can pass your
+//! own config with the `launch_test_with_config` function.
 //!
 //! Here is an example of how to can set our custom window size:
 //!
@@ -159,13 +165,11 @@ pub mod test_handler;
 pub mod test_node;
 pub mod test_utils;
 
-const SCALE_FACTOR: f64 = 1.0;
+const SCALE_FACTOR:f64 = 1.0;
 
 pub mod prelude {
 	pub use freya_core::prelude::*;
 	pub use freya_node_state::*;
 
-	pub use crate::{
-		config::*, launch::*, test_handler::*, test_node::*, test_utils::*,
-	};
+	pub use crate::{config::*, launch::*, test_handler::*, test_node::*, test_utils::*};
 }

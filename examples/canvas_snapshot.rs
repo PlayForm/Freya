@@ -1,7 +1,4 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 use freya_testing::prelude::*;
@@ -37,9 +34,9 @@ async fn main() {
 
 	// Emit click event
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (100., 100.).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(100., 100.).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 

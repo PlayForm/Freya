@@ -10,7 +10,7 @@ pub type DevtoolsReceiver = watch::Receiver<Vec<NodeInfo>>;
 
 #[derive(Clone)]
 pub struct Devtools {
-	sender: watch::Sender<Vec<NodeInfo>>,
+	sender:watch::Sender<Vec<NodeInfo>>,
 }
 
 impl Devtools {
@@ -20,7 +20,7 @@ impl Devtools {
 		(Self { sender }, receiver)
 	}
 
-	pub fn update(&self, fdom: &FreyaDOM) {
+	pub fn update(&self, fdom:&FreyaDOM) {
 		let rdom = fdom.rdom();
 		let layout = fdom.layout();
 
@@ -44,17 +44,17 @@ impl Devtools {
 				if has_layout {
 					let node_type = node.node_type();
 					new_nodes.push(NodeInfo {
-						id: node.id(),
-						parent_id: node.parent_id(),
-						children_len: node
+						id:node.id(),
+						parent_id:node.parent_id(),
+						children_len:node
 							.children()
 							.iter()
 							.filter(|node| layout.get(node.id()).is_some())
 							.count(),
-						tag: *node_type.tag().unwrap(),
-						height: node.height(),
-						state: get_node_state(&node),
-						layout_node: layout.get(node.id()).unwrap().clone(),
+						tag:*node_type.tag().unwrap(),
+						height:node.height(),
+						state:get_node_state(&node),
+						layout_node:layout.get(node.id()).unwrap().clone(),
 					});
 				}
 			}
@@ -66,11 +66,11 @@ impl Devtools {
 
 #[derive(Clone, PartialEq)]
 pub struct NodeInfo {
-	pub id: NodeId,
-	pub parent_id: Option<NodeId>,
-	pub children_len: usize,
-	pub tag: TagName,
-	pub height: u16,
-	pub state: NodeState,
-	pub layout_node: LayoutNode,
+	pub id:NodeId,
+	pub parent_id:Option<NodeId>,
+	pub children_len:usize,
+	pub tag:TagName,
+	pub height:u16,
+	pub state:NodeState,
+	pub layout_node:LayoutNode,
 }

@@ -5,11 +5,11 @@ fn parse_basic_corner_radius() {
 	assert_eq!(
 		CornerRadius::parse("3"),
 		Ok(CornerRadius {
-			top_left: 3.0,
-			top_right: 3.0,
-			bottom_left: 3.0,
-			bottom_right: 3.0,
-			smoothing: 0.0
+			top_left:3.0,
+			top_right:3.0,
+			bottom_left:3.0,
+			bottom_right:3.0,
+			smoothing:0.0
 		})
 	);
 }
@@ -18,11 +18,11 @@ fn parse_two_value_radius() {
 	assert_eq!(
 		CornerRadius::parse("2 4"),
 		Ok(CornerRadius {
-			top_left: 2.0,
-			top_right: 2.0,
-			bottom_left: 4.0,
-			bottom_right: 4.0,
-			smoothing: 0.0,
+			top_left:2.0,
+			top_right:2.0,
+			bottom_left:4.0,
+			bottom_right:4.0,
+			smoothing:0.0,
 		})
 	);
 }
@@ -32,11 +32,11 @@ fn parse_four_value_radius() {
 	assert_eq!(
 		CornerRadius::parse("2 4 3 1"),
 		Ok(CornerRadius {
-			top_left: 2.0,
-			top_right: 4.0,
-			bottom_left: 3.0,
-			bottom_right: 1.0,
-			smoothing: 0.0,
+			top_left:2.0,
+			top_right:4.0,
+			bottom_left:3.0,
+			bottom_right:1.0,
+			smoothing:0.0,
 		})
 	);
 }

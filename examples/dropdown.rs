@@ -1,21 +1,12 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	let values = use_hook(|| {
-		vec![
-			"First Option".to_string(),
-			"Second Option".to_string(),
-			"Rust".to_string(),
-		]
+		vec!["First Option".to_string(), "Second Option".to_string(), "Rust".to_string()]
 	});
 	let mut selected_dropdown = use_signal(|| "First Option".to_string());
 

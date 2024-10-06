@@ -18,8 +18,7 @@ pub async fn filedrop_events() {
 
 		let msg = path.read().clone().unwrap_or("Default".to_string());
 
-		let background =
-			if *status.read() == Status::Hovering { "red" } else { "blue" };
+		let background = if *status.read() == Status::Hovering { "red" } else { "blue" };
 
 		rsx!(
 			rect {
@@ -47,9 +46,9 @@ pub async fn filedrop_events() {
 	assert_eq!(root.get(0).style().background, Fill::Color(Color::BLUE));
 
 	utils.push_event(PlatformEvent::File {
-		name: EventName::GlobalFileHover,
-		cursor: (5., 5.).into(),
-		file_path: None,
+		name:EventName::GlobalFileHover,
+		cursor:(5., 5.).into(),
+		file_path:None,
 	});
 
 	utils.wait_for_update().await;
@@ -57,9 +56,9 @@ pub async fn filedrop_events() {
 	assert_eq!(root.get(0).style().background, Fill::Color(Color::RED));
 
 	utils.push_event(PlatformEvent::File {
-		name: EventName::FileDrop,
-		cursor: (5., 5.).into(),
-		file_path: Some(PathBuf::from_str("/nice/path/right.rs").unwrap()),
+		name:EventName::FileDrop,
+		cursor:(5., 5.).into(),
+		file_path:Some(PathBuf::from_str("/nice/path/right.rs").unwrap()),
 	});
 
 	utils.wait_for_update().await;

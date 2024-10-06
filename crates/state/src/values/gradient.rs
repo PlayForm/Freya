@@ -7,12 +7,12 @@ use crate::{DisplayColor, ExtSplit, Parse, ParseError};
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct GradientStop {
-	pub color: Color,
-	pub offset: f32,
+	pub color:Color,
+	pub offset:f32,
 }
 
 impl Parse for GradientStop {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		let mut split = value.split_ascii_whitespace_excluding_group('(', ')');
 		let color_str = split.next().ok_or(ParseError)?;
 
@@ -21,21 +21,15 @@ impl Parse for GradientStop {
 			return Err(ParseError);
 		}
 
-		let offset = offset_str
-			.replacen('%', "", 1)
-			.parse::<f32>()
-			.map_err(|_| ParseError)?
-			/ 100.0;
+		let offset =
+			offset_str.replacen('%', "", 1).parse::<f32>().map_err(|_| ParseError)? / 100.0;
 
-		Ok(GradientStop {
-			color: Color::parse(color_str).map_err(|_| ParseError)?,
-			offset,
-		})
+		Ok(GradientStop { color:Color::parse(color_str).map_err(|_| ParseError)?, offset })
 	}
 }
 
 impl fmt::Display for GradientStop {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
 		_ = self.color.fmt_rgb(f);
 		write!(f, " {}%", self.offset * 100.0)
 	}
@@ -43,26 +37,21 @@ impl fmt::Display for GradientStop {
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct LinearGradient {
-	pub stops: Vec<GradientStop>,
-	pub angle: f32,
+	pub stops:Vec<GradientStop>,
+	pub angle:f32,
 }
 
 impl LinearGradient {
-	pub fn into_shader(&self, bounds: Rect<f32, Measure>) -> Option<Shader> {
-		let colors: Vec<Color> =
-			self.stops.iter().map(|stop| stop.color).collect();
-		let offsets: Vec<f32> =
-			self.stops.iter().map(|stop| stop.offset).collect();
+	pub fn into_shader(&self, bounds:Rect<f32, Measure>) -> Option<Shader> {
+		let colors:Vec<Color> = self.stops.iter().map(|stop| stop.color).collect();
+		let offsets:Vec<f32> = self.stops.iter().map(|stop| stop.offset).collect();
 
 		let center = bounds.center();
 
 		let matrix = Matrix::rotate_deg_pivot(self.angle, (center.x, center.y));
 
 		Shader::linear_gradient(
-			(
-				(bounds.min_x(), bounds.min_y()),
-				(bounds.max_x(), bounds.max_y()),
-			),
+			((bounds.min_x(), bounds.min_y()), (bounds.max_x(), bounds.max_y())),
 			GradientShaderColors::Colors(&colors[..]),
 			Some(&offsets[..]),
 			TileMode::Clamp,
@@ -73,7 +62,7 @@ impl LinearGradient {
 }
 
 impl Parse for LinearGradient {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		if !value.starts_with("linear-gradient(") || !value.ends_with(')') {
 			return Err(ParseError);
 		}
@@ -87,9 +76,7 @@ impl Parse for LinearGradient {
 		let angle_or_first_stop = split.next().ok_or(ParseError)?.trim();
 
 		if angle_or_first_stop.ends_with("deg") {
-			if let Ok(angle) =
-				angle_or_first_stop.replacen("deg", "", 1).parse::<f32>()
-			{
+			if let Ok(angle) = angle_or_first_stop.replacen("deg", "", 1).parse::<f32>() {
 				gradient.angle = angle;
 			}
 		} else {
@@ -105,31 +92,25 @@ impl Parse for LinearGradient {
 }
 
 impl fmt::Display for LinearGradient {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
 		write!(
 			f,
 			"linear-gradient({}deg, {})",
 			self.angle,
-			self.stops
-				.iter()
-				.map(|stop| stop.to_string())
-				.collect::<Vec<_>>()
-				.join(", ")
+			self.stops.iter().map(|stop| stop.to_string()).collect::<Vec<_>>().join(", ")
 		)
 	}
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct RadialGradient {
-	pub stops: Vec<GradientStop>,
+	pub stops:Vec<GradientStop>,
 }
 
 impl RadialGradient {
-	pub fn into_shader(&self, bounds: Rect<f32, Measure>) -> Option<Shader> {
-		let colors: Vec<Color> =
-			self.stops.iter().map(|stop| stop.color).collect();
-		let offsets: Vec<f32> =
-			self.stops.iter().map(|stop| stop.offset).collect();
+	pub fn into_shader(&self, bounds:Rect<f32, Measure>) -> Option<Shader> {
+		let colors:Vec<Color> = self.stops.iter().map(|stop| stop.color).collect();
+		let offsets:Vec<f32> = self.stops.iter().map(|stop| stop.offset).collect();
 
 		let center = bounds.center();
 
@@ -146,7 +127,7 @@ impl RadialGradient {
 }
 
 impl Parse for RadialGradient {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		if !value.starts_with("radial-gradient(") || !value.ends_with(')') {
 			return Err(ParseError);
 		}
@@ -165,39 +146,31 @@ impl Parse for RadialGradient {
 }
 
 impl fmt::Display for RadialGradient {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
 		write!(
 			f,
 			"radial-gradient({})",
-			self.stops
-				.iter()
-				.map(|stop| stop.to_string())
-				.collect::<Vec<_>>()
-				.join(", ")
+			self.stops.iter().map(|stop| stop.to_string()).collect::<Vec<_>>().join(", ")
 		)
 	}
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct ConicGradient {
-	pub stops: Vec<GradientStop>,
-	pub angles: Option<(f32, f32)>,
-	pub angle: Option<f32>,
+	pub stops:Vec<GradientStop>,
+	pub angles:Option<(f32, f32)>,
+	pub angle:Option<f32>,
 }
 
 impl ConicGradient {
-	pub fn into_shader(&self, bounds: Rect<f32, Measure>) -> Option<Shader> {
-		let colors: Vec<Color> =
-			self.stops.iter().map(|stop| stop.color).collect();
-		let offsets: Vec<f32> =
-			self.stops.iter().map(|stop| stop.offset).collect();
+	pub fn into_shader(&self, bounds:Rect<f32, Measure>) -> Option<Shader> {
+		let colors:Vec<Color> = self.stops.iter().map(|stop| stop.color).collect();
+		let offsets:Vec<f32> = self.stops.iter().map(|stop| stop.offset).collect();
 
 		let center = bounds.center();
 
-		let matrix = Matrix::rotate_deg_pivot(
-			-90.0 + self.angle.unwrap_or(0.0),
-			(center.x, center.y),
-		);
+		let matrix =
+			Matrix::rotate_deg_pivot(-90.0 + self.angle.unwrap_or(0.0), (center.x, center.y));
 
 		Shader::sweep_gradient(
 			(center.x, center.y),
@@ -212,7 +185,7 @@ impl ConicGradient {
 }
 
 impl Parse for ConicGradient {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		if !value.starts_with("conic-gradient(") || !value.ends_with(')') {
 			return Err(ParseError);
 		}
@@ -227,21 +200,17 @@ impl Parse for ConicGradient {
 		let angle_or_first_stop = split.next().ok_or(ParseError)?.trim();
 
 		if angle_or_first_stop.ends_with("deg") {
-			if let Ok(angle) =
-				angle_or_first_stop.replacen("deg", "", 1).parse::<f32>()
-			{
+			if let Ok(angle) = angle_or_first_stop.replacen("deg", "", 1).parse::<f32>() {
 				gradient.angle = Some(angle);
 			}
 		} else {
-			gradient.stops.push(
-				GradientStop::parse(angle_or_first_stop)
-					.map_err(|_| ParseError)?,
-			);
+			gradient
+				.stops
+				.push(GradientStop::parse(angle_or_first_stop).map_err(|_| ParseError)?);
 		}
 
 		if let Some(angles_or_second_stop) = split.next().map(str::trim) {
-			if angles_or_second_stop.starts_with("from ")
-				&& angles_or_second_stop.ends_with("deg")
+			if angles_or_second_stop.starts_with("from ") && angles_or_second_stop.ends_with("deg")
 			{
 				if let Some(start) = angles_or_second_stop
 					.find("deg")
@@ -250,23 +219,15 @@ impl Parse for ConicGradient {
 				{
 					let end = angles_or_second_stop
 						.find(" to ")
-						.and_then(|index| {
-							angles_or_second_stop.get(index + 4..)
-						})
-						.and_then(|slice| {
-							slice
-								.find("deg")
-								.and_then(|index| slice.get(0..index))
-						})
+						.and_then(|index| angles_or_second_stop.get(index + 4..))
+						.and_then(|slice| slice.find("deg").and_then(|index| slice.get(0..index)))
 						.and_then(|slice| slice.parse::<f32>().ok())
 						.unwrap_or(360.0);
 
 					gradient.angles = Some((start, end));
 				}
 			} else {
-				gradient
-					.stops
-					.push(GradientStop::parse(angles_or_second_stop)?);
+				gradient.stops.push(GradientStop::parse(angles_or_second_stop)?);
 			}
 		}
 
@@ -279,7 +240,7 @@ impl Parse for ConicGradient {
 }
 
 impl fmt::Display for ConicGradient {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
 		write!(f, "conic-gradient(")?;
 
 		if let Some(angle) = self.angle {
@@ -293,11 +254,7 @@ impl fmt::Display for ConicGradient {
 		write!(
 			f,
 			"{})",
-			self.stops
-				.iter()
-				.map(|stop| stop.to_string())
-				.collect::<Vec<_>>()
-				.join(", ")
+			self.stops.iter().map(|stop| stop.to_string()).collect::<Vec<_>>().join(", ")
 		)
 	}
 }

@@ -4,41 +4,49 @@ use freya_elements::{
 	events::{keyboard::Key, KeyboardEvent, MouseEvent, WheelEvent},
 };
 use freya_hooks::{
-	use_applied_theme, use_focus, use_node, ScrollBarThemeWith,
+	use_applied_theme,
+	use_focus,
+	use_node,
+	ScrollBarThemeWith,
 	ScrollViewThemeWith,
 };
 
 use super::use_scroll_controller::ScrollController;
 use crate::{
-	get_container_size, get_corrected_scroll_position,
-	get_scroll_position_from_cursor, get_scroll_position_from_wheel,
-	get_scrollbar_pos_and_size, is_scrollbar_visible, manage_key_event,
-	scroll_views::use_scroll_controller::{
-		use_scroll_controller, ScrollConfig,
-	},
-	Axis, ScrollBar, ScrollThumb, SCROLL_SPEED_MULTIPLIER,
+	get_container_size,
+	get_corrected_scroll_position,
+	get_scroll_position_from_cursor,
+	get_scroll_position_from_wheel,
+	get_scrollbar_pos_and_size,
+	is_scrollbar_visible,
+	manage_key_event,
+	scroll_views::use_scroll_controller::{use_scroll_controller, ScrollConfig},
+	Axis,
+	ScrollBar,
+	ScrollThumb,
+	SCROLL_SPEED_MULTIPLIER,
 };
 
 /// Properties for the [`ScrollView`] component.
 #[derive(Props, Clone, PartialEq)]
 pub struct ScrollViewProps {
 	/// Theme override.
-	pub theme: Option<ScrollViewThemeWith>,
+	pub theme:Option<ScrollViewThemeWith>,
 	/// Theme override for the scrollbars.
-	pub scrollbar_theme: Option<ScrollBarThemeWith>,
+	pub scrollbar_theme:Option<ScrollBarThemeWith>,
 	/// Inner children for the ScrollView.
-	pub children: Element,
+	pub children:Element,
 	/// Direction of the ScrollView, `vertical` or `horizontal`.
 	#[props(default = "vertical".to_string(), into)]
-	pub direction: String,
+	pub direction:String,
 	/// Show the scrollbar, visible by default.
 	#[props(default = true, into)]
-	pub show_scrollbar: bool,
+	pub show_scrollbar:bool,
 	/// Enable scrolling with arrow keys.
 	#[props(default = true, into)]
-	pub scroll_with_arrows: bool,
+	pub scroll_with_arrows:bool,
 
-	pub scroll_controller: Option<ScrollController>,
+	pub scroll_controller:Option<ScrollController>,
 }
 
 /// Scrollable area with bidirectional support and scrollbars.
@@ -100,7 +108,7 @@ pub struct ScrollViewProps {
 /// }
 /// ```
 #[allow(non_snake_case)]
-pub fn ScrollView(props: ScrollViewProps) -> Element {
+pub fn ScrollView(props:ScrollViewProps) -> Element {
 	let mut clicking_scrollbar = use_signal::<Option<(Axis, f64)>>(|| None);
 	let mut clicking_shift = use_signal(|| false);
 	let mut clicking_alt = use_signal(|| false);
@@ -112,8 +120,7 @@ pub fn ScrollView(props: ScrollViewProps) -> Element {
 
 	let mut focus = use_focus();
 	let theme = use_applied_theme!(&props.theme, scroll_view);
-	let scrollbar_theme =
-		use_applied_theme!(&props.scrollbar_theme, scroll_bar);
+	let scrollbar_theme = use_applied_theme!(&props.scrollbar_theme, scroll_bar);
 
 	let padding = &theme.padding;
 	let user_container_width = &theme.width;
@@ -126,25 +133,14 @@ pub fn ScrollView(props: ScrollViewProps) -> Element {
 
 	let direction_is_vertical = user_direction == "vertical";
 
-	let vertical_scrollbar_is_visible = is_scrollbar_visible(
-		show_scrollbar,
-		size.inner.height,
-		size.area.height(),
-	);
-	let horizontal_scrollbar_is_visible = is_scrollbar_visible(
-		show_scrollbar,
-		size.inner.width,
-		size.area.width(),
-	);
+	let vertical_scrollbar_is_visible =
+		is_scrollbar_visible(show_scrollbar, size.inner.height, size.area.height());
+	let horizontal_scrollbar_is_visible =
+		is_scrollbar_visible(show_scrollbar, size.inner.width, size.area.width());
 
-	let container_width = get_container_size(
-		vertical_scrollbar_is_visible,
-		&scrollbar_theme.size,
-	);
-	let container_height = get_container_size(
-		horizontal_scrollbar_is_visible,
-		&scrollbar_theme.size,
-	);
+	let container_width = get_container_size(vertical_scrollbar_is_visible, &scrollbar_theme.size);
+	let container_height =
+		get_container_size(horizontal_scrollbar_is_visible, &scrollbar_theme.size);
 
 	let corrected_scrolled_y = get_corrected_scroll_position(
 		size.inner.height,
@@ -157,26 +153,18 @@ pub fn ScrollView(props: ScrollViewProps) -> Element {
 		*scrolled_x.read() as f32,
 	);
 
-	let (scrollbar_y, scrollbar_height) = get_scrollbar_pos_and_size(
-		size.inner.height,
-		size.area.height(),
-		corrected_scrolled_y,
-	);
-	let (scrollbar_x, scrollbar_width) = get_scrollbar_pos_and_size(
-		size.inner.width,
-		size.area.width(),
-		corrected_scrolled_x,
-	);
+	let (scrollbar_y, scrollbar_height) =
+		get_scrollbar_pos_and_size(size.inner.height, size.area.height(), corrected_scrolled_y);
+	let (scrollbar_x, scrollbar_width) =
+		get_scrollbar_pos_and_size(size.inner.width, size.area.width(), corrected_scrolled_x);
 
 	// Moves the Y axis when the user scrolls in the container
-	let onwheel = move |e: WheelEvent| {
-		let speed_multiplier =
-			if *clicking_alt.peek() { SCROLL_SPEED_MULTIPLIER } else { 1.0 };
+	let onwheel = move |e:WheelEvent| {
+		let speed_multiplier = if *clicking_alt.peek() { SCROLL_SPEED_MULTIPLIER } else { 1.0 };
 
 		let wheel_movement = e.get_delta_y() as f32 * speed_multiplier;
 
-		let scroll_vertically_or_not = (direction_is_vertical
-			&& !*clicking_shift.peek())
+		let scroll_vertically_or_not = (direction_is_vertical && !*clicking_shift.peek())
 			|| !direction_is_vertical && *clicking_shift.peek();
 
 		if scroll_vertically_or_not {
@@ -215,7 +203,7 @@ pub fn ScrollView(props: ScrollViewProps) -> Element {
 	};
 
 	// Drag the scrollbars
-	let onmouseover = move |e: MouseEvent| {
+	let onmouseover = move |e:MouseEvent| {
 		let clicking_scrollbar = clicking_scrollbar.peek();
 
 		if let Some((Axis::Y, y)) = *clicking_scrollbar {
@@ -247,7 +235,7 @@ pub fn ScrollView(props: ScrollViewProps) -> Element {
 		}
 	};
 
-	let onkeydown = move |e: KeyboardEvent| {
+	let onkeydown = move |e:KeyboardEvent| {
 		match &e.key {
 			Key::Shift => {
 				clicking_shift.set(true);
@@ -261,7 +249,8 @@ pub fn ScrollView(props: ScrollViewProps) -> Element {
 				}
 				if !scroll_with_arrows
 					&& (k == &Key::ArrowUp
-						|| k == &Key::ArrowRight || k == &Key::ArrowDown
+						|| k == &Key::ArrowRight
+						|| k == &Key::ArrowDown
 						|| k == &Key::ArrowLeft)
 				{
 					return;
@@ -289,7 +278,7 @@ pub fn ScrollView(props: ScrollViewProps) -> Element {
 		};
 	};
 
-	let onkeyup = move |e: KeyboardEvent| {
+	let onkeyup = move |e:KeyboardEvent| {
 		if e.key == Key::Shift {
 			clicking_shift.set(false);
 		} else if e.key == Key::Alt {
@@ -298,42 +287,33 @@ pub fn ScrollView(props: ScrollViewProps) -> Element {
 	};
 
 	// Mark the Y axis scrollbar as the one being dragged
-	let onmousedown_y = move |e: MouseEvent| {
+	let onmousedown_y = move |e:MouseEvent| {
 		let coordinates = e.get_element_coordinates();
 		*clicking_scrollbar.write() = Some((Axis::Y, coordinates.y));
 	};
 
 	// Mark the X axis scrollbar as the one being dragged
-	let onmousedown_x = move |e: MouseEvent| {
+	let onmousedown_x = move |e:MouseEvent| {
 		let coordinates = e.get_element_coordinates();
 		*clicking_scrollbar.write() = Some((Axis::X, coordinates.x));
 	};
 
 	// Unmark any scrollbar
-	let onclick = move |_: MouseEvent| {
+	let onclick = move |_:MouseEvent| {
 		if clicking_scrollbar.peek().is_some() {
 			*clicking_scrollbar.write() = None;
 		}
 	};
 
-	let horizontal_scrollbar_size = if horizontal_scrollbar_is_visible {
-		&scrollbar_theme.size
-	} else {
-		"0"
-	};
+	let horizontal_scrollbar_size =
+		if horizontal_scrollbar_is_visible { &scrollbar_theme.size } else { "0" };
 	let vertical_scrollbar_size =
 		if vertical_scrollbar_is_visible { &scrollbar_theme.size } else { "0" };
 
-	let is_scrolling_x = clicking_scrollbar
-		.read()
-		.as_ref()
-		.map(|f| f.0 == Axis::X)
-		.unwrap_or_default();
-	let is_scrolling_y = clicking_scrollbar
-		.read()
-		.as_ref()
-		.map(|f| f.0 == Axis::Y)
-		.unwrap_or_default();
+	let is_scrolling_x =
+		clicking_scrollbar.read().as_ref().map(|f| f.0 == Axis::X).unwrap_or_default();
+	let is_scrolling_y =
+		clicking_scrollbar.read().as_ref().map(|f| f.0 == Axis::Y).unwrap_or_default();
 
 	let focus_id = focus.attribute();
 
@@ -441,9 +421,9 @@ mod test {
 		assert!(!content.get(3).is_visible()); // 4. 600 -> 800, 600 is NOT < 500, which means it is not visible.
 
 		utils.push_event(PlatformEvent::Wheel {
-			name: EventName::Wheel,
-			scroll: (0., -300.).into(),
-			cursor: (5., 5.).into(),
+			name:EventName::Wheel,
+			scroll:(0., -300.).into(),
+			cursor:(5., 5.).into(),
 		});
 
 		utils.wait_for_update().await;
@@ -495,30 +475,31 @@ mod test {
 
 		// Simulate the user dragging the scrollbar
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (490., 20.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(490., 20.).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseDown,
-			cursor: (490., 20.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseDown,
+			cursor:(490., 20.).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (490., 320.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(490., 320.).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (490., 320.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(490., 320.).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
 
 		// Only the last three items are visible
-		// Scrollview height is 500 but the user has dragged the scrollbar 300 pixels
+		// Scrollview height is 500 but the user has dragged the scrollbar 300
+		// pixels
 		assert!(!content.get(0).is_visible()); // 1. 0   -> 200, 200 is NOT > 300, which means it is not visible.
 		assert!(content.get(1).is_visible()); // 2. 200 -> 400, 400 > 300
 		assert!(content.get(2).is_visible()); // 3. 400 -> 600, 600 > 300
@@ -527,10 +508,10 @@ mod test {
 		// Scroll up with arrows
 		for _ in 0..5 {
 			utils.push_event(PlatformEvent::Keyboard {
-				name: EventName::KeyDown,
-				key: Key::ArrowUp,
-				code: Code::ArrowUp,
-				modifiers: Modifiers::default(),
+				name:EventName::KeyDown,
+				key:Key::ArrowUp,
+				code:Code::ArrowUp,
+				modifiers:Modifiers::default(),
 			});
 			utils.wait_for_update().await;
 		}
@@ -542,10 +523,10 @@ mod test {
 
 		// Scroll to the bottom with arrows
 		utils.push_event(PlatformEvent::Keyboard {
-			name: EventName::KeyDown,
-			key: Key::End,
-			code: Code::End,
-			modifiers: Modifiers::default(),
+			name:EventName::KeyDown,
+			key:Key::End,
+			code:Code::End,
+			modifiers:Modifiers::default(),
 		});
 		utils.wait_for_update().await;
 

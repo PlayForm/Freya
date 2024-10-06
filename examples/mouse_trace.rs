@@ -1,16 +1,11 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch_cfg(app, LaunchConfig::<()>::new().with_title("Mouse Trace"));
-}
+fn main() { launch_cfg(app, LaunchConfig::<()>::new().with_title("Mouse Trace")); }
 
-const MOVEMENT_MARGIN: f64 = 75.0;
-const BOX_COUNT: usize = 80;
+const MOVEMENT_MARGIN:f64 = 75.0;
+const BOX_COUNT:usize = 80;
 
 #[allow(non_snake_case)]
 fn Box() -> Element {
@@ -43,7 +38,7 @@ fn Box() -> Element {
 fn app() -> Element {
 	let mut positions = use_signal::<Vec<CursorPoint>>(Vec::new);
 
-	let onmouseover = move |e: MouseEvent| {
+	let onmouseover = move |e:MouseEvent| {
 		let coordinates = e.get_screen_coordinates();
 		positions.with_mut(|positions| {
 			if let Some(pos) = positions.first() {
@@ -55,10 +50,7 @@ fn app() -> Element {
 					return;
 				}
 			}
-			positions.insert(
-				0,
-				(coordinates.x - 125.0, coordinates.y - 125.0).into(),
-			);
+			positions.insert(0, (coordinates.x - 125.0, coordinates.y - 125.0).into());
 			positions.truncate(BOX_COUNT);
 		})
 	};

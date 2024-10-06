@@ -7,10 +7,10 @@ use crate::{
 
 #[derive(Default, PartialEq, Clone, Debug)]
 pub struct AbsolutePosition {
-	pub top: Option<f32>,
-	pub right: Option<f32>,
-	pub bottom: Option<f32>,
-	pub left: Option<f32>,
+	pub top:Option<f32>,
+	pub right:Option<f32>,
+	pub bottom:Option<f32>,
+	pub left:Option<f32>,
 }
 
 #[derive(Default, PartialEq, Clone, Debug)]
@@ -25,30 +25,20 @@ impl Position {
 	pub fn is_empty(&self) -> bool {
 		match self {
 			Self::Absolute(absolute_position) => {
-				let AbsolutePosition { top, right, bottom, left } =
-					absolute_position.deref();
-				top.is_some()
-					&& right.is_some() && bottom.is_some()
-					&& left.is_some()
+				let AbsolutePosition { top, right, bottom, left } = absolute_position.deref();
+				top.is_some() && right.is_some() && bottom.is_some() && left.is_some()
 			},
 			Self::Stacked => true,
 		}
 	}
 
 	pub fn new_absolute() -> Self {
-		Self::Absolute(Box::new(AbsolutePosition {
-			top: None,
-			right: None,
-			bottom: None,
-			left: None,
-		}))
+		Self::Absolute(Box::new(AbsolutePosition { top:None, right:None, bottom:None, left:None }))
 	}
 
-	pub fn is_absolute(&self) -> bool {
-		matches!(self, Self::Absolute { .. })
-	}
+	pub fn is_absolute(&self) -> bool { matches!(self, Self::Absolute { .. }) }
 
-	pub fn set_top(&mut self, value: f32) {
+	pub fn set_top(&mut self, value:f32) {
 		if !self.is_absolute() {
 			*self = Self::new_absolute();
 		}
@@ -57,7 +47,7 @@ impl Position {
 		}
 	}
 
-	pub fn set_right(&mut self, value: f32) {
+	pub fn set_right(&mut self, value:f32) {
 		if !self.is_absolute() {
 			*self = Self::new_absolute();
 		}
@@ -66,7 +56,7 @@ impl Position {
 		}
 	}
 
-	pub fn set_bottom(&mut self, value: f32) {
+	pub fn set_bottom(&mut self, value:f32) {
 		if !self.is_absolute() {
 			*self = Self::new_absolute();
 		}
@@ -75,7 +65,7 @@ impl Position {
 		}
 	}
 
-	pub fn set_left(&mut self, value: f32) {
+	pub fn set_left(&mut self, value:f32) {
 		if !self.is_absolute() {
 			*self = Self::new_absolute();
 		}
@@ -86,15 +76,14 @@ impl Position {
 
 	pub fn get_origin(
 		&self,
-		available_parent_area: &Area,
-		parent_area: &Area,
-		area_size: &Size2D,
+		available_parent_area:&Area,
+		parent_area:&Area,
+		area_size:&Size2D,
 	) -> Point2D {
 		match self {
 			Position::Stacked => available_parent_area.origin,
 			Position::Absolute(absolute_position) => {
-				let AbsolutePosition { top, right, bottom, left } =
-					absolute_position.deref();
+				let AbsolutePosition { top, right, bottom, left } = absolute_position.deref();
 				let y = {
 					let mut y = parent_area.min_y();
 					if let Some(top) = top {
@@ -120,7 +109,7 @@ impl Position {
 }
 
 impl Scaled for Position {
-	fn scale(&mut self, scale_factor: f32) {
+	fn scale(&mut self, scale_factor:f32) {
 		if let Self::Absolute(absolute_postion) = self {
 			if let Some(top) = &mut absolute_postion.top {
 				*top *= scale_factor;
@@ -142,13 +131,15 @@ impl Position {
 	pub fn pretty(&self) -> String {
 		match self {
 			Self::Stacked => "stacked".to_string(),
-			Self::Absolute(positions) => format!(
-				"{}, {}, {}, {}",
-				positions.top.unwrap_or_default(),
-				positions.right.unwrap_or_default(),
-				positions.bottom.unwrap_or_default(),
-				positions.left.unwrap_or_default()
-			),
+			Self::Absolute(positions) => {
+				format!(
+					"{}, {}, {}, {}",
+					positions.top.unwrap_or_default(),
+					positions.right.unwrap_or_default(),
+					positions.bottom.unwrap_or_default(),
+					positions.left.unwrap_or_default()
+				)
+			},
 		}
 	}
 }

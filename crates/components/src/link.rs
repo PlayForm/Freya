@@ -22,9 +22,10 @@ pub enum LinkTooltip {
 	Custom(String),
 }
 
-/// Similar to [`Link`](dioxus_router::components::Link), but you can use it in Freya.
-/// Both internal routes (dioxus-router) and external links are supported. When using internal routes
-/// make sure the Link is descendant of a [`Router`](dioxus_router::components::Router) component.
+/// Similar to [`Link`](dioxus_router::components::Link), but you can use it in
+/// Freya. Both internal routes (dioxus-router) and external links are
+/// supported. When using internal routes make sure the Link is descendant of a
+/// [`Router`](dioxus_router::components::Router) component.
 ///
 /// # Styling
 ///
@@ -53,10 +54,10 @@ pub enum LinkTooltip {
 /// # fn NotFound() -> Element { rsx!(rect { })}
 /// # fn link_example_good() -> Element {
 /// rsx! {
-///     Link {
-///         to: AppRouter::Settings,
-///         label { "App Settings" }
-///     }
+/// 	Link {
+/// 		to: AppRouter::Settings,
+/// 		label { "App Settings" }
+/// 	}
 /// }
 /// # }
 /// ```
@@ -69,10 +70,10 @@ pub enum LinkTooltip {
 /// # use freya_components::Link;
 /// # fn link_example_good() -> Element {
 /// rsx! {
-///     Link {
-///         to: "https://crates.io/crates/freya",
-///         label { "Freya crates.io" }
-///     }
+/// 	Link {
+/// 		to: "https://crates.io/crates/freya",
+/// 		label { "Freya crates.io" }
+/// 	}
 /// }
 /// # }
 /// ```
@@ -81,42 +82,38 @@ pub enum LinkTooltip {
 pub fn Link(
 	/// Theme override.
 	#[props(optional)]
-	theme: Option<LinkThemeWith>,
+	theme:Option<LinkThemeWith>,
 	/// The route or external URL string to navigate to.
 	#[props(into)]
-	to: IntoRoutable,
+	to:IntoRoutable,
 	/// Inner children for the Link.
-	children: Element,
+	children:Element,
 	/// This event will be fired if opening an external link fails.
 	#[props(optional)]
-	onerror: Option<EventHandler<()>>,
+	onerror:Option<EventHandler<()>>,
 	/// A little text hint to show when hovering over the anchor.
 	///
 	/// Setting this to [`None`] is the same as [`LinkTooltip::Default`].
 	/// To remove the tooltip, set this to [`LinkTooltip::None`].
 	#[props(optional)]
-	tooltip: Option<LinkTooltip>,
+	tooltip:Option<LinkTooltip>,
 ) -> Element {
 	let theme = use_applied_theme!(&theme, link);
 	let mut is_hovering = use_signal(|| false);
 
-	let url = if let IntoRoutable::FromStr(ref url) = to {
-		Some(url.clone())
-	} else {
-		None
-	};
+	let url = if let IntoRoutable::FromStr(ref url) = to { Some(url.clone()) } else { None };
 
-	let onmouseenter = move |_: MouseEvent| {
+	let onmouseenter = move |_:MouseEvent| {
 		is_hovering.set(true);
 	};
 
-	let onmouseleave = move |_: MouseEvent| {
+	let onmouseleave = move |_:MouseEvent| {
 		is_hovering.set(false);
 	};
 
 	let onclick = {
 		to_owned![url, to];
-		move |event: MouseEvent| {
+		move |event:MouseEvent| {
 			if !matches!(event.trigger_button, Some(MouseButton::Left)) {
 				return;
 			}
@@ -251,9 +248,7 @@ mod test {
 			)
 		}
 
-		fn link_app() -> Element {
-			rsx!(Router::<Route> {})
-		}
+		fn link_app() -> Element { rsx!(Router::<Route> {}) }
 
 		let mut utils = launch_test(link_app);
 
@@ -265,9 +260,9 @@ mod test {
 
 		// Go to the "Somewhere" route
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (5., 70.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(5., 70.).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
@@ -278,9 +273,9 @@ mod test {
 
 		// Go to the "Home" route again
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (5., 5.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(5., 5.).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;

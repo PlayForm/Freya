@@ -12,7 +12,12 @@ use torin::geometry::CursorPoint;
 use uuid::Uuid;
 
 use crate::{
-	use_platform, EditorHistory, RopeEditor, TextCursor, TextEditor, TextEvent,
+	use_platform,
+	EditorHistory,
+	RopeEditor,
+	TextCursor,
+	TextEditor,
+	TextEvent,
 	UsePlatform,
 };
 
@@ -30,7 +35,8 @@ pub enum EditableEvent {
 pub enum EditableMode {
 	/// Multiple editors of only one line.
 	///
-	/// Useful for textarea-like editors that need more customization than a simple paragraph for example.
+	/// Useful for textarea-like editors that need more customization than a
+	/// simple paragraph for example.
 	SingleLineMultipleEditors,
 	/// One editor of multiple lines.
 	///
@@ -39,24 +45,15 @@ pub enum EditableMode {
 }
 
 impl Default for EditableMode {
-	fn default() -> Self {
-		Self::MultipleLinesSingleEditor
-	}
+	fn default() -> Self { Self::MultipleLinesSingleEditor }
 }
 
 /// Indicates the type of text dragging being done.
 #[derive(Debug, PartialEq, Clone)]
 pub enum TextDragging {
 	None,
-	FromPointToPoint {
-		src: CursorPoint,
-	},
-	FromCursorToPoint {
-		shift: bool,
-		clicked: bool,
-		cursor: usize,
-		dist: Option<CursorPoint>,
-	},
+	FromPointToPoint { src:CursorPoint },
+	FromCursorToPoint { shift:bool, clicked:bool, cursor:usize, dist:Option<CursorPoint> },
 }
 
 impl TextDragging {
@@ -68,13 +65,11 @@ impl TextDragging {
 		}
 	}
 
-	pub fn set_cursor_coords(&mut self, cursor: CursorPoint) {
+	pub fn set_cursor_coords(&mut self, cursor:CursorPoint) {
 		match self {
 			Self::FromPointToPoint { src } => *src = cursor,
-			Self::FromCursorToPoint { dist, shift: true, .. } => {
-				*dist = Some(cursor)
-			},
-			_ => *self = Self::FromPointToPoint { src: cursor },
+			Self::FromCursorToPoint { dist, shift: true, .. } => *dist = Some(cursor),
+			_ => *self = Self::FromPointToPoint { src:cursor },
 		}
 	}
 
@@ -96,23 +91,19 @@ impl TextDragging {
 /// Manage an editable content.
 #[derive(Clone, Copy, PartialEq)]
 pub struct UseEditable {
-	pub(crate) editor: Signal<RopeEditor>,
-	pub(crate) cursor_reference: Signal<CursorReference>,
-	pub(crate) dragging: Signal<TextDragging>,
-	pub(crate) platform: UsePlatform,
-	pub(crate) allow_tabs: bool,
+	pub(crate) editor:Signal<RopeEditor>,
+	pub(crate) cursor_reference:Signal<CursorReference>,
+	pub(crate) dragging:Signal<TextDragging>,
+	pub(crate) platform:UsePlatform,
+	pub(crate) allow_tabs:bool,
 }
 
 impl UseEditable {
 	/// Reference to the editor.
-	pub fn editor(&self) -> &Signal<RopeEditor> {
-		&self.editor
-	}
+	pub fn editor(&self) -> &Signal<RopeEditor> { &self.editor }
 
 	/// Mutable reference to the editor.
-	pub fn editor_mut(&mut self) -> &mut Signal<RopeEditor> {
-		&mut self.editor
-	}
+	pub fn editor_mut(&mut self) -> &mut Signal<RopeEditor> { &mut self.editor }
 
 	/// Create a cursor attribute.
 	pub fn cursor_attr(&self) -> AttributeValue {
@@ -122,7 +113,7 @@ impl UseEditable {
 	}
 
 	/// Create a highlights attribute.
-	pub fn highlights_attr(&self, editor_id: usize) -> AttributeValue {
+	pub fn highlights_attr(&self, editor_id:usize) -> AttributeValue {
 		AttributeValue::any_value(CustomAttributeValues::TextHighlights(
 			self.editor
 				.read()
@@ -133,7 +124,7 @@ impl UseEditable {
 	}
 
 	/// Process a [`EditableEvent`] event.
-	pub fn process_event(&mut self, edit_event: &EditableEvent) {
+	pub fn process_event(&mut self, edit_event:&EditableEvent) {
 		let res = match edit_event {
 			EditableEvent::MouseDown(e, id) => {
 				let coords = e.get_element_coordinates();
@@ -155,9 +146,7 @@ impl UseEditable {
 			EditableEvent::Click => {
 				let dragging = &mut *self.dragging.write();
 				match dragging {
-					TextDragging::FromCursorToPoint {
-						shift, clicked, ..
-					} if *shift => {
+					TextDragging::FromCursorToPoint { shift, clicked, .. } if *shift => {
 						*clicked = false;
 					},
 					_ => {
@@ -172,18 +161,15 @@ impl UseEditable {
 					Code::ShiftLeft => {
 						let dragging = &mut *self.dragging.write();
 						match dragging {
-							TextDragging::FromCursorToPoint {
-								shift: shift_pressed,
-								..
-							} => {
+							TextDragging::FromCursorToPoint { shift: shift_pressed, .. } => {
 								*shift_pressed = true;
 							},
 							TextDragging::None => {
 								*dragging = TextDragging::FromCursorToPoint {
-									shift: true,
-									clicked: false,
-									cursor: self.editor.peek().cursor_pos(),
-									dist: None,
+									shift:true,
+									clicked:false,
+									cursor:self.editor.peek().cursor_pos(),
+									dist:None,
 								}
 							},
 							_ => {},
@@ -193,11 +179,7 @@ impl UseEditable {
 					Code::Tab if !self.allow_tabs => {},
 					// Handle editing
 					_ => {
-						let event = self.editor.write().process_key(
-							&e.key,
-							&e.code,
-							&e.modifiers,
-						);
+						let event = self.editor.write().process_key(&e.key, &e.code, &e.modifiers);
 						if event.contains(TextEvent::TEXT_CHANGED) {
 							*self.dragging.write() = TextDragging::None;
 						}
@@ -224,14 +206,12 @@ impl UseEditable {
 		if let Some((cursor_id, cursor_position, cursor_selection)) = res {
 			if self.dragging.peek().has_cursor_coords() {
 				self.platform
-					.send(EventMessage::RemeasureTextGroup(
-						TextGroupMeasurement {
-							text_id: self.cursor_reference.peek().text_id,
-							cursor_id,
-							cursor_position,
-							cursor_selection,
-						},
-					))
+					.send(EventMessage::RemeasureTextGroup(TextGroupMeasurement {
+						text_id:self.cursor_reference.peek().text_id,
+						cursor_id,
+						cursor_position,
+						cursor_selection,
+					}))
 					.unwrap()
 			}
 		}
@@ -240,47 +220,39 @@ impl UseEditable {
 
 /// Create a configuration for a [`UseEditable`].
 pub struct EditableConfig {
-	pub(crate) content: String,
-	pub(crate) cursor: TextCursor,
-	pub(crate) identation: u8,
-	pub(crate) allow_tabs: bool,
+	pub(crate) content:String,
+	pub(crate) cursor:TextCursor,
+	pub(crate) identation:u8,
+	pub(crate) allow_tabs:bool,
 }
 
 impl EditableConfig {
 	/// Create a [`EditableConfig`].
-	pub fn new(content: String) -> Self {
-		Self {
-			content,
-			cursor: TextCursor::default(),
-			identation: 4,
-			allow_tabs: false,
-		}
+	pub fn new(content:String) -> Self {
+		Self { content, cursor:TextCursor::default(), identation:4, allow_tabs:false }
 	}
 
 	/// Specify a custom initial cursor position.
-	pub fn with_cursor(mut self, pos: usize) -> Self {
+	pub fn with_cursor(mut self, pos:usize) -> Self {
 		self.cursor = TextCursor::new(pos);
 		self
 	}
 
 	/// Specify a custom identation
-	pub fn with_identation(mut self, identation: u8) -> Self {
+	pub fn with_identation(mut self, identation:u8) -> Self {
 		self.identation = identation;
 		self
 	}
 
 	/// Specify whether you want to allow tabs to be inserted
-	pub fn with_allow_tabs(mut self, allow_tabs: bool) -> Self {
+	pub fn with_allow_tabs(mut self, allow_tabs:bool) -> Self {
 		self.allow_tabs = allow_tabs;
 		self
 	}
 }
 
 /// Create a virtual text editor with it's own cursor and rope.
-pub fn use_editable(
-	initializer: impl Fn() -> EditableConfig,
-	mode: EditableMode,
-) -> UseEditable {
+pub fn use_editable(initializer:impl Fn() -> EditableConfig, mode:EditableMode) -> UseEditable {
 	let platform = use_platform();
 	let clipboard = use_clipboard();
 
@@ -296,8 +268,7 @@ pub fn use_editable(
 			EditorHistory::new(),
 		));
 		let dragging = Signal::new(TextDragging::None);
-		let (cursor_sender, mut cursor_receiver) =
-			unbounded_channel::<CursorLayoutResponse>();
+		let (cursor_sender, mut cursor_receiver) = unbounded_channel::<CursorLayoutResponse>();
 		let cursor_reference = CursorReference { text_id, cursor_sender };
 
 		spawn(async move {
@@ -306,18 +277,15 @@ pub fn use_editable(
 					// Update the cursor position calculated by the layout
 					CursorLayoutResponse::CursorPosition { position, id } => {
 						let mut text_editor = editor.write();
-						let new_cursor = text_editor.measure_new_cursor(
-							text_editor.utf16_cu_to_char(position),
-							id,
-						);
+						let new_cursor = text_editor
+							.measure_new_cursor(text_editor.utf16_cu_to_char(position), id);
 
-						// Only update and clear the selection if the cursor has changed
+						// Only update and clear the selection if the cursor has
+						// changed
 						if *text_editor.cursor() != new_cursor {
 							*text_editor.cursor_mut() = new_cursor;
-							if let TextDragging::FromCursorToPoint {
-								cursor: from,
-								..
-							} = &*dragging.read()
+							if let TextDragging::FromCursorToPoint { cursor: from, .. } =
+								&*dragging.read()
 							{
 								let to = text_editor.cursor_pos();
 								text_editor.set_selection((*from, to));
@@ -335,10 +303,8 @@ pub fn use_editable(
 							editor.peek().utf16_cu_to_char(from),
 							editor.peek().utf16_cu_to_char(to),
 						);
-						let maybe_new_cursor =
-							editor.peek().measure_new_cursor(to, id);
-						let maybe_new_selection =
-							editor.peek().measure_new_selection(from, to, id);
+						let maybe_new_cursor = editor.peek().measure_new_cursor(to, id);
+						let maybe_new_selection = editor.peek().measure_new_selection(from, to, id);
 
 						// Update the text selection if it has changed
 						if let Some(current_selection) = current_selection {
@@ -363,10 +329,10 @@ pub fn use_editable(
 
 		UseEditable {
 			editor,
-			cursor_reference: Signal::new(cursor_reference.clone()),
+			cursor_reference:Signal::new(cursor_reference.clone()),
 			dragging,
 			platform,
-			allow_tabs: config.allow_tabs,
+			allow_tabs:config.allow_tabs,
 		}
 	})
 }

@@ -20,9 +20,9 @@ use tabs::{layout::*, style::*, tree::*};
 
 /// Run the [`VirtualDom`] with a sidepanel where the devtools are located.
 pub fn with_devtools(
-	root: fn() -> Element,
-	devtools_receiver: DevtoolsReceiver,
-	hovered_node: HoveredNode,
+	root:fn() -> Element,
+	devtools_receiver:DevtoolsReceiver,
+	hovered_node:HoveredNode,
 ) -> VirtualDom {
 	VirtualDom::new_with_props(
 		AppWithDevtools,
@@ -32,19 +32,17 @@ pub fn with_devtools(
 
 #[derive(Props, Clone)]
 struct AppWithDevtoolsProps {
-	root: fn() -> Element,
-	devtools_receiver: DevtoolsReceiver,
-	hovered_node: HoveredNode,
+	root:fn() -> Element,
+	devtools_receiver:DevtoolsReceiver,
+	hovered_node:HoveredNode,
 }
 
 impl PartialEq for AppWithDevtoolsProps {
-	fn eq(&self, _other: &Self) -> bool {
-		true
-	}
+	fn eq(&self, _other:&Self) -> bool { true }
 }
 
 #[allow(non_snake_case)]
-fn AppWithDevtools(props: AppWithDevtoolsProps) -> Element {
+fn AppWithDevtools(props:AppWithDevtoolsProps) -> Element {
 	#[allow(non_snake_case)]
 	let Root = props.root;
 	let devtools_receiver = props.devtools_receiver;
@@ -80,24 +78,22 @@ fn AppWithDevtools(props: AppWithDevtoolsProps) -> Element {
 
 #[derive(Props, Clone)]
 pub struct DevToolsProps {
-	devtools_receiver: DevtoolsReceiver,
-	hovered_node: HoveredNode,
+	devtools_receiver:DevtoolsReceiver,
+	hovered_node:HoveredNode,
 }
 
 impl PartialEq for DevToolsProps {
-	fn eq(&self, _: &Self) -> bool {
-		true
-	}
+	fn eq(&self, _:&Self) -> bool { true }
 }
 
 #[allow(non_snake_case)]
-pub fn DevTools(props: DevToolsProps) -> Element {
+pub fn DevTools(props:DevToolsProps) -> Element {
 	let theme = use_init_theme(|| DARK_THEME);
 	use_init_radio_station::<DevtoolsState, DevtoolsChannel>(|| {
 		DevtoolsState {
-			hovered_node: props.hovered_node.clone(),
-			devtools_receiver: props.devtools_receiver.clone(),
-			devtools_tree: HashSet::default(),
+			hovered_node:props.hovered_node.clone(),
+			devtools_receiver:props.devtools_receiver.clone(),
+			devtools_tree:HashSet::default(),
 		}
 	});
 
@@ -161,8 +157,7 @@ pub enum Route {
 impl Route {
 	pub fn get_node_id(&self) -> Option<NodeId> {
 		match self {
-			Self::NodeInspectorStyle { node_id }
-			| Self::NodeInspectorLayout { node_id } => {
+			Self::NodeInspectorStyle { node_id } | Self::NodeInspectorLayout { node_id } => {
 				Some(NodeId::deserialize(node_id))
 			},
 			_ => None,
@@ -182,7 +177,7 @@ fn PageNotFound() -> Element {
 
 #[allow(non_snake_case)]
 #[component]
-fn LayoutForNodeInspector(node_id: String) -> Element {
+fn LayoutForNodeInspector(node_id:String) -> Element {
 	rsx!(
 		rect {
 			overflow: "clip",
@@ -260,26 +255,19 @@ fn LayoutForDOMInspector() -> Element {
 
 #[allow(non_snake_case)]
 #[component]
-fn DOMInspector() -> Element {
-	None
-}
+fn DOMInspector() -> Element { None }
 
 pub trait NodeIdSerializer {
 	fn serialize(&self) -> String;
 
-	fn deserialize(node_id: &str) -> Self;
+	fn deserialize(node_id:&str) -> Self;
 }
 
 impl NodeIdSerializer for NodeId {
-	fn serialize(&self) -> String {
-		format!("{}-{}", self.index(), self.gen())
-	}
+	fn serialize(&self) -> String { format!("{}-{}", self.index(), self.gen()) }
 
-	fn deserialize(node_id: &str) -> Self {
+	fn deserialize(node_id:&str) -> Self {
 		let (index, gen) = node_id.split_once('-').unwrap();
-		NodeId::new_from_index_and_gen(
-			index.parse().unwrap(),
-			gen.parse().unwrap(),
-		)
+		NodeId::new_from_index_and_gen(index.parse().unwrap(), gen.parse().unwrap())
 	}
 }

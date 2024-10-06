@@ -1,16 +1,11 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use std::fmt::Display;
 
 use freya::prelude::*;
 use itertools::{Either, Itertools};
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 #[derive(PartialEq, Clone)]
 enum OrderBy {
@@ -20,7 +15,7 @@ enum OrderBy {
 }
 
 impl Display for OrderBy {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
 			OrderBy::Name => f.write_str("Name"),
 			OrderBy::Type => f.write_str("Type"),
@@ -49,25 +44,17 @@ fn app() -> Element {
 		]
 	});
 	let columns = use_hook(|| {
-		vec![
-			("Name", OrderBy::Name),
-			("Type", OrderBy::Type),
-			("Rank", OrderBy::Rank),
-		]
+		vec![("Name", OrderBy::Name), ("Type", OrderBy::Type), ("Rank", OrderBy::Rank)]
 	});
 	let data = data.read();
 
 	let filtered_data = {
-		let filtered_data = data.iter().sorted_by(|a, b| match *order.read() {
-			OrderBy::Name => {
-				Ord::cmp(&a[0].to_lowercase(), &b[0].to_lowercase())
-			},
-			OrderBy::Type => {
-				Ord::cmp(&a[1].to_lowercase(), &b[1].to_lowercase())
-			},
-			OrderBy::Rank => {
-				Ord::cmp(&a[2].to_lowercase(), &b[2].to_lowercase())
-			},
+		let filtered_data = data.iter().sorted_by(|a, b| {
+			match *order.read() {
+				OrderBy::Name => Ord::cmp(&a[0].to_lowercase(), &b[0].to_lowercase()),
+				OrderBy::Type => Ord::cmp(&a[1].to_lowercase(), &b[1].to_lowercase()),
+				OrderBy::Rank => Ord::cmp(&a[2].to_lowercase(), &b[2].to_lowercase()),
+			}
 		});
 
 		if *order_direction.read() == OrderDirection::Down {
@@ -77,7 +64,7 @@ fn app() -> Element {
 		}
 	};
 
-	let mut on_column_head_click = move |column_order: &OrderBy| {
+	let mut on_column_head_click = move |column_order:&OrderBy| {
 		// Change order diection
 		if &*order.read() == column_order {
 			if *order_direction.read() == OrderDirection::Up {

@@ -7,8 +7,8 @@ use crate::dom::FreyaDOM;
 
 /// Call the render function for the nodes that should be rendered.
 pub fn process_render(
-	fdom: &FreyaDOM,
-	mut render_fn: impl FnMut(&FreyaDOM, &NodeId, &LayoutNode, &Torin<NodeId>),
+	fdom:&FreyaDOM,
+	mut render_fn:impl FnMut(&FreyaDOM, &NodeId, &LayoutNode, &Torin<NodeId>),
 ) {
 	let layout = fdom.layout();
 	let rdom = fdom.rdom();
@@ -23,10 +23,10 @@ pub fn process_render(
 			let layout_node = layout.get(*node_id);
 
 			if let Some(layout_node) = layout_node {
-				// Skip elements that are completely out of any their parent's viewport
+				// Skip elements that are completely out of any their parent's
+				// viewport
 				for viewport_id in &node_viewports.viewports {
-					let viewport =
-						layout.get(*viewport_id).unwrap().visible_area();
+					let viewport = layout.get(*viewport_id).unwrap().visible_area();
 					if !viewport.intersects(&layout_node.area) {
 						continue 'elements;
 					}

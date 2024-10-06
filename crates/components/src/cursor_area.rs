@@ -7,9 +7,9 @@ pub use winit::window::CursorIcon;
 #[derive(Props, Clone, PartialEq)]
 pub struct CursorAreaProps {
 	/// Cursor icon that will be used when hovering this area.
-	icon: CursorIcon,
+	icon:CursorIcon,
 	/// Inner children for the CursorArea.
-	children: Element,
+	children:Element,
 }
 
 /// Change the cursor icon when it's hovering over this component.
@@ -33,9 +33,7 @@ pub struct CursorAreaProps {
 /// }
 /// ```
 #[allow(non_snake_case)]
-pub fn CursorArea(
-	CursorAreaProps { children, icon }: CursorAreaProps,
-) -> Element {
+pub fn CursorArea(CursorAreaProps { children, icon }:CursorAreaProps) -> Element {
 	let platform = use_platform();
 	let mut is_hovering = use_signal(|| false);
 
@@ -97,9 +95,9 @@ mod test {
 		assert_eq!(utils.cursor_icon(), CursorIcon::default());
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (100., 100.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(100., 100.).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
@@ -108,9 +106,9 @@ mod test {
 		assert_eq!(utils.cursor_icon(), CursorIcon::Progress);
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (100., 300.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(100., 300.).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
@@ -119,9 +117,9 @@ mod test {
 		assert_eq!(utils.cursor_icon(), CursorIcon::Pointer);
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (-1., -1.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(-1., -1.).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;

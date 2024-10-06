@@ -9,16 +9,16 @@ pub struct ParseError;
 
 // FromStr but we own it so we can impl it on torin and skia_safe types.
 pub trait Parse: Sized {
-	fn parse(value: &str) -> Result<Self, ParseError>;
+	fn parse(value:&str) -> Result<Self, ParseError>;
 }
 
 pub trait ParseAttribute: Sized {
 	fn parse_attribute(
 		&mut self,
-		attr: OwnedAttributeView<CustomAttributeValues>,
+		attr:OwnedAttributeView<CustomAttributeValues>,
 	) -> Result<(), ParseError>;
 
-	fn parse_safe(&mut self, attr: OwnedAttributeView<CustomAttributeValues>) {
+	fn parse_safe(&mut self, attr:OwnedAttributeView<CustomAttributeValues>) {
 		#[cfg(debug_assertions)]
 		{
 			let error_attr = attr.clone();
@@ -38,42 +38,42 @@ pub trait ParseAttribute: Sized {
 pub trait ExtSplit {
 	fn split_excluding_group(
 		&self,
-		delimiter: char,
-		group_start: char,
-		group_end: char,
+		delimiter:char,
+		group_start:char,
+		group_end:char,
 	) -> SplitExcludingGroup<'_>;
 	fn split_ascii_whitespace_excluding_group(
 		&self,
-		group_start: char,
-		group_end: char,
+		group_start:char,
+		group_end:char,
 	) -> SplitAsciiWhitespaceExcludingGroup<'_>;
 }
 
 impl ExtSplit for str {
 	fn split_excluding_group(
 		&self,
-		delimiter: char,
-		group_start: char,
-		group_end: char,
+		delimiter:char,
+		group_start:char,
+		group_end:char,
 	) -> SplitExcludingGroup<'_> {
 		SplitExcludingGroup {
-			text: self,
-			chars: self.char_indices(),
+			text:self,
+			chars:self.char_indices(),
 			delimiter,
 			group_start,
 			group_end,
-			trailing_empty: true,
+			trailing_empty:true,
 		}
 	}
 
 	fn split_ascii_whitespace_excluding_group(
 		&self,
-		group_start: char,
-		group_end: char,
+		group_start:char,
+		group_end:char,
 	) -> SplitAsciiWhitespaceExcludingGroup<'_> {
 		SplitAsciiWhitespaceExcludingGroup {
-			text: self,
-			chars: self.char_indices(),
+			text:self,
+			chars:self.char_indices(),
 			group_start,
 			group_end,
 		}
@@ -82,12 +82,12 @@ impl ExtSplit for str {
 
 #[derive(Clone, Debug)]
 pub struct SplitExcludingGroup<'a> {
-	pub text: &'a str,
-	pub chars: CharIndices<'a>,
-	pub delimiter: char,
-	pub group_start: char,
-	pub group_end: char,
-	pub trailing_empty: bool,
+	pub text:&'a str,
+	pub chars:CharIndices<'a>,
+	pub delimiter:char,
+	pub group_start:char,
+	pub group_end:char,
+	pub trailing_empty:bool,
 }
 
 impl<'a> Iterator for SplitExcludingGroup<'a> {
@@ -127,7 +127,7 @@ impl<'a> Iterator for SplitExcludingGroup<'a> {
 			prev = match self.chars.next() {
 				None => return Some(&self.text[start..]),
 				Some((end, c)) if c == self.delimiter && !in_group => {
-					return Some(&self.text[start..end])
+					return Some(&self.text[start..end]);
 				},
 				Some((_, c)) => c,
 			}
@@ -137,10 +137,10 @@ impl<'a> Iterator for SplitExcludingGroup<'a> {
 
 #[derive(Clone, Debug)]
 pub struct SplitAsciiWhitespaceExcludingGroup<'a> {
-	pub text: &'a str,
-	pub chars: CharIndices<'a>,
-	pub group_start: char,
-	pub group_end: char,
+	pub text:&'a str,
+	pub chars:CharIndices<'a>,
+	pub group_start:char,
+	pub group_end:char,
 }
 
 impl<'a> Iterator for SplitAsciiWhitespaceExcludingGroup<'a> {
@@ -174,7 +174,7 @@ impl<'a> Iterator for SplitAsciiWhitespaceExcludingGroup<'a> {
 			prev = match self.chars.next() {
 				None => return Some(&self.text[start..]),
 				Some((end, c)) if c.is_ascii_whitespace() && !in_group => {
-					return Some(&self.text[start..end])
+					return Some(&self.text[start..end]);
 				},
 				Some((_, c)) => c,
 			}

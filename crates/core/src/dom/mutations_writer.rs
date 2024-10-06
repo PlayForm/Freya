@@ -11,19 +11,17 @@ use torin::torin::Torin;
 use crate::prelude::DioxusDOMAdapter;
 
 pub struct MutationsWriter<'a> {
-	pub native_writer:
-		DioxusNativeCoreMutationWriter<'a, CustomAttributeValues>,
-	pub layout: &'a mut Torin<NodeId>,
-	pub layers: &'a Layers,
-	pub paragraphs: &'a ParagraphElements,
-	pub scale_factor: f32,
+	pub native_writer:DioxusNativeCoreMutationWriter<'a, CustomAttributeValues>,
+	pub layout:&'a mut Torin<NodeId>,
+	pub layers:&'a Layers,
+	pub paragraphs:&'a ParagraphElements,
+	pub scale_factor:f32,
 }
 
 impl<'a> MutationsWriter<'a> {
-	pub fn remove(&mut self, id: ElementId) {
+	pub fn remove(&mut self, id:ElementId) {
 		let node_id = self.native_writer.state.element_to_node_id(id);
-		let mut dom_adapter =
-			DioxusDOMAdapter::new(self.native_writer.rdom, self.scale_factor);
+		let mut dom_adapter = DioxusDOMAdapter::new(self.native_writer.rdom, self.scale_factor);
 
 		// Remove from layout
 		self.layout.remove(node_id, &mut dom_adapter, true);
@@ -40,12 +38,11 @@ impl<'a> MutationsWriter<'a> {
 				let layer_state = node.get::<LayerState>();
 				let cursor_state = node.get::<CursorState>();
 
-				let Some((layer_state, cursor_state)) =
-					layer_state.zip(cursor_state)
-				else {
-					// There might exist Nodes in the RealDOM with no states yet,
-					// this is mainly due to nodes being created in the same run as when this function (remove) is being called,
-					// like nodes created by loaded templates.
+				let Some((layer_state, cursor_state)) = layer_state.zip(cursor_state) else {
+					// There might exist Nodes in the RealDOM with no states
+					// yet, this is mainly due to nodes being created in
+					// the same run as when this function (remove) is being
+					// called, like nodes created by loaded templates.
 					// In this case we can safely skip these nodes.
 					continue;
 				};
@@ -65,8 +62,7 @@ impl<'a> MutationsWriter<'a> {
 
 				// Remove from paragraph elements
 				if let Some(cursor_ref) = cursor_state.cursor_ref.as_ref() {
-					self.paragraphs
-						.remove_paragraph(node_id, &cursor_ref.text_id);
+					self.paragraphs.remove_paragraph(node_id, &cursor_ref.text_id);
 				}
 			}
 		}
@@ -74,72 +70,54 @@ impl<'a> MutationsWriter<'a> {
 }
 
 impl<'a> WriteMutations for MutationsWriter<'a> {
-	fn register_template(&mut self, template: dioxus_core::prelude::Template) {
+	fn register_template(&mut self, template:dioxus_core::prelude::Template) {
 		self.native_writer.register_template(template);
 	}
 
-	fn append_children(&mut self, id: dioxus_core::ElementId, m: usize) {
+	fn append_children(&mut self, id:dioxus_core::ElementId, m:usize) {
 		self.native_writer.append_children(id, m);
 	}
 
-	fn assign_node_id(
-		&mut self,
-		path: &'static [u8],
-		id: dioxus_core::ElementId,
-	) {
+	fn assign_node_id(&mut self, path:&'static [u8], id:dioxus_core::ElementId) {
 		self.native_writer.assign_node_id(path, id);
 	}
 
-	fn create_placeholder(&mut self, id: dioxus_core::ElementId) {
+	fn create_placeholder(&mut self, id:dioxus_core::ElementId) {
 		self.native_writer.create_placeholder(id);
 	}
 
-	fn create_text_node(&mut self, value: &str, id: dioxus_core::ElementId) {
+	fn create_text_node(&mut self, value:&str, id:dioxus_core::ElementId) {
 		self.native_writer.create_text_node(value, id);
 	}
 
-	fn hydrate_text_node(
-		&mut self,
-		path: &'static [u8],
-		value: &str,
-		id: dioxus_core::ElementId,
-	) {
+	fn hydrate_text_node(&mut self, path:&'static [u8], value:&str, id:dioxus_core::ElementId) {
 		self.native_writer.hydrate_text_node(path, value, id);
 	}
 
-	fn load_template(
-		&mut self,
-		name: &'static str,
-		index: usize,
-		id: dioxus_core::ElementId,
-	) {
+	fn load_template(&mut self, name:&'static str, index:usize, id:dioxus_core::ElementId) {
 		self.native_writer.load_template(name, index, id);
 	}
 
-	fn replace_node_with(&mut self, id: dioxus_core::ElementId, m: usize) {
+	fn replace_node_with(&mut self, id:dioxus_core::ElementId, m:usize) {
 		if m > 0 {
 			self.remove(id);
 			self.native_writer.replace_node_with(id, m);
 		}
 	}
 
-	fn replace_placeholder_with_nodes(
-		&mut self,
-		path: &'static [u8],
-		m: usize,
-	) {
+	fn replace_placeholder_with_nodes(&mut self, path:&'static [u8], m:usize) {
 		if m > 0 {
 			self.native_writer.replace_placeholder_with_nodes(path, m);
 		}
 	}
 
-	fn insert_nodes_after(&mut self, id: dioxus_core::ElementId, m: usize) {
+	fn insert_nodes_after(&mut self, id:dioxus_core::ElementId, m:usize) {
 		if m > 0 {
 			self.native_writer.insert_nodes_after(id, m);
 		}
 	}
 
-	fn insert_nodes_before(&mut self, id: dioxus_core::ElementId, m: usize) {
+	fn insert_nodes_before(&mut self, id:dioxus_core::ElementId, m:usize) {
 		if m > 0 {
 			self.native_writer.insert_nodes_before(id, m);
 		}
@@ -147,41 +125,31 @@ impl<'a> WriteMutations for MutationsWriter<'a> {
 
 	fn set_attribute(
 		&mut self,
-		name: &'static str,
-		ns: Option<&'static str>,
-		value: &dioxus_core::AttributeValue,
-		id: dioxus_core::ElementId,
+		name:&'static str,
+		ns:Option<&'static str>,
+		value:&dioxus_core::AttributeValue,
+		id:dioxus_core::ElementId,
 	) {
 		self.native_writer.set_attribute(name, ns, value, id);
 	}
 
-	fn set_node_text(&mut self, value: &str, id: dioxus_core::ElementId) {
+	fn set_node_text(&mut self, value:&str, id:dioxus_core::ElementId) {
 		self.layout.invalidate(self.native_writer.state.element_to_node_id(id));
 		self.native_writer.set_node_text(value, id);
 	}
 
-	fn create_event_listener(
-		&mut self,
-		name: &'static str,
-		id: dioxus_core::ElementId,
-	) {
+	fn create_event_listener(&mut self, name:&'static str, id:dioxus_core::ElementId) {
 		self.native_writer.create_event_listener(name, id);
 	}
 
-	fn remove_event_listener(
-		&mut self,
-		name: &'static str,
-		id: dioxus_core::ElementId,
-	) {
+	fn remove_event_listener(&mut self, name:&'static str, id:dioxus_core::ElementId) {
 		self.native_writer.remove_event_listener(name, id);
 	}
 
-	fn remove_node(&mut self, id: dioxus_core::ElementId) {
+	fn remove_node(&mut self, id:dioxus_core::ElementId) {
 		self.remove(id);
 		self.native_writer.remove_node(id);
 	}
 
-	fn push_root(&mut self, id: dioxus_core::ElementId) {
-		self.native_writer.push_root(id);
-	}
+	fn push_root(&mut self, id:dioxus_core::ElementId) { self.native_writer.push_root(id); }
 }

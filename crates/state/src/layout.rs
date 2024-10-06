@@ -5,44 +5,40 @@ use freya_native_core::{
 	exports::shipyard::Component,
 	node::OwnedAttributeValue,
 	node_ref::NodeView,
-	prelude::{
-		AttributeMaskBuilder, Dependancy, NodeMaskBuilder, OwnedAttributeView,
-		State,
-	},
-	NodeId, SendAnyMap,
+	prelude::{AttributeMaskBuilder, Dependancy, NodeMaskBuilder, OwnedAttributeView, State},
+	NodeId,
+	SendAnyMap,
 };
 use freya_native_core_macro::partial_derive_state;
 use torin::prelude::*;
 
-use crate::{
-	CustomAttributeValues, NodeReference, Parse, ParseAttribute, ParseError,
-};
+use crate::{CustomAttributeValues, NodeReference, Parse, ParseAttribute, ParseError};
 
 #[derive(Default, Clone, Debug, Component, PartialEq)]
 pub struct LayoutState {
-	pub width: Size,
-	pub height: Size,
-	pub minimum_width: Size,
-	pub minimum_height: Size,
-	pub maximum_height: Size,
-	pub maximum_width: Size,
-	pub padding: Gaps,
-	pub margin: Gaps,
-	pub direction: DirectionMode,
-	pub offset_y: Length,
-	pub offset_x: Length,
-	pub main_alignment: Alignment,
-	pub cross_alignment: Alignment,
-	pub position: Position,
-	pub content: Content,
-	pub node_ref: Option<NodeReference>,
-	pub node_id: NodeId,
+	pub width:Size,
+	pub height:Size,
+	pub minimum_width:Size,
+	pub minimum_height:Size,
+	pub maximum_height:Size,
+	pub maximum_width:Size,
+	pub padding:Gaps,
+	pub margin:Gaps,
+	pub direction:DirectionMode,
+	pub offset_y:Length,
+	pub offset_x:Length,
+	pub main_alignment:Alignment,
+	pub cross_alignment:Alignment,
+	pub position:Position,
+	pub content:Content,
+	pub node_ref:Option<NodeReference>,
+	pub node_id:NodeId,
 }
 
 impl ParseAttribute for LayoutState {
 	fn parse_attribute(
 		&mut self,
-		attr: OwnedAttributeView<CustomAttributeValues>,
+		attr:OwnedAttributeView<CustomAttributeValues>,
 	) -> Result<(), ParseError> {
 		match attr.attribute {
 			AttributeName::Width => {
@@ -95,16 +91,12 @@ impl ParseAttribute for LayoutState {
 			},
 			AttributeName::OffsetY => {
 				if let Some(value) = attr.value.as_text() {
-					self.offset_y = Length::new(
-						value.parse::<f32>().map_err(|_| ParseError)?,
-					);
+					self.offset_y = Length::new(value.parse::<f32>().map_err(|_| ParseError)?);
 				}
 			},
 			AttributeName::OffsetX => {
 				if let Some(value) = attr.value.as_text() {
-					self.offset_x = Length::new(
-						value.parse::<f32>().map_err(|_| ParseError)?,
-					);
+					self.offset_x = Length::new(value.parse::<f32>().map_err(|_| ParseError)?);
 				}
 			},
 			AttributeName::MainAlign => {
@@ -126,29 +118,22 @@ impl ParseAttribute for LayoutState {
 			},
 			AttributeName::PositionTop => {
 				if let Some(value) = attr.value.as_text() {
-					self.position
-						.set_top(value.parse::<f32>().map_err(|_| ParseError)?);
+					self.position.set_top(value.parse::<f32>().map_err(|_| ParseError)?);
 				}
 			},
 			AttributeName::PositionRight => {
 				if let Some(value) = attr.value.as_text() {
-					self.position.set_right(
-						value.parse::<f32>().map_err(|_| ParseError)?,
-					);
+					self.position.set_right(value.parse::<f32>().map_err(|_| ParseError)?);
 				}
 			},
 			AttributeName::PositionBottom => {
 				if let Some(value) = attr.value.as_text() {
-					self.position.set_bottom(
-						value.parse::<f32>().map_err(|_| ParseError)?,
-					);
+					self.position.set_bottom(value.parse::<f32>().map_err(|_| ParseError)?);
 				}
 			},
 			AttributeName::PositionLeft => {
 				if let Some(value) = attr.value.as_text() {
-					self.position.set_left(
-						value.parse::<f32>().map_err(|_| ParseError)?,
-					);
+					self.position.set_left(value.parse::<f32>().map_err(|_| ParseError)?);
 				}
 			},
 			AttributeName::Content => {
@@ -157,9 +142,8 @@ impl ParseAttribute for LayoutState {
 				}
 			},
 			AttributeName::Reference => {
-				if let OwnedAttributeValue::Custom(
-					CustomAttributeValues::Reference(reference),
-				) = attr.value
+				if let OwnedAttributeValue::Custom(CustomAttributeValues::Reference(reference)) =
+					attr.value
 				{
 					self.node_ref = Some(reference.clone());
 				}
@@ -172,14 +156,12 @@ impl ParseAttribute for LayoutState {
 
 #[partial_derive_state]
 impl State<CustomAttributeValues> for LayoutState {
+	type ChildDependencies = ();
+	type NodeDependencies = ();
 	type ParentDependencies = ();
 
-	type ChildDependencies = ();
-
-	type NodeDependencies = ();
-
-	const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new()
-		.with_attrs(AttributeMaskBuilder::Some(&[
+	const NODE_MASK:NodeMaskBuilder<'static> =
+		NodeMaskBuilder::new().with_attrs(AttributeMaskBuilder::Some(&[
 			AttributeName::Width,
 			AttributeName::Height,
 			AttributeName::MinWidth,
@@ -204,20 +186,15 @@ impl State<CustomAttributeValues> for LayoutState {
 
 	fn update<'a>(
 		&mut self,
-		node_view: NodeView<CustomAttributeValues>,
-		_node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-		_parent: Option<
-			<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		_children: Vec<
-			<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		context: &SendAnyMap,
+		node_view:NodeView<CustomAttributeValues>,
+		_node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+		_parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+		_children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+		context:&SendAnyMap,
 	) -> bool {
 		let torin_layout = context.get::<Arc<Mutex<Torin<NodeId>>>>().unwrap();
 
-		let mut layout =
-			LayoutState { node_id: node_view.node_id(), ..Default::default() };
+		let mut layout = LayoutState { node_id:node_view.node_id(), ..Default::default() };
 
 		if let Some(attributes) = node_view.attributes() {
 			for attr in attributes {

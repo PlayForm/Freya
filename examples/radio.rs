@@ -1,13 +1,8 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch_with_title(app, "Radio");
-}
+fn main() { launch_with_title(app, "Radio"); }
 
 #[derive(PartialEq)]
 enum Choice {

@@ -1,18 +1,13 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use std::time::Duration;
 
 use freya::prelude::*;
 use tokio::time::interval;
 
-fn main() {
-	launch_with_props(app, "Rotate", (350.0, 350.0));
-}
+fn main() { launch_with_props(app, "Rotate", (350.0, 350.0)); }
 
-const SPEEDS: (i16, i16, i16) = (2, 3, 6);
+const SPEEDS:(i16, i16, i16) = (2, 3, 6);
 
 fn app() -> Element {
 	let mut degrees = use_signal(|| (0, 0, 0));

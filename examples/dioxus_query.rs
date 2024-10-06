@@ -1,15 +1,10 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use dioxus_query::prelude::*;
 use freya::prelude::*;
 use serde::Deserialize;
 
-fn main() {
-	launch_with_props(app, "dioxus-query", (400.0, 350.0));
-}
+fn main() { launch_with_props(app, "dioxus-query", (400.0, 350.0)); }
 
 #[derive(PartialEq, Eq, Clone, Hash)]
 enum QueryKey {
@@ -23,14 +18,12 @@ enum QueryValue {
 
 #[derive(Deserialize, PartialEq)]
 struct Joke {
-	setup: String,
-	punchline: String,
+	setup:String,
+	punchline:String,
 }
 
 async fn get_random_joke() -> Option<QueryValue> {
-	let res = reqwest::get("https://official-joke-api.appspot.com/random_joke")
-		.await
-		.ok()?;
+	let res = reqwest::get("https://official-joke-api.appspot.com/random_joke").await.ok()?;
 	let data = res.json::<Joke>().await.ok()?;
 
 	Some(QueryValue::Joke(data))
@@ -39,8 +32,8 @@ async fn get_random_joke() -> Option<QueryValue> {
 fn app() -> Element {
 	use_init_query_client::<QueryValue, (), QueryKey>();
 	let client = use_query_client::<QueryValue, (), QueryKey>();
-	let joke_query = use_get_query([QueryKey::RandomJoke], |_| async {
-		get_random_joke().await.ok_or(()).into()
+	let joke_query = use_get_query([QueryKey::RandomJoke], |_| {
+		async { get_random_joke().await.ok_or(()).into() }
 	});
 
 	let new_joke = move |_| {

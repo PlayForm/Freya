@@ -1,7 +1,4 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use std::{
 	thread::{self, sleep},
@@ -9,23 +6,16 @@ use std::{
 };
 
 use freya::prelude::*;
-use freya_core::prelude::{
-	EventName, FreyaPlugin, PlatformEvent, PluginEvent, PluginHandle,
-};
+use freya_core::prelude::{EventName, FreyaPlugin, PlatformEvent, PluginEvent, PluginHandle};
 use gilrs::{Axis, EventType, Gilrs};
 
-fn main() {
-	launch_cfg(
-		app,
-		LaunchConfig::<()>::new().with_plugin(GamePadPlugin::default()),
-	)
-}
+fn main() { launch_cfg(app, LaunchConfig::<()>::new().with_plugin(GamePadPlugin::default())) }
 
 #[derive(Default)]
 pub struct GamePadPlugin;
 
 impl GamePadPlugin {
-	pub fn listen_gamepad(handle: PluginHandle) {
+	pub fn listen_gamepad(handle:PluginHandle) {
 		thread::spawn(move || {
 			println!("Listening for gamepads");
 
@@ -40,18 +30,10 @@ impl GamePadPlugin {
 					loop {
 						sleep(Duration::from_millis(16));
 						match ev.event {
-							EventType::AxisChanged(
-								Axis::LeftStickX,
-								diff,
-								_,
-							) => {
+							EventType::AxisChanged(Axis::LeftStickX, diff, _) => {
 								diff_x = diff as f64;
 							},
-							EventType::AxisChanged(
-								Axis::LeftStickY,
-								diff,
-								_,
-							) => {
+							EventType::AxisChanged(Axis::LeftStickY, diff, _) => {
 								diff_y = diff as f64;
 							},
 							_ => {},
@@ -60,18 +42,18 @@ impl GamePadPlugin {
 						if diff_x != 0.0 {
 							x += diff_x as f64 * 10.;
 							handle.send_platform_event(PlatformEvent::Mouse {
-								name: EventName::MouseOver,
-								cursor: (x, y).into(),
-								button: None,
+								name:EventName::MouseOver,
+								cursor:(x, y).into(),
+								button:None,
 							});
 						}
 
 						if diff_x != 0.0 {
 							y -= diff_y as f64 * 10.;
 							handle.send_platform_event(PlatformEvent::Mouse {
-								name: EventName::MouseOver,
-								cursor: (x, y).into(),
-								button: None,
+								name:EventName::MouseOver,
+								cursor:(x, y).into(),
+								button:None,
 							});
 						}
 
@@ -91,7 +73,7 @@ impl GamePadPlugin {
 }
 
 impl FreyaPlugin for GamePadPlugin {
-	fn on_event(&mut self, event: &PluginEvent, handle: PluginHandle) {
+	fn on_event(&mut self, event:&PluginEvent, handle:PluginHandle) {
 		match event {
 			PluginEvent::WindowCreated(_) => {
 				Self::listen_gamepad(handle);
@@ -101,8 +83,8 @@ impl FreyaPlugin for GamePadPlugin {
 	}
 }
 
-const MOVEMENT_MARGIN: f64 = 75.0;
-const BOX_COUNT: usize = 80;
+const MOVEMENT_MARGIN:f64 = 75.0;
+const BOX_COUNT:usize = 80;
 
 #[allow(non_snake_case)]
 fn Box() -> Element {
@@ -135,7 +117,7 @@ fn Box() -> Element {
 fn app() -> Element {
 	let mut positions = use_signal::<Vec<CursorPoint>>(Vec::new);
 
-	let onmouseover = move |e: MouseEvent| {
+	let onmouseover = move |e:MouseEvent| {
 		let coordinates = e.get_screen_coordinates();
 		positions.with_mut(|positions| {
 			if let Some(pos) = positions.first() {
@@ -147,10 +129,7 @@ fn app() -> Element {
 					return;
 				}
 			}
-			positions.insert(
-				0,
-				(coordinates.x - 125.0, coordinates.y - 125.0).into(),
-			);
+			positions.insert(0, (coordinates.x - 125.0, coordinates.y - 125.0).into());
 			positions.truncate(BOX_COUNT);
 		})
 	};

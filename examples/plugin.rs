@@ -1,7 +1,4 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 use freya_core::{
@@ -12,7 +9,7 @@ use freya_core::{
 struct DummyPlugin;
 
 impl FreyaPlugin for DummyPlugin {
-	fn on_event(&mut self, event: &PluginEvent, handle: PluginHandle) {
+	fn on_event(&mut self, event:&PluginEvent, handle:PluginHandle) {
 		if let PluginEvent::AfterRender { .. } = event {
 			println!("The app just got rendered to the canvas.");
 		}
@@ -20,12 +17,7 @@ impl FreyaPlugin for DummyPlugin {
 }
 
 fn main() {
-	launch_cfg(
-		app,
-		LaunchConfig::<()>::new()
-			.with_plugin(DummyPlugin)
-			.with_size(250.0, 250.),
-	)
+	launch_cfg(app, LaunchConfig::<()>::new().with_plugin(DummyPlugin).with_size(250.0, 250.))
 }
 
 fn app() -> Element {

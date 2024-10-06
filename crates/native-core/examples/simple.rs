@@ -1,5 +1,7 @@
 use freya_native_core::{
-	exports::shipyard::Component, node_ref::*, prelude::*,
+	exports::shipyard::Component,
+	node_ref::*,
+	prelude::*,
 	real_dom::NodeTypeMut,
 };
 use freya_native_core_macro::partial_derive_state;
@@ -13,15 +15,14 @@ struct Size(f64, f64);
 /// Derive some of the boilerplate for the State implementation
 #[partial_derive_state]
 impl State for Size {
-	type ParentDependencies = ();
-
 	// The size of the current node depends on the size of its children
 	type ChildDependencies = (Self,);
-
 	type NodeDependencies = ();
+	type ParentDependencies = ();
 
-	// Size only cares about the width, height, and text parts of the current node
-	const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new()
+	// Size only cares about the width, height, and text parts of the current
+	// node
+	const NODE_MASK:NodeMaskBuilder<'static> = NodeMaskBuilder::new()
         // Get access to the width and height attributes
         .with_attrs(AttributeMaskBuilder::Some(&[
             AttributeName::Width,
@@ -32,15 +33,11 @@ impl State for Size {
 
 	fn update<'a>(
 		&mut self,
-		node_view: NodeView<()>,
-		_node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-		_parent: Option<
-			<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		children: Vec<
-			<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		context: &SendAnyMap,
+		node_view:NodeView<()>,
+		_node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+		_parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+		children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+		context:&SendAnyMap,
 	) -> bool {
 		let font_size = context.get::<FontSize>().unwrap().0;
 		let mut width;
@@ -63,16 +60,19 @@ impl State for Size {
 				.reduce(|accum, item| if accum >= item { accum } else { item })
 				.unwrap_or(0.0);
 		}
-		// if the node contains a width or height attribute it overrides the other size
+		// if the node contains a width or height attribute it overrides the
+		// other size
 		for a in node_view.attributes().into_iter().flatten() {
 			match a.attribute {
 				AttributeName::Width => width = a.value.as_float().unwrap(),
 				AttributeName::Height => height = a.value.as_float().unwrap(),
-				// because Size only depends on the width and height, no other attributes will be passed to the member
+				// because Size only depends on the width and height, no other
+				// attributes will be passed to the member
 				_ => panic!(),
 			}
 		}
-		// to determine what other parts of the dom need to be updated we return a boolean that marks if this member changed
+		// to determine what other parts of the dom need to be updated we return
+		// a boolean that marks if this member changed
 		let changed = (width != self.0) || (height != self.1);
 		*self = Self(width, height);
 		changed
@@ -81,53 +81,49 @@ impl State for Size {
 
 #[derive(Debug, Clone, Copy, PartialEq, Default, Component)]
 struct TextColor {
-	r: u8,
-	g: u8,
-	b: u8,
+	r:u8,
+	g:u8,
+	b:u8,
 }
 
 #[partial_derive_state]
 impl State for TextColor {
+	type ChildDependencies = ();
+	type NodeDependencies = ();
 	// TextColor depends on the TextColor part of the parent
 	type ParentDependencies = (Self,);
 
-	type ChildDependencies = ();
-
-	type NodeDependencies = ();
-
 	// TextColor only cares about the color attribute of the current node
-	const NODE_MASK: NodeMaskBuilder<'static> =
+	const NODE_MASK:NodeMaskBuilder<'static> =
 		// Get access to the color attribute
-		NodeMaskBuilder::new()
-			.with_attrs(AttributeMaskBuilder::Some(&[AttributeName::Color]));
+		NodeMaskBuilder::new().with_attrs(AttributeMaskBuilder::Some(&[AttributeName::Color]));
 
 	fn update<'a>(
 		&mut self,
-		node_view: NodeView<()>,
-		_node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-		parent: Option<
-			<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		_children: Vec<
-			<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		_context: &SendAnyMap,
+		node_view:NodeView<()>,
+		_node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+		parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+		_children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+		_context:&SendAnyMap,
 	) -> bool {
-		// TextColor only depends on the color tag, so getting the first tag is equivilent to looking through all tags
+		// TextColor only depends on the color tag, so getting the first tag is
+		// equivilent to looking through all tags
 		let new = match node_view
 			.attributes()
 			.and_then(|mut attrs| attrs.next())
 			.and_then(|attr| attr.value.as_text())
 		{
 			// if there is a color tag, translate it
-			Some("red") => TextColor { r: 255, g: 0, b: 0 },
-			Some("green") => TextColor { r: 0, g: 255, b: 0 },
-			Some("blue") => TextColor { r: 0, g: 0, b: 255 },
+			Some("red") => TextColor { r:255, g:0, b:0 },
+			Some("green") => TextColor { r:0, g:255, b:0 },
+			Some("blue") => TextColor { r:0, g:0, b:255 },
 			Some(color) => panic!("unknown color {color}"),
 			// otherwise check if the node has a parent and inherit that color
-			None => match parent {
-				Some((parent,)) => *parent,
-				None => Self::default(),
+			None => {
+				match parent {
+					Some((parent,)) => *parent,
+					None => Self::default(),
+				}
 			},
 		};
 		// check if the member has changed
@@ -142,38 +138,29 @@ struct Border(bool);
 
 #[partial_derive_state]
 impl State for Border {
+	type ChildDependencies = ();
+	type NodeDependencies = ();
 	// TextColor depends on the TextColor part of the parent
 	type ParentDependencies = (Self,);
 
-	type ChildDependencies = ();
-
-	type NodeDependencies = ();
-
 	// Border does not depended on any other member in the current node
-	const NODE_MASK: NodeMaskBuilder<'static> =
+	const NODE_MASK:NodeMaskBuilder<'static> =
 		// Get access to the border attribute
-		NodeMaskBuilder::new()
-			.with_attrs(AttributeMaskBuilder::Some(&[AttributeName::Border]));
+		NodeMaskBuilder::new().with_attrs(AttributeMaskBuilder::Some(&[AttributeName::Border]));
 
 	fn update<'a>(
 		&mut self,
-		node_view: NodeView<()>,
-		_node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-		_parent: Option<
-			<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		_children: Vec<
-			<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		_context: &SendAnyMap,
+		node_view:NodeView<()>,
+		_node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+		_parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+		_children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+		_context:&SendAnyMap,
 	) -> bool {
 		// check if the node contians a border attribute
 		let new = Self(
 			node_view
 				.attributes()
-				.and_then(|mut attrs| {
-					attrs.next().map(|a| *a.attribute == AttributeName::Border)
-				})
+				.and_then(|mut attrs| attrs.next().map(|a| *a.attribute == AttributeName::Border))
 				.is_some(),
 		);
 		// check if the member has changed
@@ -184,7 +171,7 @@ impl State for Border {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-	let mut rdom: RealDom = RealDom::new([
+	let mut rdom:RealDom = RealDom::new([
 		Border::to_type_erased(),
 		TextColor::to_type_erased(),
 		Size::to_type_erased(),

@@ -1,21 +1,16 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
-static RUST_LOGO: &[u8] = include_bytes!("./rust_logo.png");
+static RUST_LOGO:&[u8] = include_bytes!("./rust_logo.png");
 
 fn app() -> Element {
 	let image_data = static_bytes(RUST_LOGO);
 	let mut size = use_signal(|| 250);
 
-	let onwheel = move |e: WheelEvent| {
+	let onwheel = move |e:WheelEvent| {
 		let y = e.get_delta_y() as i32;
 		let res = *size.read() + y;
 		if res >= 600 || res <= 20 {

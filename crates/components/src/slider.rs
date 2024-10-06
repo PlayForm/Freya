@@ -3,9 +3,7 @@ use freya_elements::{
 	elements as dioxus_elements,
 	events::{MouseEvent, WheelEvent},
 };
-use freya_hooks::{
-	use_applied_theme, use_focus, use_node, use_platform, SliderThemeWith,
-};
+use freya_hooks::{use_applied_theme, use_focus, use_node, use_platform, SliderThemeWith};
 use tracing::info;
 use winit::window::CursorIcon;
 
@@ -13,18 +11,18 @@ use winit::window::CursorIcon;
 #[derive(Props, Clone, PartialEq)]
 pub struct SliderProps {
 	/// Theme override.
-	pub theme: Option<SliderThemeWith>,
+	pub theme:Option<SliderThemeWith>,
 	/// Handler for the `onmoved` event.
-	pub onmoved: EventHandler<f64>,
+	pub onmoved:EventHandler<f64>,
 	/// Width of the Slider.
 	#[props(into, default = "100%".to_string())]
-	pub width: String,
+	pub width:String,
 	/// Height of the Slider.
-	pub value: f64,
+	pub value:f64,
 }
 
 #[inline]
-fn ensure_correct_slider_range(value: f64) -> f64 {
+fn ensure_correct_slider_range(value:f64) -> f64 {
 	if value < 0.0 {
 		info!("Slider value is less than 0.0, setting to 0.0");
 		0.0
@@ -48,8 +46,9 @@ pub enum SliderStatus {
 
 /// Controlled `Slider` component.
 ///
-/// You must pass a percentage from 0.0 to 100.0 and listen for value changes with `onmoved` and then decide if this changes are applicable,
-/// and if so, apply them.
+/// You must pass a percentage from 0.0 to 100.0 and listen for value changes
+/// with `onmoved` and then decide if this changes are applicable, and if so,
+/// apply them.
 ///
 /// # Styling
 /// Inherits a [`SliderTheme`](freya_hooks::SliderTheme) theme.
@@ -75,9 +74,7 @@ pub enum SliderStatus {
 /// }
 /// ```
 #[allow(non_snake_case)]
-pub fn Slider(
-	SliderProps { value, onmoved, theme, width }: SliderProps,
-) -> Element {
+pub fn Slider(SliderProps { value, onmoved, theme, width }:SliderProps) -> Element {
 	let theme = use_applied_theme!(&theme, slider);
 	let mut focus = use_focus();
 	let mut status = use_signal(SliderStatus::default);
@@ -94,13 +91,13 @@ pub fn Slider(
 		}
 	});
 
-	let onmouseleave = move |e: MouseEvent| {
+	let onmouseleave = move |e:MouseEvent| {
 		e.stop_propagation();
 		*status.write() = SliderStatus::Idle;
 		platform.set_cursor(CursorIcon::default());
 	};
 
-	let onmouseenter = move |e: MouseEvent| {
+	let onmouseenter = move |e:MouseEvent| {
 		e.stop_propagation();
 		*status.write() = SliderStatus::Hovering;
 		platform.set_cursor(CursorIcon::Pointer);
@@ -108,7 +105,7 @@ pub fn Slider(
 
 	let onmouseover = {
 		to_owned![onmoved];
-		move |e: MouseEvent| {
+		move |e:MouseEvent| {
 			e.stop_propagation();
 			if *clicking.peek() {
 				let coordinates = e.get_element_coordinates();
@@ -123,7 +120,7 @@ pub fn Slider(
 
 	let onmousedown = {
 		to_owned![onmoved];
-		move |e: MouseEvent| {
+		move |e:MouseEvent| {
 			e.stop_propagation();
 			focus.focus();
 			clicking.set(true);
@@ -136,11 +133,11 @@ pub fn Slider(
 		}
 	};
 
-	let onclick = move |_: MouseEvent| {
+	let onclick = move |_:MouseEvent| {
 		clicking.set(false);
 	};
 
-	let onwheel = move |e: WheelEvent| {
+	let onwheel = move |e:WheelEvent| {
 		e.stop_propagation();
 		let wheel_y = e.get_delta_y().clamp(-1.0, 1.0);
 		let percentage = value + (wheel_y * 2.0);
@@ -240,24 +237,24 @@ mod test {
 		assert_eq!(label.get(0).text(), Some("50"));
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (250.0, 7.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(250.0, 7.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseDown,
-			cursor: (250.0, 7.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseDown,
+			cursor:(250.0, 7.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (500.0, 7.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(500.0, 7.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (500.0, 7.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(500.0, 7.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;

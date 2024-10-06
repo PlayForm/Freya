@@ -1,13 +1,8 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 #[allow(non_snake_case)]
 fn TheOtherSwitch() -> Element {
@@ -16,8 +11,8 @@ fn TheOtherSwitch() -> Element {
 	let is_enabled = theme.read().name == "dark";
 
 	rsx!(Switch {
-		enabled: is_enabled,
-		ontoggled: move |_| {
+		enabled:is_enabled,
+		ontoggled:move |_| {
 			if is_enabled {
 				*theme.write() = LIGHT_THEME
 			} else {

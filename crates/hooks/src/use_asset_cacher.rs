@@ -12,8 +12,8 @@ use dioxus_hooks::{use_context, use_context_provider};
 use dioxus_signals::{Readable, Signal, Writable};
 use tokio::time::sleep;
 
-/// Defines the duration for which an Asset will remain cached after it's user has stopped using it.
-/// The default is 1h (3600s).
+/// Defines the duration for which an Asset will remain cached after it's user
+/// has stopped using it. The default is 1h (3600s).
 #[derive(Hash, PartialEq, Eq, Clone)]
 pub enum AssetAge {
 	/// Asset will be cached for the specified duration
@@ -29,18 +29,17 @@ impl Default for AssetAge {
 }
 
 impl From<Duration> for AssetAge {
-	fn from(value: Duration) -> Self {
-		Self::Duration(value)
-	}
+	fn from(value:Duration) -> Self { Self::Duration(value) }
 }
 
 /// Configuration for a given Asset.
 #[derive(Hash, PartialEq, Eq, Clone)]
 pub struct AssetConfiguration {
 	/// Asset age.
-	pub age: AssetAge,
-	/// The ID of the asset. For example: For images their source URL or path can be used as ID.
-	pub id: String,
+	pub age:AssetAge,
+	/// The ID of the asset. For example: For images their source URL or path
+	/// can be used as ID.
+	pub id:String,
 }
 
 enum AssetUsers {
@@ -49,27 +48,25 @@ enum AssetUsers {
 }
 
 struct AssetState {
-	users: AssetUsers,
-	asset_bytes: Signal<Bytes>,
+	users:AssetUsers,
+	asset_bytes:Signal<Bytes>,
 }
 
 #[derive(Clone, Copy, Default)]
 pub struct AssetCacher {
-	registry: Signal<HashMap<AssetConfiguration, AssetState>>,
+	registry:Signal<HashMap<AssetConfiguration, AssetState>>,
 }
 
 impl AssetCacher {
 	/// Cache the given [`AssetConfiguration`]
 	pub fn cache(
 		&mut self,
-		asset_config: AssetConfiguration,
-		asset_bytes: Bytes,
-		subscribe: bool,
+		asset_config:AssetConfiguration,
+		asset_bytes:Bytes,
+		subscribe:bool,
 	) -> Signal<Bytes> {
 		// Cancel previous caches
-		if let Some(mut asset_state) =
-			self.registry.write().remove(&asset_config)
-		{
+		if let Some(mut asset_state) = self.registry.write().remove(&asset_config) {
 			if let AssetUsers::ClearTask(task) = asset_state.users {
 				task.cancel();
 				asset_state.asset_bytes.take();
@@ -84,7 +81,7 @@ impl AssetCacher {
 			asset_config.clone(),
 			AssetState {
 				asset_bytes,
-				users: AssetUsers::Scopes(if subscribe {
+				users:AssetUsers::Scopes(if subscribe {
 					HashSet::from([current_scope_id().unwrap()])
 				} else {
 					HashSet::default()
@@ -95,8 +92,9 @@ impl AssetCacher {
 		asset_bytes
 	}
 
-	/// Stop using an asset. It will get removed after the specified duration if it's not used until then.
-	pub fn unuse_asset(&mut self, asset_config: AssetConfiguration) {
+	/// Stop using an asset. It will get removed after the specified duration if
+	/// it's not used until then.
+	pub fn unuse_asset(&mut self, asset_config:AssetConfiguration) {
 		let mut registry = self.registry;
 
 		let spawn_clear_task = {
@@ -109,11 +107,13 @@ impl AssetCacher {
 						// Unsub
 						scopes.remove(&current_scope_id().unwrap());
 
-						// Only spawn a clear-task if there are no more scopes using this asset
+						// Only spawn a clear-task if there are no more scopes
+						// using this asset
 						scopes.is_empty()
 					},
 					AssetUsers::ClearTask(task) => {
-						// This case should never happen but... we leave it here anyway.
+						// This case should never happen but... we leave it here
+						// anyway.
 						task.cancel();
 						true
 					},
@@ -127,21 +127,18 @@ impl AssetCacher {
 			// Only clear the asset if a duration was specified
 			if let AssetAge::Duration(duration) = asset_config.age {
 				// Why not use `spawn_forever`? Reason: https://github.com/DioxusLabs/dioxus/issues/2215
-				let clear_task =
-					Runtime::current().unwrap().on_scope(ScopeId(0), || {
-						spawn({
-							let asset_config = asset_config.clone();
-							async move {
-								sleep(duration).await;
-								if let Some(mut asset_state) =
-									registry.write().remove(&asset_config)
-								{
-									// Clear the asset
-									asset_state.asset_bytes.take();
-								}
+				let clear_task = Runtime::current().unwrap().on_scope(ScopeId(0), || {
+					spawn({
+						let asset_config = asset_config.clone();
+						async move {
+							sleep(duration).await;
+							if let Some(mut asset_state) = registry.write().remove(&asset_config) {
+								// Clear the asset
+								asset_state.asset_bytes.take();
 							}
-						})
-					});
+						}
+					})
+				});
 
 				// Registry the clear-task
 				let mut registry = registry.write();
@@ -151,11 +148,9 @@ impl AssetCacher {
 		}
 	}
 
-	/// Start using an Asset. Your scope will get subscribed, to stop using an asset use [`Self::unuse_asset`]
-	pub fn use_asset(
-		&mut self,
-		config: &AssetConfiguration,
-	) -> Option<Signal<Bytes>> {
+	/// Start using an Asset. Your scope will get subscribed, to stop using an
+	/// asset use [`Self::unuse_asset`]
+	pub fn use_asset(&mut self, config:&AssetConfiguration) -> Option<Signal<Bytes>> {
 		let mut registry = self.registry.write();
 		if let Some(asset_state) = registry.get_mut(config) {
 			match &mut asset_state.users {
@@ -165,9 +160,8 @@ impl AssetCacher {
 					asset_state.asset_bytes.take();
 
 					// Start using this asset
-					asset_state.users = AssetUsers::Scopes(HashSet::from([
-						current_scope_id().unwrap(),
-					]));
+					asset_state.users =
+						AssetUsers::Scopes(HashSet::from([current_scope_id().unwrap()]));
 				},
 				AssetUsers::Scopes(scopes) => {
 					// Start using this asset
@@ -180,26 +174,18 @@ impl AssetCacher {
 	}
 
 	/// Get the size of the cache registry.
-	pub fn size(&self) -> usize {
-		self.registry.read().len()
-	}
+	pub fn size(&self) -> usize { self.registry.read().len() }
 
 	/// Clear all the assets from the cache registry.
-	pub fn clear(&mut self) {
-		self.registry.try_write().unwrap().clear();
-	}
+	pub fn clear(&mut self) { self.registry.try_write().unwrap().clear(); }
 }
 
 /// Global caching system for assets.
 ///
 /// This is a "low level" hook, so you probably won't need it.
-pub fn use_asset_cacher() -> AssetCacher {
-	use_context()
-}
+pub fn use_asset_cacher() -> AssetCacher { use_context() }
 
 /// Initialize the global caching system for assets.
 ///
 /// This is a "low level" hook, so you probably won't need it.
-pub fn use_init_asset_cacher() {
-	use_context_provider(AssetCacher::default);
-}
+pub fn use_init_asset_cacher() { use_context_provider(AssetCacher::default); }

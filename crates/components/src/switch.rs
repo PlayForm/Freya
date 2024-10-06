@@ -4,8 +4,14 @@ use freya_elements::{
 	events::{KeyboardEvent, MouseEvent},
 };
 use freya_hooks::{
-	use_animation, use_applied_theme, use_focus, use_platform, AnimNum, Ease,
-	Function, SwitchThemeWith,
+	use_animation,
+	use_applied_theme,
+	use_focus,
+	use_platform,
+	AnimNum,
+	Ease,
+	Function,
+	SwitchThemeWith,
 };
 use winit::window::CursorIcon;
 
@@ -13,11 +19,11 @@ use winit::window::CursorIcon;
 #[derive(Props, Clone, PartialEq)]
 pub struct SwitchProps {
 	/// Theme override.
-	pub theme: Option<SwitchThemeWith>,
+	pub theme:Option<SwitchThemeWith>,
 	/// Whether the `Switch` is enabled or not.
-	pub enabled: bool,
+	pub enabled:bool,
 	/// Handler for the `ontoggled` event.
-	pub ontoggled: EventHandler<()>,
+	pub ontoggled:EventHandler<()>,
 }
 
 /// Describes the current status of the Switch.
@@ -43,25 +49,20 @@ pub enum SwitchStatus {
 /// ```no_run
 /// # use freya::prelude::*;
 /// fn app() -> Element {
-///     let mut enabled = use_signal(|| false);
+/// 	let mut enabled = use_signal(|| false);
 ///
-///     rsx!(Switch {
-///         enabled: *enabled.read(),
-///         ontoggled: move |_| {
-///             enabled.toggle();
-///         }
-///     })
+/// 	rsx!(Switch {
+/// 		enabled:*enabled.read(),
+/// 		ontoggled:move |_| {
+/// 			enabled.toggle();
+/// 		}
+/// 	})
 /// }
 /// ```
 #[allow(non_snake_case)]
-pub fn Switch(props: SwitchProps) -> Element {
+pub fn Switch(props:SwitchProps) -> Element {
 	let animation = use_animation(|ctx| {
-		ctx.with(
-			AnimNum::new(0., 25.)
-				.time(300)
-				.function(Function::Expo)
-				.ease(Ease::Out),
-		)
+		ctx.with(AnimNum::new(0., 25.).time(300).function(Function::Expo).ease(Ease::Out))
 	});
 	let theme = use_applied_theme!(&props.theme, switch);
 	let platform = use_platform();
@@ -76,29 +77,29 @@ pub fn Switch(props: SwitchProps) -> Element {
 		}
 	});
 
-	let onmousedown = |e: MouseEvent| {
+	let onmousedown = |e:MouseEvent| {
 		e.stop_propagation();
 	};
 
-	let onmouseleave = move |e: MouseEvent| {
+	let onmouseleave = move |e:MouseEvent| {
 		e.stop_propagation();
 		*status.write() = SwitchStatus::Idle;
 		platform.set_cursor(CursorIcon::default());
 	};
 
-	let onmouseenter = move |e: MouseEvent| {
+	let onmouseenter = move |e:MouseEvent| {
 		e.stop_propagation();
 		*status.write() = SwitchStatus::Hovering;
 		platform.set_cursor(CursorIcon::Pointer);
 	};
 
-	let onclick = move |e: MouseEvent| {
+	let onclick = move |e:MouseEvent| {
 		e.stop_propagation();
 		focus.focus();
 		props.ontoggled.call(());
 	};
 
-	let onkeydown = move |e: KeyboardEvent| {
+	let onkeydown = move |e:KeyboardEvent| {
 		if focus.validate_keydown(&e) {
 			props.ontoggled.call(());
 		}
@@ -112,11 +113,7 @@ pub fn Switch(props: SwitchProps) -> Element {
 				theme.enabled_thumb_background,
 			)
 		} else {
-			(
-				animation.get().read().as_f32(),
-				theme.background,
-				theme.thumb_background,
-			)
+			(animation.get().read().as_f32(), theme.background, theme.thumb_background)
 		}
 	};
 	let border = if focus.is_selected() {
@@ -202,9 +199,9 @@ mod test {
 		assert_eq!(label.get(0).text(), Some("false"));
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 15.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 15.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
@@ -213,9 +210,9 @@ mod test {
 		assert_eq!(label.get(0).text(), Some("true"));
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 15.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 15.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;

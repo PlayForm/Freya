@@ -19,13 +19,11 @@ use uuid::Uuid;
 pub struct ImageReference(pub Arc<Mutex<Option<Bytes>>>);
 
 impl PartialEq for ImageReference {
-	fn eq(&self, _other: &Self) -> bool {
-		true
-	}
+	fn eq(&self, _other:&Self) -> bool { true }
 }
 
 impl Display for ImageReference {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		f.debug_struct("ImageReference").finish_non_exhaustive()
 	}
 }
@@ -35,41 +33,36 @@ impl Display for ImageReference {
 pub struct NodeReference(pub Arc<watch::Sender<NodeReferenceLayout>>);
 
 impl PartialEq for NodeReference {
-	fn eq(&self, other: &Self) -> bool {
-		Arc::ptr_eq(&self.0, &other.0)
-	}
+	fn eq(&self, other:&Self) -> bool { Arc::ptr_eq(&self.0, &other.0) }
 }
 
 impl Display for NodeReference {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		f.debug_struct("NodeReference").finish_non_exhaustive()
 	}
 }
 
 pub struct CanvasRunnerContext<'a> {
-	pub canvas: &'a Canvas,
-	pub font_collection: &'a mut FontCollection,
-	pub area: Area,
-	pub scale_factor: f32,
+	pub canvas:&'a Canvas,
+	pub font_collection:&'a mut FontCollection,
+	pub area:Area,
+	pub scale_factor:f32,
 }
 
-pub type CanvasRunner =
-	dyn Fn(&mut CanvasRunnerContext) + Sync + Send + 'static;
+pub type CanvasRunner = dyn Fn(&mut CanvasRunnerContext) + Sync + Send + 'static;
 
 /// Canvas Reference
 #[derive(Clone)]
 pub struct CanvasReference {
-	pub runner: Arc<Box<CanvasRunner>>,
+	pub runner:Arc<Box<CanvasRunner>>,
 }
 
 impl PartialEq for CanvasReference {
-	fn eq(&self, other: &Self) -> bool {
-		Arc::ptr_eq(&self.runner, &other.runner)
-	}
+	fn eq(&self, other:&Self) -> bool { Arc::ptr_eq(&self.runner, &other.runner) }
 }
 
 impl Debug for CanvasReference {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		f.debug_struct("CanvasReference").finish_non_exhaustive()
 	}
 }
@@ -77,18 +70,16 @@ impl Debug for CanvasReference {
 /// Cursor reference
 #[derive(Clone, Debug)]
 pub struct CursorReference {
-	pub text_id: Uuid,
-	pub cursor_sender: UnboundedSender<CursorLayoutResponse>,
+	pub text_id:Uuid,
+	pub cursor_sender:UnboundedSender<CursorLayoutResponse>,
 }
 
 impl PartialEq for CursorReference {
-	fn eq(&self, other: &Self) -> bool {
-		self.text_id == other.text_id
-	}
+	fn eq(&self, other:&Self) -> bool { self.text_id == other.text_id }
 }
 
 impl Display for CursorReference {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		f.debug_struct("CursorReference").finish_non_exhaustive()
 	}
 }
@@ -121,17 +112,13 @@ pub enum CustomAttributeValues {
 }
 
 impl Debug for CustomAttributeValues {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
 			Self::Reference(_) => f.debug_tuple("Reference").finish(),
-			Self::CursorReference(_) => {
-				f.debug_tuple("CursorReference").finish()
-			},
+			Self::CursorReference(_) => f.debug_tuple("CursorReference").finish(),
 			Self::Bytes(_) => f.debug_tuple("Bytes").finish(),
 			Self::ImageReference(_) => f.debug_tuple("ImageReference").finish(),
-			Self::AccessibilityId(_) => {
-				f.debug_tuple("AccessibilityId").finish()
-			},
+			Self::AccessibilityId(_) => f.debug_tuple("AccessibilityId").finish(),
 			Self::TextHighlights(_) => f.debug_tuple("TextHighlights").finish(),
 			Self::Canvas(_) => f.debug_tuple("Canvas").finish(),
 		}
@@ -139,21 +126,19 @@ impl Debug for CustomAttributeValues {
 }
 
 impl FromAnyValue for CustomAttributeValues {
-	fn from_any_value(b: &dyn Any) -> Self {
+	fn from_any_value(b:&dyn Any) -> Self {
 		b.downcast_ref::<CustomAttributeValues>().unwrap().clone()
 	}
 }
 
-/// Transform some dynamic bytes (e.g: remote image fetched at runtime) into an attribute
-pub fn dynamic_bytes(bytes: impl Into<Bytes>) -> AttributeValue {
-	AttributeValue::any_value(CustomAttributeValues::Bytes(
-		AttributesBytes::Dynamic(bytes.into()),
-	))
+/// Transform some dynamic bytes (e.g: remote image fetched at runtime) into an
+/// attribute
+pub fn dynamic_bytes(bytes:impl Into<Bytes>) -> AttributeValue {
+	AttributeValue::any_value(CustomAttributeValues::Bytes(AttributesBytes::Dynamic(bytes.into())))
 }
 
-/// Transform some static bytes (e.g: statically linked images or SVGs) into an attribute
-pub fn static_bytes(bytes: &'static [u8]) -> AttributeValue {
-	AttributeValue::any_value(CustomAttributeValues::Bytes(
-		AttributesBytes::Static(bytes),
-	))
+/// Transform some static bytes (e.g: statically linked images or SVGs) into an
+/// attribute
+pub fn static_bytes(bytes:&'static [u8]) -> AttributeValue {
+	AttributeValue::any_value(CustomAttributeValues::Bytes(AttributesBytes::Static(bytes)))
 }

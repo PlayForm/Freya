@@ -10,37 +10,33 @@ use crate::{
 
 #[derive(Clone)]
 pub struct PluginHandle {
-	pub proxy: EventLoopProxy<EventMessage>,
+	pub proxy:EventLoopProxy<EventMessage>,
 }
 
 impl PluginHandle {
-	pub fn new(proxy: &EventLoopProxy<EventMessage>) -> Self {
-		Self { proxy: proxy.clone() }
-	}
+	pub fn new(proxy:&EventLoopProxy<EventMessage>) -> Self { Self { proxy:proxy.clone() } }
 
 	/// Emit a [PlatformEvent]. Useful to simulate certain events.
-	pub fn send_platform_event(&self, event: PlatformEvent) {
+	pub fn send_platform_event(&self, event:PlatformEvent) {
 		self.proxy.send_event(EventMessage::PlatformEvent(event)).ok();
 	}
 
 	/// Emit a [EventMessage].
-	pub fn send_event_loop_event(&self, event: EventMessage) {
-		self.proxy.send_event(event).ok();
-	}
+	pub fn send_event_loop_event(&self, event:EventMessage) { self.proxy.send_event(event).ok(); }
 }
 
 /// Manages all loaded plugins.
 #[derive(Default)]
 pub struct PluginsManager {
-	plugins: Vec<Box<dyn FreyaPlugin>>,
+	plugins:Vec<Box<dyn FreyaPlugin>>,
 }
 
 impl PluginsManager {
-	pub fn add_plugin(&mut self, plugin: impl FreyaPlugin + 'static) {
+	pub fn add_plugin(&mut self, plugin:impl FreyaPlugin + 'static) {
 		self.plugins.push(Box::new(plugin))
 	}
 
-	pub fn send(&mut self, event: PluginEvent, handle: PluginHandle) {
+	pub fn send(&mut self, event:PluginEvent, handle:PluginHandle) {
 		for plugin in &mut self.plugins {
 			plugin.on_event(&event, handle.clone())
 		}
@@ -54,16 +50,16 @@ pub enum PluginEvent<'a> {
 
 	/// Before starting to render the app to the Canvas.
 	BeforeRender {
-		canvas: &'a Canvas,
-		font_collection: &'a FontCollection,
-		freya_dom: &'a FreyaDOM,
+		canvas:&'a Canvas,
+		font_collection:&'a FontCollection,
+		freya_dom:&'a FreyaDOM,
 	},
 
 	/// After rendering the app to the Canvas.
 	AfterRender {
-		canvas: &'a Canvas,
-		font_collection: &'a FontCollection,
-		freya_dom: &'a FreyaDOM,
+		canvas:&'a Canvas,
+		font_collection:&'a FontCollection,
+		freya_dom:&'a FreyaDOM,
 	},
 
 	/// Before starting to measure the layout.
@@ -80,5 +76,5 @@ pub enum PluginEvent<'a> {
 /// Skeleton for Freya plugins.
 pub trait FreyaPlugin {
 	/// React on events emitted by Freya.
-	fn on_event(&mut self, event: &PluginEvent, handle: PluginHandle);
+	fn on_event(&mut self, event:&PluginEvent, handle:PluginHandle);
 }

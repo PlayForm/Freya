@@ -45,9 +45,7 @@ async fn with_state() {
 
 #[tokio::test]
 async fn check_size() {
-	fn stateful_app() -> Element {
-		rsx!(rect { width: "50%", height: "calc(100% - 70)" })
-	}
+	fn stateful_app() -> Element { rsx!(rect { width:"50%", height:"calc(100% - 70)" }) }
 
 	let mut utils = launch_test(stateful_app);
 
@@ -92,9 +90,9 @@ async fn simulate_events() {
 	assert_eq!(text.text(), Some("Is enabled? false"));
 
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (5.0, 5.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(5.0, 5.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	// Render new layout after having it clicked
@@ -122,15 +120,9 @@ async fn match_by_text() {
 
 	let mut utils = launch_test(app);
 
-	assert_eq!(
-		utils.root().get_by_text("Hello, World!").unwrap().text(),
-		Some("Hello, World!")
-	);
+	assert_eq!(utils.root().get_by_text("Hello, World!").unwrap().text(), Some("Hello, World!"));
 
 	assert!(utils.root().get_by_text("Blabla").is_none());
 
-	assert_eq!(
-		utils.root().get_by_text("Hello, Rust!").unwrap().text(),
-		Some("Hello, Rust!")
-	);
+	assert_eq!(utils.root().get_by_text("Hello, Rust!").unwrap().text(), Some("Hello, Rust!"));
 }

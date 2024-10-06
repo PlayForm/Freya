@@ -8,17 +8,17 @@ use crate::{text_editor::*, EditableMode, EditorHistory, HistoryChange};
 
 /// TextEditor implementing a Rope
 pub struct RopeEditor {
-	pub(crate) rope: Rope,
-	pub(crate) cursor: TextCursor,
-	pub(crate) identation: u8,
-	pub(crate) mode: EditableMode,
-	pub(crate) selected: Option<(usize, usize)>,
-	pub(crate) clipboard: UseClipboard,
-	pub(crate) history: EditorHistory,
+	pub(crate) rope:Rope,
+	pub(crate) cursor:TextCursor,
+	pub(crate) identation:u8,
+	pub(crate) mode:EditableMode,
+	pub(crate) selected:Option<(usize, usize)>,
+	pub(crate) clipboard:UseClipboard,
+	pub(crate) history:EditorHistory,
 }
 
 impl Display for RopeEditor {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		f.write_str(&self.rope.to_string())
 	}
 }
@@ -26,27 +26,25 @@ impl Display for RopeEditor {
 impl RopeEditor {
 	// Create a new [`RopeEditor`]
 	pub fn new(
-		text: String,
-		cursor: TextCursor,
-		identation: u8,
-		mode: EditableMode,
-		clipboard: UseClipboard,
-		history: EditorHistory,
+		text:String,
+		cursor:TextCursor,
+		identation:u8,
+		mode:EditableMode,
+		clipboard:UseClipboard,
+		history:EditorHistory,
 	) -> Self {
 		Self {
-			rope: Rope::from_str(&text),
+			rope:Rope::from_str(&text),
 			cursor,
 			identation,
-			selected: None,
+			selected:None,
 			mode,
 			clipboard,
 			history,
 		}
 	}
 
-	pub fn rope(&self) -> &Rope {
-		&self.rope
-	}
+	pub fn rope(&self) -> &Rope { &self.rope }
 }
 
 impl TextEditor for RopeEditor {
@@ -57,63 +55,46 @@ impl TextEditor for RopeEditor {
 		LinesIterator { lines }
 	}
 
-	fn insert_char(&mut self, char: char, idx: usize) {
+	fn insert_char(&mut self, char:char, idx:usize) {
 		self.history.push_change(HistoryChange::InsertChar { idx, char });
 		self.rope.insert_char(idx, char);
 	}
 
-	fn insert(&mut self, text: &str, idx: usize) {
-		self.history.push_change(HistoryChange::InsertText {
-			idx,
-			text: text.to_owned(),
-		});
+	fn insert(&mut self, text:&str, idx:usize) {
+		self.history
+			.push_change(HistoryChange::InsertText { idx, text:text.to_owned() });
 		self.rope.insert(idx, text);
 	}
 
-	fn remove(&mut self, range: Range<usize>) {
+	fn remove(&mut self, range:Range<usize>) {
 		let text = self.rope.slice(range.clone()).to_string();
-		self.history
-			.push_change(HistoryChange::Remove { idx: range.start, text });
+		self.history.push_change(HistoryChange::Remove { idx:range.start, text });
 		self.rope.remove(range)
 	}
 
-	fn char_to_line(&self, char_idx: usize) -> usize {
-		self.rope.char_to_line(char_idx)
-	}
+	fn char_to_line(&self, char_idx:usize) -> usize { self.rope.char_to_line(char_idx) }
 
-	fn line_to_char(&self, line_idx: usize) -> usize {
-		self.rope.line_to_char(line_idx)
-	}
+	fn line_to_char(&self, line_idx:usize) -> usize { self.rope.line_to_char(line_idx) }
 
-	fn utf16_cu_to_char(&self, utf16_cu_idx: usize) -> usize {
+	fn utf16_cu_to_char(&self, utf16_cu_idx:usize) -> usize {
 		self.rope.utf16_cu_to_char(utf16_cu_idx)
 	}
 
-	fn char_to_utf16_cu(&self, idx: usize) -> usize {
-		self.rope.char_to_utf16_cu(idx)
-	}
+	fn char_to_utf16_cu(&self, idx:usize) -> usize { self.rope.char_to_utf16_cu(idx) }
 
-	fn line(&self, line_idx: usize) -> Option<Line<'_>> {
+	fn line(&self, line_idx:usize) -> Option<Line<'_>> {
 		let line = self.rope.get_line(line_idx);
 
-		line.map(|line| Line { text: line.into() })
+		line.map(|line| Line { text:line.into() })
 	}
 
-	fn len_lines(&self) -> usize {
-		self.rope.len_lines()
-	}
+	fn len_lines(&self) -> usize { self.rope.len_lines() }
 
-	fn len_chars(&self) -> usize {
-		self.rope.len_chars()
-	}
+	fn len_chars(&self) -> usize { self.rope.len_chars() }
 
-	fn cursor(&self) -> &TextCursor {
-		&self.cursor
-	}
+	fn cursor(&self) -> &TextCursor { &self.cursor }
 
-	fn cursor_mut(&mut self) -> &mut TextCursor {
-		&mut self.cursor
-	}
+	fn cursor_mut(&mut self) -> &mut TextCursor { &mut self.cursor }
 
 	fn expand_selection_to_cursor(&mut self) {
 		let pos = self.cursor_pos();
@@ -124,22 +105,13 @@ impl TextEditor for RopeEditor {
 		}
 	}
 
-	fn get_clipboard(&mut self) -> &mut UseClipboard {
-		&mut self.clipboard
-	}
+	fn get_clipboard(&mut self) -> &mut UseClipboard { &mut self.clipboard }
 
-	fn has_any_selection(&self) -> bool {
-		self.selected.is_some()
-	}
+	fn has_any_selection(&self) -> bool { self.selected.is_some() }
 
-	fn get_selection(&self) -> Option<(usize, usize)> {
-		self.selected
-	}
+	fn get_selection(&self) -> Option<(usize, usize)> { self.selected }
 
-	fn get_visible_selection(
-		&self,
-		editor_id: usize,
-	) -> Option<(usize, usize)> {
+	fn get_visible_selection(&self, editor_id:usize) -> Option<(usize, usize)> {
 		let (selected_from, selected_to) = self.selected?;
 
 		if self.mode == EditableMode::SingleLineMultipleEditors {
@@ -158,8 +130,7 @@ impl TextEditor for RopeEditor {
 
 			// Between starting line and endling line
 			if (editor_id > selected_from_row && editor_id < selected_to_row)
-				|| (editor_id < selected_from_row
-					&& editor_id > selected_to_row)
+				|| (editor_id < selected_from_row && editor_id > selected_to_row)
 			{
 				let len = self.line(editor_id).unwrap().len_chars();
 				return Some((0, len));
@@ -173,8 +144,7 @@ impl TextEditor for RopeEditor {
 						Some((0, selected_from_col_idx))
 					} else if selected_to_row == editor_id {
 						// Ending line
-						let len =
-							self.line(selected_to_row).unwrap().len_chars();
+						let len = self.line(selected_to_row).unwrap().len_chars();
 						Some((selected_to_col_idx, len))
 					} else {
 						None
@@ -184,8 +154,7 @@ impl TextEditor for RopeEditor {
 				Ordering::Less => {
 					if selected_from_row == editor_id {
 						// Starting line
-						let len =
-							self.line(selected_from_row).unwrap().len_chars();
+						let len = self.line(selected_from_row).unwrap().len_chars();
 						Some((selected_from_col_idx, len))
 					} else if selected_to_row == editor_id {
 						// Ending line
@@ -196,26 +165,18 @@ impl TextEditor for RopeEditor {
 				},
 				Ordering::Equal if selected_from_row == editor_id => {
 					// Starting and endline line are the same
-					Some((
-						selected_from - editor_row_idx,
-						selected_to - editor_row_idx,
-					))
+					Some((selected_from - editor_row_idx, selected_to - editor_row_idx))
 				},
 				_ => None,
 			};
 
-			highlights.map(|(from, to)| {
-				(self.char_to_utf16_cu(from), self.char_to_utf16_cu(to))
-			})
+			highlights.map(|(from, to)| (self.char_to_utf16_cu(from), self.char_to_utf16_cu(to)))
 		} else {
-			Some((
-				self.char_to_utf16_cu(selected_from),
-				self.char_to_utf16_cu(selected_to),
-			))
+			Some((self.char_to_utf16_cu(selected_from), self.char_to_utf16_cu(selected_to)))
 		}
 	}
 
-	fn set(&mut self, text: &str) {
+	fn set(&mut self, text:&str) {
 		self.rope.remove(0..);
 		self.rope.insert(0, text);
 		if self.cursor_pos() > text.len() {
@@ -223,16 +184,9 @@ impl TextEditor for RopeEditor {
 		}
 	}
 
-	fn clear_selection(&mut self) {
-		self.selected = None;
-	}
+	fn clear_selection(&mut self) { self.selected = None; }
 
-	fn measure_new_selection(
-		&self,
-		from: usize,
-		to: usize,
-		editor_id: usize,
-	) -> (usize, usize) {
+	fn measure_new_selection(&self, from:usize, to:usize, editor_id:usize) -> (usize, usize) {
 		if self.mode == EditableMode::SingleLineMultipleEditors {
 			let row_idx = self.line_to_char(editor_id);
 			if let Some((start, _)) = self.selected {
@@ -247,7 +201,7 @@ impl TextEditor for RopeEditor {
 		}
 	}
 
-	fn measure_new_cursor(&self, to: usize, editor_id: usize) -> TextCursor {
+	fn measure_new_cursor(&self, to:usize, editor_id:usize) -> TextCursor {
 		if self.mode == EditableMode::SingleLineMultipleEditors {
 			let row_char = self.line_to_char(editor_id);
 			let pos = row_char + to;
@@ -257,9 +211,7 @@ impl TextEditor for RopeEditor {
 		}
 	}
 
-	fn set_selection(&mut self, selected: (usize, usize)) {
-		self.selected = Some(selected);
-	}
+	fn set_selection(&mut self, selected:(usize, usize)) { self.selected = Some(selected); }
 
 	fn get_selected_text(&self) -> Option<String> {
 		let (start, end) = self.get_selection_range()?;
@@ -271,28 +223,21 @@ impl TextEditor for RopeEditor {
 		let (start, end) = self.selected?;
 
 		// Use left-to-right selection
-		let (start, end) =
-			if start < end { (start, end) } else { (end, start) };
+		let (start, end) = if start < end { (start, end) } else { (end, start) };
 
 		Some((start, end))
 	}
 
-	fn undo(&mut self) -> Option<usize> {
-		self.history.undo(&mut self.rope)
-	}
+	fn undo(&mut self) -> Option<usize> { self.history.undo(&mut self.rope) }
 
-	fn redo(&mut self) -> Option<usize> {
-		self.history.redo(&mut self.rope)
-	}
+	fn redo(&mut self) -> Option<usize> { self.history.redo(&mut self.rope) }
 
-	fn get_identation(&self) -> u8 {
-		self.identation
-	}
+	fn get_identation(&self) -> u8 { self.identation }
 }
 
 /// Iterator over text lines.
 pub struct LinesIterator<'a> {
-	pub lines: Lines<'a>,
+	pub lines:Lines<'a>,
 }
 
 impl<'a> Iterator for LinesIterator<'a> {
@@ -301,6 +246,6 @@ impl<'a> Iterator for LinesIterator<'a> {
 	fn next(&mut self) -> Option<Self::Item> {
 		let line = self.lines.next();
 
-		line.map(|line| Line { text: line.into() })
+		line.map(|line| Line { text:line.into() })
 	}
 }

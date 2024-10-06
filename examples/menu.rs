@@ -1,13 +1,8 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch_with_props(app, "Menus", (550.0, 450.0));
-}
+fn main() { launch_with_props(app, "Menus", (550.0, 450.0)); }
 
 fn app() -> Element {
 	use_init_theme(|| DARK_THEME);

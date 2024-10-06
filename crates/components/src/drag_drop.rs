@@ -7,68 +7,57 @@ use torin::prelude::CursorPoint;
 #[derive(Props, Clone, PartialEq)]
 pub struct DragProviderProps {
 	/// Inner children of the DragProvider.
-	children: Element,
+	children:Element,
 }
 
-/// Provide a common place for [`DragZone`]s and [`DropZone`]s to exchange their data.
+/// Provide a common place for [`DragZone`]s and [`DropZone`]s to exchange their
+/// data.
 #[allow(non_snake_case)]
-pub fn DragProvider<T: 'static>(
-	DragProviderProps { children }: DragProviderProps,
-) -> Element {
+pub fn DragProvider<T:'static>(DragProviderProps { children }:DragProviderProps) -> Element {
 	use_context_provider::<Signal<Option<T>>>(|| Signal::new(None));
 	rsx!({ children })
 }
 
 /// Properties for the [`DragZone`] component.
 #[derive(Props, Clone, PartialEq)]
-pub struct DragZoneProps<T: Clone + 'static + PartialEq> {
+pub struct DragZoneProps<T:Clone + 'static + PartialEq> {
 	/// Element visible when dragging the element. This follows the cursor.
-	drag_element: Element,
+	drag_element:Element,
 	/// Inner children for the DropZone.
-	children: Element,
+	children:Element,
 	/// Data that will be handled to the destination [`DropZone`].
-	data: T,
+	data:T,
 }
 
 /// Make the inner children draggable to other [`DropZone`].
 #[allow(non_snake_case)]
-pub fn DragZone<T: 'static + Clone + PartialEq>(
-	DragZoneProps { data, children, drag_element }: DragZoneProps<T>,
+pub fn DragZone<T:'static + Clone + PartialEq>(
+	DragZoneProps { data, children, drag_element }:DragZoneProps<T>,
 ) -> Element {
 	let mut drags = use_context::<Signal<Option<T>>>();
 	let mut dragging = use_signal(|| false);
 	let mut pos = use_signal(CursorPoint::default);
 	let (node_reference, size) = use_node_signal();
 
-	let onglobalmouseover = move |e: MouseEvent| {
+	let onglobalmouseover = move |e:MouseEvent| {
 		if *dragging.read() {
 			let size = size.read();
 			let coord = e.get_screen_coordinates();
 			pos.set(
-				(
-					coord.x - size.area.min_x() as f64,
-					coord.y - size.area.min_y() as f64,
-				)
-					.into(),
+				(coord.x - size.area.min_x() as f64, coord.y - size.area.min_y() as f64).into(),
 			);
 		}
 	};
 
-	let onmousedown = move |e: MouseEvent| {
+	let onmousedown = move |e:MouseEvent| {
 		let size = size.read();
 		let coord = e.get_screen_coordinates();
-		pos.set(
-			(
-				coord.x - size.area.min_x() as f64,
-				coord.y - size.area.min_y() as f64,
-			)
-				.into(),
-		);
+		pos.set((coord.x - size.area.min_x() as f64, coord.y - size.area.min_y() as f64).into());
 		dragging.set(true);
 		*drags.write() = Some(data.clone());
 	};
 
-	let onglobalclick = move |_: MouseEvent| {
+	let onglobalclick = move |_:MouseEvent| {
 		if *dragging.read() {
 			dragging.set(false);
 			pos.set((0.0, 0.0).into());
@@ -98,21 +87,19 @@ pub fn DragZone<T: 'static + Clone + PartialEq>(
 
 /// Properties for the [`DropZone`] component.
 #[derive(Props, PartialEq, Clone)]
-pub struct DropZoneProps<T: 'static + PartialEq + Clone> {
+pub struct DropZoneProps<T:'static + PartialEq + Clone> {
 	/// Inner children for the DropZone.
-	children: Element,
+	children:Element,
 	/// Handler for the `ondrop` event.
-	ondrop: EventHandler<T>,
+	ondrop:EventHandler<T>,
 }
 
 /// Elements from [`DragZone`]s can be dropped here.
 #[allow(non_snake_case)]
-pub fn DropZone<T: 'static + Clone + PartialEq>(
-	props: DropZoneProps<T>,
-) -> Element {
+pub fn DropZone<T:'static + Clone + PartialEq>(props:DropZoneProps<T>) -> Element {
 	let mut drags = use_context::<Signal<Option<T>>>();
 
-	let onclick = move |_: MouseEvent| {
+	let onclick = move |_:MouseEvent| {
 		if let Some(current_drags) = &*drags.read() {
 			props.ondrop.call(current_drags.clone());
 		}
@@ -178,25 +165,25 @@ mod test {
 		utils.wait_for_update().await;
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseDown,
-			cursor: (5.0, 5.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseDown,
+			cursor:(5.0, 5.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (5.0, 5.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(5.0, 5.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (5.0, 300.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(5.0, 300.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
@@ -204,16 +191,13 @@ mod test {
 		assert_eq!(root.get(0).get(0).get(0).get(0).text(), Some("Moving"));
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (5.0, 300.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(5.0, 300.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
 
-		assert_eq!(
-			root.get(1).get(0).get(0).get(0).text(),
-			Some("Enabled: true")
-		);
+		assert_eq!(root.get(1).get(0).get(0).get(0).text(), Some("Enabled: true"));
 	}
 }

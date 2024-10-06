@@ -15,21 +15,18 @@ pub type AccessibilityIdCounter = Rc<RefCell<u64>>;
 pub struct NavigationMark(bool);
 
 impl NavigationMark {
-	pub fn allowed(&self) -> bool {
-		self.0
-	}
+	pub fn allowed(&self) -> bool { self.0 }
 
-	pub fn set_allowed(&mut self, allowed: bool) {
-		self.0 = allowed;
-	}
+	pub fn set_allowed(&mut self, allowed:bool) { self.0 = allowed; }
 }
 
 #[derive(Clone, Copy)]
 pub struct UsePlatformEvents {
-	pub navigation_mark: Signal<NavigationMark>,
+	pub navigation_mark:Signal<NavigationMark>,
 }
 
-/// Keep some native features (focused element, preferred theme, etc) on sync between the platform and the components
+/// Keep some native features (focused element, preferred theme, etc) on sync
+/// between the platform and the components
 pub fn use_init_native_platform() -> UsePlatformEvents {
 	// Inithe global asset cacher
 	use_init_asset_cacher();
@@ -38,8 +35,7 @@ pub fn use_init_native_platform() -> UsePlatformEvents {
 	use_context_provider(|| Rc::new(RefCell::new(0u64)));
 
 	// Init the NavigationMark signal
-	let navigation_mark =
-		use_context_provider(|| Signal::new(NavigationMark(true)));
+	let navigation_mark = use_context_provider(|| Signal::new(NavigationMark(true)));
 
 	// Init the signals with platform values
 	use_hook(|| {
@@ -96,11 +92,7 @@ mod test {
 		fn OtherChild() -> Element {
 			let mut focus_manager = use_focus();
 
-			rsx!(rect {
-				width: "100%",
-				height: "50%",
-				onclick: move |_| focus_manager.focus(),
-			})
+			rsx!(rect { width:"100%", height:"50%", onclick:move |_| focus_manager.focus() })
 		}
 
 		fn use_focus_app() -> Element {
@@ -116,10 +108,7 @@ mod test {
 
 		let mut utils = launch_test_with_config(
 			use_focus_app,
-			TestingConfig {
-				size: (100.0, 100.0).into(),
-				..TestingConfig::default()
-			},
+			TestingConfig { size:(100.0, 100.0).into(), ..TestingConfig::default() },
 		);
 
 		// Initial state
@@ -128,9 +117,9 @@ mod test {
 
 		// Click on the first rect
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (5.0, 5.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(5.0, 5.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		// First rect is now focused
@@ -142,9 +131,9 @@ mod test {
 
 		// Click on the second rect
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (5.0, 75.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(5.0, 75.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		// Second rect is now focused

@@ -4,8 +4,16 @@ use freya_elements::{
 	events::{keyboard::Key, KeyboardData, MouseEvent},
 };
 use freya_hooks::{
-	use_applied_theme, use_editable, use_focus, use_platform, EditableConfig,
-	EditableEvent, EditableMode, InputTheme, InputThemeWith, TextEditor,
+	use_applied_theme,
+	use_editable,
+	use_focus,
+	use_platform,
+	EditableConfig,
+	EditableEvent,
+	EditableMode,
+	InputTheme,
+	InputThemeWith,
+	TextEditor,
 };
 use winit::window::CursorIcon;
 
@@ -20,9 +28,7 @@ pub enum InputMode {
 }
 
 impl InputMode {
-	pub fn new_password() -> Self {
-		Self::Hidden('*')
-	}
+	pub fn new_password() -> Self { Self::Hidden('*') }
 }
 
 /// Indicates the current status of the Input.
@@ -39,16 +45,17 @@ pub enum InputStatus {
 #[derive(Props, Clone, PartialEq)]
 pub struct InputProps {
 	/// Theme override.
-	pub theme: Option<InputThemeWith>,
+	pub theme:Option<InputThemeWith>,
 	/// Text to show for when there is no value
-	pub placeholder: Option<String>,
+	pub placeholder:Option<String>,
 	/// Current value of the Input
-	pub value: String,
+	pub value:String,
 	/// Handler for the `onchange` event.
-	pub onchange: EventHandler<String>,
-	/// Display mode for Input. By default, input text is shown as it is provided.
+	pub onchange:EventHandler<String>,
+	/// Display mode for Input. By default, input text is shown as it is
+	/// provided.
 	#[props(default = InputMode::Shown, into)]
-	pub mode: InputMode,
+	pub mode:InputMode,
 }
 
 /// Small box to edit text.
@@ -77,9 +84,7 @@ pub struct InputProps {
 /// }
 /// ```
 #[allow(non_snake_case)]
-pub fn Input(
-	InputProps { theme, value, onchange, mode, placeholder }: InputProps,
-) -> Element {
+pub fn Input(InputProps { theme, value, onchange, mode, placeholder }:InputProps) -> Element {
 	let platform = use_platform();
 	let mut status = use_signal(InputStatus::default);
 	let mut editable = use_editable(
@@ -90,8 +95,7 @@ pub fn Input(
 	let mut focus = use_focus();
 
 	let is_focused = focus.is_focused();
-	let display_placeholder =
-		value.is_empty() && placeholder.is_some() && !is_focused;
+	let display_placeholder = value.is_empty() && placeholder.is_some() && !is_focused;
 
 	if &value != editable.editor().read().rope() {
 		editable.editor_mut().write().set(&value);
@@ -103,27 +107,27 @@ pub fn Input(
 		}
 	});
 
-	let onkeydown = move |e: Event<KeyboardData>| {
+	let onkeydown = move |e:Event<KeyboardData>| {
 		if is_focused && e.data.key != Key::Enter {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 			onchange.call(editable.editor().peek().to_string());
 		}
 	};
 
-	let onkeyup = move |e: Event<KeyboardData>| {
+	let onkeyup = move |e:Event<KeyboardData>| {
 		if is_focused {
 			editable.process_event(&EditableEvent::KeyUp(e.data));
 		}
 	};
 
-	let onmousedown = move |e: MouseEvent| {
+	let onmousedown = move |e:MouseEvent| {
 		if !display_placeholder {
 			editable.process_event(&EditableEvent::MouseDown(e.data, 0));
 		}
 		focus.focus();
 	};
 
-	let onmouseover = move |e: MouseEvent| {
+	let onmouseover = move |e:MouseEvent| {
 		editable.process_event(&EditableEvent::MouseOver(e.data, 0));
 	};
 
@@ -137,15 +141,17 @@ pub fn Input(
 		*status.write() = InputStatus::default();
 	};
 
-	let onglobalclick = move |_| match *status.read() {
-		InputStatus::Idle if focus.is_focused() => {
-			focus.unfocus();
-			editable.process_event(&EditableEvent::Click);
-		},
-		InputStatus::Hovering => {
-			editable.process_event(&EditableEvent::Click);
-		},
-		_ => {},
+	let onglobalclick = move |_| {
+		match *status.read() {
+			InputStatus::Idle if focus.is_focused() => {
+				focus.unfocus();
+				editable.process_event(&EditableEvent::Click);
+			},
+			InputStatus::Hovering => {
+				editable.process_event(&EditableEvent::Click);
+			},
+			_ => {},
+		}
 	};
 
 	let focus_id = focus.attribute();
@@ -233,8 +239,8 @@ mod test {
 			let mut value = use_signal(|| "Hello, Worl".to_string());
 
 			rsx!(Input {
-				value: value.read().clone(),
-				onchange: move |new_value| {
+				value:value.read().clone(),
+				onchange:move |new_value| {
 					value.set(new_value);
 				}
 			},)
@@ -252,9 +258,9 @@ mod test {
 
 		// Focus the input in the end of the text
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseDown,
-			cursor: (115., 25.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseDown,
+			cursor:(115., 25.).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 		utils.wait_for_update().await;
@@ -264,10 +270,10 @@ mod test {
 
 		// Write "d"
 		utils.push_event(PlatformEvent::Keyboard {
-			name: EventName::KeyDown,
-			key: Key::Character("d".to_string()),
-			code: Code::KeyD,
-			modifiers: Modifiers::default(),
+			name:EventName::KeyDown,
+			key:Key::Character("d".to_string()),
+			code:Code::KeyD,
+			modifiers:Modifiers::default(),
 		});
 		utils.wait_for_update().await;
 

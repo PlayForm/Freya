@@ -1,20 +1,14 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 use freya_core::prelude::PlatformInformation;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	let platform = use_platform();
-	let PlatformInformation {
-		is_fullscreen, is_minimized, is_maximized, ..
-	} = *use_platform_information().read();
+	let PlatformInformation { is_fullscreen, is_minimized, is_maximized, .. } =
+		*use_platform_information().read();
 
 	rsx!(
 		rect {

@@ -6,8 +6,14 @@ use freya_elements::{
 	events::{keyboard::Key, KeyboardEvent, MouseEvent},
 };
 use freya_hooks::{
-	theme_with, use_applied_theme, use_focus, use_platform,
-	DropdownItemThemeWith, DropdownTheme, DropdownThemeWith, IconThemeWith,
+	theme_with,
+	use_applied_theme,
+	use_focus,
+	use_platform,
+	DropdownItemThemeWith,
+	DropdownTheme,
+	DropdownThemeWith,
+	IconThemeWith,
 };
 use winit::window::CursorIcon;
 
@@ -15,15 +21,15 @@ use crate::icons::ArrowIcon;
 
 /// Properties for the [`DropdownItem`] component.
 #[derive(Props, Clone, PartialEq)]
-pub struct DropdownItemProps<T: 'static + Clone + PartialEq> {
+pub struct DropdownItemProps<T:'static + Clone + PartialEq> {
 	/// Theme override.
-	pub theme: Option<DropdownItemThemeWith>,
+	pub theme:Option<DropdownItemThemeWith>,
 	/// Selectable items, like [`DropdownItem`]
-	pub children: Element,
+	pub children:Element,
 	/// Selected value.
-	pub value: T,
+	pub value:T,
 	/// Handler for the `onclick` event.
-	pub onclick: Option<EventHandler<()>>,
+	pub onclick:Option<EventHandler<()>>,
 }
 
 /// Current status of the DropdownItem.
@@ -40,11 +46,10 @@ pub enum DropdownItemStatus {
 /// Inherits the [`DropdownItemTheme`](freya_hooks::DropdownItemTheme) theme.
 #[allow(non_snake_case)]
 pub fn DropdownItem<T>(
-	DropdownItemProps { theme, children, value, onclick }: DropdownItemProps<T>,
+	DropdownItemProps { theme, children, value, onclick }:DropdownItemProps<T>,
 ) -> Element
 where
-	T: Clone + PartialEq + 'static,
-{
+	T: Clone + PartialEq + 'static, {
 	let selected = use_context::<Signal<T>>();
 	let theme = use_applied_theme!(&theme, dropdown_item);
 	let focus = use_focus();
@@ -81,7 +86,7 @@ where
 
 	let onkeydown = {
 		to_owned![onclick];
-		move |ev: KeyboardEvent| {
+		move |ev:KeyboardEvent| {
 			if ev.key == Key::Enter && is_focused {
 				if let Some(onclick) = &onclick {
 					onclick.call(())
@@ -90,7 +95,7 @@ where
 		}
 	};
 
-	let onclick = move |_: MouseEvent| {
+	let onclick = move |_:MouseEvent| {
 		if let Some(onclick) = &onclick {
 			onclick.call(())
 		}
@@ -117,13 +122,13 @@ where
 
 /// Properties for the [`Dropdown`] component.
 #[derive(Props, Clone, PartialEq)]
-pub struct DropdownProps<T: 'static + Clone + PartialEq> {
+pub struct DropdownProps<T:'static + Clone + PartialEq> {
 	/// Theme override.
-	pub theme: Option<DropdownThemeWith>,
+	pub theme:Option<DropdownThemeWith>,
 	/// Selectable items, like [`DropdownItem`]
-	pub children: Element,
+	pub children:Element,
 	/// Selected value.
-	pub value: T,
+	pub value:T,
 }
 
 /// Current status of the Dropdown.
@@ -166,12 +171,10 @@ pub enum DropdownStatus {
 /// }
 /// ```
 #[allow(non_snake_case)]
-pub fn Dropdown<T>(props: DropdownProps<T>) -> Element
+pub fn Dropdown<T>(props:DropdownProps<T>) -> Element
 where
-	T: PartialEq + Clone + Display + 'static,
-{
-	let mut selected =
-		use_context_provider(|| Signal::new(props.value.clone()));
+	T: PartialEq + Clone + Display + 'static, {
+	let mut selected = use_context_provider(|| Signal::new(props.value.clone()));
 	let theme = use_applied_theme!(&props.theme, dropdown);
 	let mut focus = use_focus();
 	let mut status = use_signal(DropdownStatus::default);
@@ -194,7 +197,7 @@ where
 	});
 
 	// Close the dropdown if clicked anywhere
-	let onglobalclick = move |_: MouseEvent| {
+	let onglobalclick = move |_:MouseEvent| {
 		opened.set(false);
 	};
 
@@ -203,7 +206,7 @@ where
 		opened.set(true)
 	};
 
-	let onkeydown = move |e: KeyboardEvent| {
+	let onkeydown = move |e:KeyboardEvent| {
 		match e.key {
 			// Close when `Escape` key is pressed
 			Key::Escape => {
@@ -312,11 +315,7 @@ mod test {
 	pub async fn dropdown() {
 		fn dropdown_app() -> Element {
 			let values = use_hook(|| {
-				vec![
-					"Value A".to_string(),
-					"Value B".to_string(),
-					"Value C".to_string(),
-				]
+				vec!["Value A".to_string(), "Value B".to_string(), "Value C".to_string()]
 			});
 			let mut selected_dropdown = use_signal(|| "Value A".to_string());
 
@@ -350,9 +349,9 @@ mod test {
 
 		// Open the dropdown
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 15.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 15.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -361,9 +360,9 @@ mod test {
 
 		// Close the dropdown by clicking outside of it
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (200.0, 200.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(200.0, 200.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -372,17 +371,17 @@ mod test {
 
 		// Open the dropdown again
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 15.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 15.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
 		// Click on the second option
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (45.0, 100.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(45.0, 100.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 		utils.wait_for_update().await;

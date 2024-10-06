@@ -1,18 +1,11 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use dioxus_router::prelude::{Outlet, Routable, Router};
 use freya::prelude::*;
 
-fn main() {
-	launch_with_props(app, "Router Example", (550.0, 400.0));
-}
+fn main() { launch_with_props(app, "Router Example", (550.0, 400.0)); }
 
-fn app() -> Element {
-	rsx!(Router::<Route> {})
-}
+fn app() -> Element { rsx!(Router::<Route> {}) }
 
 #[derive(Routable, Clone, PartialEq)]
 #[rustfmt::skip]

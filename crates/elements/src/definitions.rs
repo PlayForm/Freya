@@ -5,13 +5,7 @@ pub use events::*;
 pub type AttributeDescription = (&'static str, Option<&'static str>, bool);
 
 macro_rules! impl_element_match {
-	(
-        $el:ident $name:ident None {
-            $(
-                $fil:ident: $vil:ident,
-            )*
-        }
-    ) => {
+	($el:ident $name:ident None { $($fil:ident : $vil:ident,)* }) => {
 		if $el == stringify!($name) {
 			return Some((stringify!($name), None));
 		}
@@ -19,9 +13,7 @@ macro_rules! impl_element_match {
 }
 
 macro_rules! impl_attribute_match {
-	(
-        $attr:ident $fil:ident: $vil:ident,
-    ) => {
+	($attr:ident $fil:ident : $vil:ident,) => {
 		if $attr == stringify!($fil) {
 			return Some((stringify!($fil), None));
 		}
@@ -518,31 +510,25 @@ pub mod events {
 		T: std::future::Future<Output = ()> + 'static,
 	{
 		#[inline]
-		fn spawn(self) {
-			dioxus_core::prelude::spawn(self);
-		}
+		fn spawn(self) { dioxus_core::prelude::spawn(self); }
 	}
 
 	/// A platform specific event.
 	#[doc(hidden)]
 	pub struct PlatformEventData {
-		event: Box<dyn Any>,
+		event:Box<dyn Any>,
 	}
 
 	impl PlatformEventData {
-		pub fn new(event: Box<dyn Any>) -> Self {
-			Self { event }
-		}
+		pub fn new(event:Box<dyn Any>) -> Self { Self { event } }
 
-		pub fn downcast<T: 'static>(&self) -> Option<&T> {
-			self.event.downcast_ref::<T>()
-		}
+		pub fn downcast<T:'static>(&self) -> Option<&T> { self.event.downcast_ref::<T>() }
 
-		pub fn downcast_mut<T: 'static>(&mut self) -> Option<&mut T> {
+		pub fn downcast_mut<T:'static>(&mut self) -> Option<&mut T> {
 			self.event.downcast_mut::<T>()
 		}
 
-		pub fn into_inner<T: 'static>(self) -> Option<T> {
+		pub fn into_inner<T:'static>(self) -> Option<T> {
 			self.event.downcast::<T>().ok().map(|e| *e)
 		}
 	}

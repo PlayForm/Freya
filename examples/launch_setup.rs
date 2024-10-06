@@ -1,7 +1,4 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
@@ -16,9 +13,7 @@ fn main() {
 			.on_exit(|window| {
 				println!("Window title was {}", window.title());
 			})
-			.with_window_attributes(|attributes| {
-				attributes.with_resizable(false)
-			}),
+			.with_window_attributes(|attributes| attributes.with_resizable(false)),
 	);
 }
 

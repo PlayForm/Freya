@@ -5,22 +5,17 @@ use freya_hooks::{use_init_native_platform, use_platform};
 
 #[allow(non_snake_case)]
 #[component]
-pub fn NativeContainer(children: Element) -> Element {
+pub fn NativeContainer(children:Element) -> Element {
 	let mut native_platform = use_init_native_platform();
 	let platform = use_platform();
 
-	let onkeydown = move |e: KeyboardEvent| {
-		let allowed_to_navigate =
-			native_platform.navigation_mark.peek().allowed();
+	let onkeydown = move |e:KeyboardEvent| {
+		let allowed_to_navigate = native_platform.navigation_mark.peek().allowed();
 		if e.key == Key::Tab && allowed_to_navigate {
 			if e.modifiers.contains(Modifiers::SHIFT) {
-				platform
-					.send(EventMessage::FocusPrevAccessibilityNode)
-					.unwrap();
+				platform.send(EventMessage::FocusPrevAccessibilityNode).unwrap();
 			} else {
-				platform
-					.send(EventMessage::FocusNextAccessibilityNode)
-					.unwrap();
+				platform.send(EventMessage::FocusNextAccessibilityNode).unwrap();
 			}
 		} else {
 			native_platform.navigation_mark.write().set_allowed(true)

@@ -11,65 +11,84 @@ use tokio::time::Instant;
 use crate::{use_platform, UsePlatform};
 
 pub fn apply_value(
-	origin: f32,
-	destination: f32,
-	index: i32,
-	time: Duration,
-	ease: Ease,
-	function: Function,
+	origin:f32,
+	destination:f32,
+	index:i32,
+	time:Duration,
+	ease:Ease,
+	function:Function,
 ) -> f32 {
-	let (t, b, c, d) =
-		(index as f32, origin, destination - origin, time.as_millis() as f32);
+	let (t, b, c, d) = (index as f32, origin, destination - origin, time.as_millis() as f32);
 	match function {
-		Function::Back => match ease {
-			Ease::In => Back::ease_in(t, b, c, d),
-			Ease::InOut => Back::ease_in_out(t, b, c, d),
-			Ease::Out => Back::ease_out(t, b, c, d),
+		Function::Back => {
+			match ease {
+				Ease::In => Back::ease_in(t, b, c, d),
+				Ease::InOut => Back::ease_in_out(t, b, c, d),
+				Ease::Out => Back::ease_out(t, b, c, d),
+			}
 		},
-		Function::Bounce => match ease {
-			Ease::In => Bounce::ease_in(t, b, c, d),
-			Ease::InOut => Bounce::ease_in_out(t, b, c, d),
-			Ease::Out => Bounce::ease_out(t, b, c, d),
+		Function::Bounce => {
+			match ease {
+				Ease::In => Bounce::ease_in(t, b, c, d),
+				Ease::InOut => Bounce::ease_in_out(t, b, c, d),
+				Ease::Out => Bounce::ease_out(t, b, c, d),
+			}
 		},
-		Function::Circ => match ease {
-			Ease::In => Circ::ease_in(t, b, c, d),
-			Ease::InOut => Circ::ease_in_out(t, b, c, d),
-			Ease::Out => Circ::ease_out(t, b, c, d),
+		Function::Circ => {
+			match ease {
+				Ease::In => Circ::ease_in(t, b, c, d),
+				Ease::InOut => Circ::ease_in_out(t, b, c, d),
+				Ease::Out => Circ::ease_out(t, b, c, d),
+			}
 		},
-		Function::Cubic => match ease {
-			Ease::In => Cubic::ease_in(t, b, c, d),
-			Ease::InOut => Cubic::ease_in_out(t, b, c, d),
-			Ease::Out => Cubic::ease_out(t, b, c, d),
+		Function::Cubic => {
+			match ease {
+				Ease::In => Cubic::ease_in(t, b, c, d),
+				Ease::InOut => Cubic::ease_in_out(t, b, c, d),
+				Ease::Out => Cubic::ease_out(t, b, c, d),
+			}
 		},
-		Function::Elastic => match ease {
-			Ease::In => Elastic::ease_in(t, b, c, d),
-			Ease::InOut => Elastic::ease_in_out(t, b, c, d),
-			Ease::Out => Elastic::ease_out(t, b, c, d),
+		Function::Elastic => {
+			match ease {
+				Ease::In => Elastic::ease_in(t, b, c, d),
+				Ease::InOut => Elastic::ease_in_out(t, b, c, d),
+				Ease::Out => Elastic::ease_out(t, b, c, d),
+			}
 		},
-		Function::Expo => match ease {
-			Ease::In => Expo::ease_in(t, b, c, d),
-			Ease::InOut => Expo::ease_in_out(t, b, c, d),
-			Ease::Out => Expo::ease_out(t, b, c, d),
+		Function::Expo => {
+			match ease {
+				Ease::In => Expo::ease_in(t, b, c, d),
+				Ease::InOut => Expo::ease_in_out(t, b, c, d),
+				Ease::Out => Expo::ease_out(t, b, c, d),
+			}
 		},
-		Function::Linear => match ease {
-			Ease::In => Linear::ease_in(t, b, c, d),
-			Ease::InOut => Linear::ease_in_out(t, b, c, d),
-			Ease::Out => Linear::ease_out(t, b, c, d),
+		Function::Linear => {
+			match ease {
+				Ease::In => Linear::ease_in(t, b, c, d),
+				Ease::InOut => Linear::ease_in_out(t, b, c, d),
+				Ease::Out => Linear::ease_out(t, b, c, d),
+			}
 		},
-		Function::Quad => match ease {
-			Ease::In => Quad::ease_in(t, b, c, d),
-			Ease::InOut => Quad::ease_in_out(t, b, c, d),
-			Ease::Out => Quad::ease_out(t, b, c, d),
+		Function::Quad => {
+			match ease {
+				Ease::In => Quad::ease_in(t, b, c, d),
+				Ease::InOut => Quad::ease_in_out(t, b, c, d),
+				Ease::Out => Quad::ease_out(t, b, c, d),
+			}
 		},
-		Function::Quart => match ease {
-			Ease::In => Quart::ease_in(t, b, c, d),
-			Ease::InOut => Quart::ease_in_out(t, b, c, d),
-			Ease::Out => Quart::ease_out(t, b, c, d),
+		Function::Quart => {
+			match ease {
+				Ease::In => Quart::ease_in(t, b, c, d),
+				Ease::InOut => Quart::ease_in_out(t, b, c, d),
+				Ease::Out => Quart::ease_out(t, b, c, d),
+			}
 		},
-		Function::Sine => match ease {
-			Ease::In => Sine::ease_in(t, b, c, d),
-			Ease::InOut => Sine::ease_in_out(t, b, c, d),
-			Ease::Out => Sine::ease_out(t, b, c, d),
+		Function::Sine => {
+			match ease {
+				Ease::In => Sine::ease_in(t, b, c, d),
+				Ease::InOut => Sine::ease_in_out(t, b, c, d),
+				Ease::Out => Sine::ease_out(t, b, c, d),
+			}
 		},
 	}
 }
@@ -99,61 +118,58 @@ pub enum Ease {
 
 /// Animate a color.
 pub struct AnimColor {
-	origin: Color,
-	destination: Color,
-	time: Duration,
-	ease: Ease,
-	function: Function,
+	origin:Color,
+	destination:Color,
+	time:Duration,
+	ease:Ease,
+	function:Function,
 
-	value: Color,
+	value:Color,
 }
 
 impl AnimColor {
-	pub fn new(origin: &str, destination: &str) -> Self {
+	pub fn new(origin:&str, destination:&str) -> Self {
 		Self {
-			origin: Color::parse(origin).unwrap(),
-			destination: Color::parse(destination).unwrap(),
-			time: Duration::default(),
-			ease: Ease::default(),
-			function: Function::default(),
+			origin:Color::parse(origin).unwrap(),
+			destination:Color::parse(destination).unwrap(),
+			time:Duration::default(),
+			ease:Ease::default(),
+			function:Function::default(),
 
-			value: Color::parse(origin).unwrap(),
+			value:Color::parse(origin).unwrap(),
 		}
 	}
 
-	/// Set the animation duration using milliseconds. Use `Self::duration` if you want to specify the duration in another form.
-	pub fn time(mut self, time: u64) -> Self {
+	/// Set the animation duration using milliseconds. Use `Self::duration` if
+	/// you want to specify the duration in another form.
+	pub fn time(mut self, time:u64) -> Self {
 		self.time = Duration::from_millis(time);
 		self
 	}
 
 	/// Set the animation duration using milliseconds.
-	pub fn duration(mut self, duration: Duration) -> Self {
+	pub fn duration(mut self, duration:Duration) -> Self {
 		self.time = duration;
 		self
 	}
 
 	/// Set the easing type. See `Ease` for all the types.
-	pub fn ease(mut self, ease: Ease) -> Self {
+	pub fn ease(mut self, ease:Ease) -> Self {
 		self.ease = ease;
 		self
 	}
 
 	/// Set the easing function. See `Function` for all the types.
-	pub fn function(mut self, function: Function) -> Self {
+	pub fn function(mut self, function:Function) -> Self {
 		self.function = function;
 		self
 	}
 }
 
 impl AnimatedValue for AnimColor {
-	fn time(&self) -> Duration {
-		self.time
-	}
+	fn time(&self) -> Duration { self.time }
 
-	fn as_f32(&self) -> f32 {
-		panic!("This is not a f32.")
-	}
+	fn as_f32(&self) -> f32 { panic!("This is not a f32.") }
 
 	fn as_string(&self) -> String {
 		format!(
@@ -165,7 +181,7 @@ impl AnimatedValue for AnimColor {
 		)
 	}
 
-	fn prepare(&mut self, direction: AnimDirection) {
+	fn prepare(&mut self, direction:AnimDirection) {
 		match direction {
 			AnimDirection::Forward => self.value = self.origin,
 			AnimDirection::Reverse => {
@@ -174,7 +190,7 @@ impl AnimatedValue for AnimColor {
 		}
 	}
 
-	fn is_finished(&self, index: i32, direction: AnimDirection) -> bool {
+	fn is_finished(&self, index:i32, direction:AnimDirection) -> bool {
 		match direction {
 			AnimDirection::Forward => {
 				index > self.time.as_millis() as i32
@@ -193,7 +209,7 @@ impl AnimatedValue for AnimColor {
 		}
 	}
 
-	fn advance(&mut self, index: i32, direction: AnimDirection) {
+	fn advance(&mut self, index:i32, direction:AnimDirection) {
 		if !self.is_finished(index, direction) {
 			let (origin, destination) = match direction {
 				AnimDirection::Forward => (self.origin, self.destination),
@@ -238,67 +254,64 @@ impl AnimatedValue for AnimColor {
 
 /// Animate a numeric value.
 pub struct AnimNum {
-	origin: f32,
-	destination: f32,
-	time: Duration,
-	ease: Ease,
-	function: Function,
+	origin:f32,
+	destination:f32,
+	time:Duration,
+	ease:Ease,
+	function:Function,
 
-	value: f32,
+	value:f32,
 }
 
 impl AnimNum {
-	pub fn new(origin: f32, destination: f32) -> Self {
+	pub fn new(origin:f32, destination:f32) -> Self {
 		Self {
 			origin,
 			destination,
-			time: Duration::default(),
-			ease: Ease::default(),
-			function: Function::default(),
+			time:Duration::default(),
+			ease:Ease::default(),
+			function:Function::default(),
 
-			value: origin,
+			value:origin,
 		}
 	}
 
-	/// Set the animation duration using milliseconds. Use `Self::duration` if you want to specify the duration in another form.
-	pub fn time(mut self, time: u64) -> Self {
+	/// Set the animation duration using milliseconds. Use `Self::duration` if
+	/// you want to specify the duration in another form.
+	pub fn time(mut self, time:u64) -> Self {
 		self.time = Duration::from_millis(time);
 		self
 	}
 
 	/// Set the animation duration using milliseconds.
-	pub fn duration(mut self, duration: Duration) -> Self {
+	pub fn duration(mut self, duration:Duration) -> Self {
 		self.time = duration;
 		self
 	}
 
 	/// Set the easing type. See `Ease` for all the types.
-	pub fn ease(mut self, ease: Ease) -> Self {
+	pub fn ease(mut self, ease:Ease) -> Self {
 		self.ease = ease;
 		self
 	}
 
 	/// Set the easing function. See `Function` for all the types.
-	pub fn function(mut self, function: Function) -> Self {
+	pub fn function(mut self, function:Function) -> Self {
 		self.function = function;
 		self
 	}
 }
 
 impl AnimatedValue for AnimNum {
-	fn time(&self) -> Duration {
-		self.time
-	}
+	fn time(&self) -> Duration { self.time }
 
-	fn as_f32(&self) -> f32 {
-		self.value
-	}
+	fn as_f32(&self) -> f32 { self.value }
 
 	fn as_string(&self) -> String {
 		panic!("This is not a String");
 	}
 
-	fn prepare(&mut self, direction: AnimDirection) {
+	fn prepare(&mut self, direction:AnimDirection) {
 		match direction {
 			AnimDirection::Forward => self.value = self.origin,
 			AnimDirection::Reverse => {
@@ -307,20 +320,18 @@ impl AnimatedValue for AnimNum {
 		}
 	}
 
-	fn is_finished(&self, index: i32, direction: AnimDirection) -> bool {
+	fn is_finished(&self, index:i32, direction:AnimDirection) -> bool {
 		match direction {
 			AnimDirection::Forward => {
-				index > self.time.as_millis() as i32
-					&& self.value >= self.destination
+				index > self.time.as_millis() as i32 && self.value >= self.destination
 			},
 			AnimDirection::Reverse => {
-				index > self.time.as_millis() as i32
-					&& self.value <= self.origin
+				index > self.time.as_millis() as i32 && self.value <= self.origin
 			},
 		}
 	}
 
-	fn advance(&mut self, index: i32, direction: AnimDirection) {
+	fn advance(&mut self, index:i32, direction:AnimDirection) {
 		if !self.is_finished(index, direction) {
 			let (origin, destination) = match direction {
 				AnimDirection::Forward => (self.origin, self.destination),
@@ -345,39 +356,36 @@ pub trait AnimatedValue {
 
 	fn as_string(&self) -> String;
 
-	fn prepare(&mut self, direction: AnimDirection);
+	fn prepare(&mut self, direction:AnimDirection);
 
-	fn is_finished(&self, index: i32, direction: AnimDirection) -> bool;
+	fn is_finished(&self, index:i32, direction:AnimDirection) -> bool;
 
-	fn advance(&mut self, index: i32, direction: AnimDirection);
+	fn advance(&mut self, index:i32, direction:AnimDirection);
 }
 
 pub type ReadAnimatedValue = ReadOnlySignal<Box<dyn AnimatedValue>>;
 
 #[derive(Default, PartialEq, Clone)]
 pub struct Context {
-	animated_values: Vec<Signal<Box<dyn AnimatedValue>>>,
-	on_finish: OnFinish,
-	auto_start: bool,
+	animated_values:Vec<Signal<Box<dyn AnimatedValue>>>,
+	on_finish:OnFinish,
+	auto_start:bool,
 }
 
 impl Context {
-	pub fn with(
-		&mut self,
-		animated_value: impl AnimatedValue + 'static,
-	) -> ReadAnimatedValue {
-		let val: Box<dyn AnimatedValue> = Box::new(animated_value);
+	pub fn with(&mut self, animated_value:impl AnimatedValue + 'static) -> ReadAnimatedValue {
+		let val:Box<dyn AnimatedValue> = Box::new(animated_value);
 		let signal = Signal::new(val);
 		self.animated_values.push(signal);
 		ReadOnlySignal::new(signal)
 	}
 
-	pub fn on_finish(&mut self, on_finish: OnFinish) -> &mut Self {
+	pub fn on_finish(&mut self, on_finish:OnFinish) -> &mut Self {
 		self.on_finish = on_finish;
 		self
 	}
 
-	pub fn auto_start(&mut self, auto_start: bool) -> &mut Self {
+	pub fn auto_start(&mut self, auto_start:bool) -> &mut Self {
 		self.auto_start = auto_start;
 		self
 	}
@@ -399,7 +407,8 @@ impl AnimDirection {
 	}
 }
 
-/// What to do once the animation finishes. By default it is [`Stop`](OnFinish::Stop)
+/// What to do once the animation finishes. By default it is
+/// [`Stop`](OnFinish::Stop)
 #[derive(PartialEq, Clone, Copy, Default)]
 pub enum OnFinish {
 	#[default]
@@ -410,21 +419,19 @@ pub enum OnFinish {
 
 /// Animate your elements. Use [`use_animation`] to use this.
 #[derive(PartialEq, Clone)]
-pub struct UseAnimator<Animated: PartialEq + Clone + 'static> {
-	pub(crate) value_and_ctx: Memo<(Animated, Context)>,
-	pub(crate) platform: UsePlatform,
-	pub(crate) is_running: Signal<bool>,
-	pub(crate) has_run_yet: Signal<bool>,
-	pub(crate) task: Signal<Option<Task>>,
+pub struct UseAnimator<Animated:PartialEq + Clone + 'static> {
+	pub(crate) value_and_ctx:Memo<(Animated, Context)>,
+	pub(crate) platform:UsePlatform,
+	pub(crate) is_running:Signal<bool>,
+	pub(crate) has_run_yet:Signal<bool>,
+	pub(crate) task:Signal<Option<Task>>,
 }
 
-impl<T: PartialEq + Clone + 'static> Copy for UseAnimator<T> {}
+impl<T:PartialEq + Clone + 'static> Copy for UseAnimator<T> {}
 
-impl<Animated: PartialEq + Clone + 'static> UseAnimator<Animated> {
+impl<Animated:PartialEq + Clone + 'static> UseAnimator<Animated> {
 	/// Get the animated value.
-	pub fn get(&self) -> Animated {
-		self.value_and_ctx.read().0.clone()
-	}
+	pub fn get(&self) -> Animated { self.value_and_ctx.read().0.clone() }
 
 	/// Reset the animation to the default state.
 	pub fn reset(&self) {
@@ -441,32 +448,23 @@ impl<Animated: PartialEq + Clone + 'static> UseAnimator<Animated> {
 	}
 
 	/// Checks if there is any animation running.
-	pub fn is_running(&self) -> bool {
-		*self.is_running.read()
-	}
+	pub fn is_running(&self) -> bool { *self.is_running.read() }
 
 	/// Checks if it has run yet, by subscribing.
-	pub fn has_run_yet(&self) -> bool {
-		*self.has_run_yet.read()
-	}
+	pub fn has_run_yet(&self) -> bool { *self.has_run_yet.read() }
 
-	/// Checks if it has run yet, doesn't subscribe. Useful for when you just mounted your component.
-	pub fn peek_has_run_yet(&self) -> bool {
-		*self.has_run_yet.peek()
-	}
+	/// Checks if it has run yet, doesn't subscribe. Useful for when you just
+	/// mounted your component.
+	pub fn peek_has_run_yet(&self) -> bool { *self.has_run_yet.peek() }
 
 	/// Runs the animation in reverse direction.
-	pub fn reverse(&self) {
-		self.run(AnimDirection::Reverse)
-	}
+	pub fn reverse(&self) { self.run(AnimDirection::Reverse) }
 
 	/// Runs the animation normally.
-	pub fn start(&self) {
-		self.run(AnimDirection::Forward)
-	}
+	pub fn start(&self) { self.run(AnimDirection::Forward) }
 
 	/// Run the animation with a given [`AnimDirection`]
-	pub fn run(&self, mut direction: AnimDirection) {
+	pub fn run(&self, mut direction:AnimDirection) {
 		let ctx = &self.value_and_ctx.peek().1;
 		let platform = self.platform;
 		let mut is_running = self.is_running;
@@ -504,9 +502,8 @@ impl<Animated: PartialEq + Clone + 'static> UseAnimator<Animated> {
 
 				index += prev_frame.elapsed().as_millis() as i32;
 
-				let is_finished = values
-					.iter()
-					.all(|value| value.peek().is_finished(index, direction));
+				let is_finished =
+					values.iter().all(|value| value.peek().is_finished(index, direction));
 
 				// Advance the animations
 				for value in values.iter_mut() {
@@ -548,85 +545,84 @@ impl<Animated: PartialEq + Clone + 'static> UseAnimator<Animated> {
 
 /// Animate your elements easily.
 ///
-/// [`use_animation`] takes an callback to initialize the animated values and related configuration.
+/// [`use_animation`] takes an callback to initialize the animated values and
+/// related configuration.
 ///
 /// To animate a group of values at once you can just return a tuple of them.
-/// Currently supports animating numeric values (e.g width, padding, rotation, offsets) or also colors, you need specify the duration,
-/// and optionally an ease function or what type of easing you want as well.
+/// Currently supports animating numeric values (e.g width, padding, rotation,
+/// offsets) or also colors, you need specify the duration, and optionally an
+/// ease function or what type of easing you want as well.
 ///
 /// # Example
 ///
-/// Here is an example that animates a value from `0.0` to `100.0` in `50` milliseconds.
+/// Here is an example that animates a value from `0.0` to `100.0` in `50`
+/// milliseconds.
 ///
 /// ```rust, no_run
 /// # use freya::prelude::*;
-/// fn main() {
-///     launch(app);
-/// }
+/// fn main() { launch(app); }
 ///
 /// fn app() -> Element {
-///     let animation = use_animation(|ctx| {
-///         ctx.auto_start(true);
-///         ctx.with(AnimNum::new(0., 100.).time(50))
-///     });
+/// 	let animation = use_animation(|ctx| {
+/// 		ctx.auto_start(true);
+/// 		ctx.with(AnimNum::new(0., 100.).time(50))
+/// 	});
 ///
-///     let width = animation.get().read().as_f32();
+/// 	let width = animation.get().read().as_f32();
 ///
-///     rsx!(rect {
-///         width: "{width}",
-///         height: "100%",
-///         background: "blue"
-///     })
+/// 	rsx!(rect { width:"{width}", height:"100%", background:"blue" })
 /// }
 /// ```
 ///
-/// You are not limited to just one animation per call, you can have as many as you want.
+/// You are not limited to just one animation per call, you can have as many as
+/// you want.
 ///
 /// ```rust,no_run
 /// # use freya::prelude::*;
 /// fn app() -> Element {
-///     let animation = use_animation(|ctx| {
-///         ctx.auto_start(true);
-///         (
-///             ctx.with(AnimNum::new(0., 100.).time(50)),
-///             ctx.with(AnimColor::new("red", "blue").time(50)),
-///         )
-///     });
+/// 	let animation = use_animation(|ctx| {
+/// 		ctx.auto_start(true);
+/// 		(
+/// 			ctx.with(AnimNum::new(0., 100.).time(50)),
+/// 			ctx.with(AnimColor::new("red", "blue").time(50)),
+/// 		)
+/// 	});
 ///
-///     let (width, color) = animation.get();
+/// 	let (width, color) = animation.get();
 ///
-///     rsx!(rect {
-///         width: "{width.read().as_f32()}",
-///         height: "100%",
-///         background: "{color.read().as_string()}"
-///     })
+/// 	rsx!(rect {
+/// 		width:"{width.read().as_f32()}",
+/// 		height:"100%",
+/// 		background:"{color.read().as_string()}"
+/// 	})
 /// }
 /// ```
 ///
-/// You can also tweak what to do once the animation has finished with [`Context::on_finish`].
+/// You can also tweak what to do once the animation has finished with
+/// [`Context::on_finish`].
 ///
 /// ```rust,no_run
 /// # use freya::prelude::*;
 /// fn app() -> Element {
-///     let animation = use_animation(|ctx| {
-///         ctx.on_finish(OnFinish::Restart);
-///         (
-///             ctx.with(AnimNum::new(0., 100.).time(50)),
-///             ctx.with(AnimColor::new("red", "blue").time(50)),
-///         )
-///     });
+/// 	let animation = use_animation(|ctx| {
+/// 		ctx.on_finish(OnFinish::Restart);
+/// 		(
+/// 			ctx.with(AnimNum::new(0., 100.).time(50)),
+/// 			ctx.with(AnimColor::new("red", "blue").time(50)),
+/// 		)
+/// 	});
 ///
-///     let (width, color) = animation.get();
+/// 	let (width, color) = animation.get();
 ///
-///     rsx!(rect {
-///         width: "{width.read().as_f32()}",
-///         height: "100%",
-///         background: "{color.read().as_string()}"
-///     })
+/// 	rsx!(rect {
+/// 		width:"{width.read().as_f32()}",
+/// 		height:"100%",
+/// 		background:"{color.read().as_string()}"
+/// 	})
 /// }
 /// ```
-pub fn use_animation<Animated: PartialEq + Clone + 'static>(
-	run: impl Fn(&mut Context) -> Animated + Clone + 'static,
+pub fn use_animation<Animated:PartialEq + Clone + 'static>(
+	run:impl Fn(&mut Context) -> Animated + Clone + 'static,
 ) -> UseAnimator<Animated> {
 	let platform = use_platform();
 	let is_running = use_signal(|| false);
@@ -638,8 +634,7 @@ pub fn use_animation<Animated: PartialEq + Clone + 'static>(
 		(run(&mut ctx), ctx)
 	});
 
-	let animator =
-		UseAnimator { value_and_ctx, platform, is_running, has_run_yet, task };
+	let animator = UseAnimator { value_and_ctx, platform, is_running, has_run_yet, task };
 
 	use_hook(move || {
 		if animator.value_and_ctx.read().1.auto_start {
@@ -650,16 +645,12 @@ pub fn use_animation<Animated: PartialEq + Clone + 'static>(
 	animator
 }
 
-pub fn use_animation_with_dependencies<
-	Animated: PartialEq + Clone + 'static,
-	D: Dependency,
->(
-	deps: D,
-	run: impl Fn(&mut Context, D::Out) -> Animated + 'static,
+pub fn use_animation_with_dependencies<Animated:PartialEq + Clone + 'static, D:Dependency>(
+	deps:D,
+	run:impl Fn(&mut Context, D::Out) -> Animated + 'static,
 ) -> UseAnimator<Animated>
 where
-	D::Out: 'static + Clone,
-{
+	D::Out: 'static + Clone, {
 	let platform = use_platform();
 	let is_running = use_signal(|| false);
 	let has_run_yet = use_signal(|| false);
@@ -670,8 +661,7 @@ where
 		(run(&mut ctx, vals), ctx)
 	}));
 
-	let animator =
-		UseAnimator { value_and_ctx, platform, is_running, has_run_yet, task };
+	let animator = UseAnimator { value_and_ctx, platform, is_running, has_run_yet, task };
 
 	use_hook(move || {
 		if animator.value_and_ctx.read().1.auto_start {

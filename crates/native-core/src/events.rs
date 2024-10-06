@@ -42,7 +42,7 @@ pub enum EventName {
 impl FromStr for EventName {
 	type Err = ();
 
-	fn from_str(txt: &str) -> Result<Self, Self::Err> {
+	fn from_str(txt:&str) -> Result<Self, Self::Err> {
 		match txt {
 			"click" => Ok(EventName::Click),
 			"rightclick" => Ok(EventName::RightClick),
@@ -69,16 +69,14 @@ impl FromStr for EventName {
 			"globalmouseover" => Ok(EventName::GlobalMouseOver),
 			"filedrop" => Ok(EventName::FileDrop),
 			"globalfilehover" => Ok(EventName::GlobalFileHover),
-			"globalfilehovercancelled" => {
-				Ok(EventName::GlobalFileHoverCancelled)
-			},
+			"globalfilehovercancelled" => Ok(EventName::GlobalFileHoverCancelled),
 			_ => Err(()),
 		}
 	}
 }
 
 impl From<EventName> for &str {
-	fn from(event: EventName) -> Self {
+	fn from(event:EventName) -> Self {
 		match event {
 			EventName::Click => "click",
 			EventName::MiddleClick => "middleclick",
@@ -113,13 +111,11 @@ impl From<EventName> for &str {
 impl Eq for EventName {}
 
 impl PartialOrd for EventName {
-	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-		Some(self.cmp(other))
-	}
+	fn partial_cmp(&self, other:&Self) -> Option<std::cmp::Ordering> { Some(self.cmp(other)) }
 }
 
 impl Ord for EventName {
-	fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+	fn cmp(&self, other:&Self) -> std::cmp::Ordering {
 		match self {
 			// Always prioritize leave events before anything else
 			Self::MouseLeave | Self::PointerLeave => {
@@ -143,9 +139,7 @@ impl EventName {
 			Self::MouseDown => Some(Self::GlobalMouseDown),
 			Self::MouseOver => Some(Self::GlobalMouseOver),
 			Self::GlobalFileHover => Some(Self::GlobalFileHover),
-			Self::GlobalFileHoverCancelled => {
-				Some(Self::GlobalFileHoverCancelled)
-			},
+			Self::GlobalFileHoverCancelled => Some(Self::GlobalFileHoverCancelled),
 			_ => None,
 		}
 	}
@@ -159,32 +153,24 @@ impl EventName {
 		events.push(*self);
 
 		match self {
-			Self::MouseOver | Self::TouchMove => events.extend([
-				Self::MouseEnter,
-				Self::PointerEnter,
-				Self::PointerOver,
-			]),
-			Self::MouseDown | Self::TouchStart => {
-				events.push(Self::PointerDown)
+			Self::MouseOver | Self::TouchMove => {
+				events.extend([Self::MouseEnter, Self::PointerEnter, Self::PointerOver])
 			},
-			Self::Click
-			| Self::MiddleClick
-			| Self::RightClick
-			| Self::TouchEnd => events.push(Self::PointerUp),
+			Self::MouseDown | Self::TouchStart => events.push(Self::PointerDown),
+			Self::Click | Self::MiddleClick | Self::RightClick | Self::TouchEnd => {
+				events.push(Self::PointerUp)
+			},
 			Self::MouseLeave => events.push(Self::PointerLeave),
-			Self::GlobalFileHover | Self::GlobalFileHoverCancelled => {
-				events.clear()
-			},
+			Self::GlobalFileHover | Self::GlobalFileHoverCancelled => events.clear(),
 			_ => {},
 		}
 
 		events
 	}
 
-	/// Check if the event means that the pointer (e.g. cursor) just entered a Node
-	pub fn is_enter(&self) -> bool {
-		matches!(&self, Self::MouseEnter | Self::PointerEnter)
-	}
+	/// Check if the event means that the pointer (e.g. cursor) just entered a
+	/// Node
+	pub fn is_enter(&self) -> bool { matches!(&self, Self::MouseEnter | Self::PointerEnter) }
 
 	/// Check if it's one of the Pointer variants
 	pub fn is_pointer(&self) -> bool {
@@ -203,10 +189,7 @@ impl EventName {
 	pub fn was_cursor_moved(&self) -> bool {
 		matches!(
 			&self,
-			Self::MouseOver
-				| Self::MouseEnter
-				| Self::PointerEnter
-				| Self::PointerOver
+			Self::MouseOver | Self::MouseEnter | Self::PointerEnter | Self::PointerOver
 		)
 	}
 
@@ -217,7 +200,8 @@ impl EventName {
 		!matches!(
 			self,
 			Self::KeyDown
-				| Self::KeyUp | Self::MouseLeave
+				| Self::KeyUp
+				| Self::MouseLeave
 				| Self::PointerLeave
 				| Self::MouseEnter
 				| Self::PointerEnter
@@ -227,18 +211,13 @@ impl EventName {
 	}
 
 	// Only let events that do not move the mouse, go through solid nodes
-	pub fn does_go_through_solid(&self) -> bool {
-		matches!(self, Self::KeyDown | Self::KeyUp)
-	}
+	pub fn does_go_through_solid(&self) -> bool { matches!(self, Self::KeyDown | Self::KeyUp) }
 
 	// Check if this event can change the hover state of a Node.
 	pub fn can_change_hover_state(&self) -> bool {
 		matches!(
 			self,
-			Self::MouseOver
-				| Self::MouseEnter
-				| Self::PointerOver
-				| Self::PointerEnter
+			Self::MouseOver | Self::MouseEnter | Self::PointerOver | Self::PointerEnter
 		)
 	}
 }

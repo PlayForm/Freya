@@ -2,7 +2,10 @@ use dioxus::prelude::*;
 use freya_elements::elements as dioxus_elements;
 use freya_engine::prelude::*;
 use freya_hooks::{
-	use_applied_theme, use_canvas_with_deps, use_platform, GraphTheme,
+	use_applied_theme,
+	use_canvas_with_deps,
+	use_platform,
+	GraphTheme,
 	GraphThemeWith,
 };
 use freya_node_state::{CanvasRunner, CanvasRunnerContext, Parse};
@@ -10,13 +13,13 @@ use freya_node_state::{CanvasRunner, CanvasRunnerContext, Parse};
 /// Data line for the [`Graph`] component.
 #[derive(Debug, PartialEq, Clone)]
 pub struct GraphLine {
-	color: String,
-	points: Vec<Option<i32>>,
+	color:String,
+	points:Vec<Option<i32>>,
 }
 
 impl GraphLine {
-	pub fn new(color: &str, points: Vec<Option<i32>>) -> Self {
-		Self { color: color.to_string(), points }
+	pub fn new(color:&str, points:Vec<Option<i32>>) -> Self {
+		Self { color:color.to_string(), points }
 	}
 }
 
@@ -24,16 +27,16 @@ impl GraphLine {
 #[derive(Debug, Props, PartialEq, Clone)]
 pub struct GraphProps {
 	/// Theme override.
-	pub theme: Option<GraphThemeWith>,
+	pub theme:Option<GraphThemeWith>,
 	/// X axis labels.
-	labels: Vec<String>,
+	labels:Vec<String>,
 	/// Y axis data.
-	data: Vec<GraphLine>,
+	data:Vec<GraphLine>,
 }
 
 /// Graph component.
 #[allow(non_snake_case)]
-pub fn Graph(props: GraphProps) -> Element {
+pub fn Graph(props:GraphProps) -> Element {
 	let platform = use_platform();
 	let GraphTheme { width, height } = use_applied_theme!(&props.theme, graph);
 
@@ -42,7 +45,7 @@ pub fn Graph(props: GraphProps) -> Element {
 	}));
 
 	let canvas = use_canvas_with_deps(&props, |props| {
-		Box::new(move |ctx: &mut CanvasRunnerContext| {
+		Box::new(move |ctx:&mut CanvasRunnerContext| {
 			ctx.canvas.translate((ctx.area.min_x(), ctx.area.min_y()));
 
 			let mut paragraph_style = ParagraphStyle::default();
@@ -53,7 +56,7 @@ pub fn Graph(props: GraphProps) -> Element {
 			paragraph_style.set_text_style(&text_style);
 
 			let x_labels = &props.labels;
-			let x_height: f32 = 50.0;
+			let x_height:f32 = 50.0;
 
 			let start_x = ctx.area.min_x();
 			let start_y = ctx.area.height() - x_height;
@@ -102,14 +105,12 @@ pub fn Graph(props: GraphProps) -> Element {
 				let mut previous_y = None;
 
 				for (i, y_point) in line.points.iter().enumerate() {
-					let line_x =
-						(space_x * i as f32) + start_x + (space_x / 2.0);
+					let line_x = (space_x * i as f32) + start_x + (space_x / 2.0);
 					// Save the position where the last point drawed
 					let new_previous_x = previous_x.unwrap_or(line_x);
 
 					if let Some(y_point) = y_point {
-						let line_y = start_y
-							- (space_y * ((y_point - smallest_y) as f32));
+						let line_y = start_y - (space_y * ((y_point - smallest_y) as f32));
 						let new_previous_y = previous_y.unwrap_or(line_y);
 
 						// Draw the line and circle
@@ -136,10 +137,8 @@ pub fn Graph(props: GraphProps) -> Element {
 			for (i, point) in x_labels.iter().enumerate() {
 				let x = (space_x * i as f32) + start_x;
 
-				let mut paragrap_builder = ParagraphBuilder::new(
-					&paragraph_style,
-					ctx.font_collection.clone(),
-				);
+				let mut paragrap_builder =
+					ParagraphBuilder::new(&paragraph_style, ctx.font_collection.clone());
 				paragrap_builder.add_text(point);
 				let mut text = paragrap_builder.build();
 

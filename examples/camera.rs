@@ -1,7 +1,4 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 #[cfg(feature = "use_camera")]
 use freya::prelude::*;
@@ -12,9 +9,7 @@ fn main() {
 }
 
 #[cfg(feature = "use_camera")]
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 #[cfg(feature = "use_camera")]
 fn app() -> Element {
 	let (image_reference, camera_error) = use_camera(CameraSettings::default());

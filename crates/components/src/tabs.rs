@@ -1,15 +1,21 @@
 use dioxus::prelude::*;
 use freya_elements::elements as dioxus_elements;
 use freya_hooks::{
-	use_activable_route, use_applied_theme, use_focus, use_platform,
-	BottomTabTheme, BottomTabThemeWith, TabTheme, TabThemeWith,
+	use_activable_route,
+	use_applied_theme,
+	use_focus,
+	use_platform,
+	BottomTabTheme,
+	BottomTabThemeWith,
+	TabTheme,
+	TabThemeWith,
 };
 use winit::window::CursorIcon;
 
 /// Horizontal container for Tabs. Use in combination with [`Tab`]
 #[allow(non_snake_case)]
 #[component]
-pub fn Tabsbar(children: Element) -> Element {
+pub fn Tabsbar(children:Element) -> Element {
 	rsx!(
 		rect {
 			direction: "horizontal",
@@ -28,7 +34,8 @@ pub enum TabStatus {
 	Hovering,
 }
 
-///  Clickable Tab. Usually used in combination with [`Tabsbar`], [`Link`] and [`ActivableRoute`].
+///  Clickable Tab. Usually used in combination with [`Tabsbar`], [`Link`] and
+/// [`ActivableRoute`].
 ///
 /// # Styling
 /// Inherits the [`TabTheme`](freya_hooks::TabTheme) theme.
@@ -72,7 +79,7 @@ pub enum TabStatus {
 /// ```
 #[allow(non_snake_case)]
 #[component]
-pub fn Tab(children: Element, theme: Option<TabThemeWith>) -> Element {
+pub fn Tab(children:Element, theme:Option<TabThemeWith>) -> Element {
 	let focus = use_focus();
 	let mut status = use_signal(TabStatus::default);
 	let platform = use_platform();
@@ -111,11 +118,7 @@ pub fn Tab(children: Element, theme: Option<TabThemeWith>) -> Element {
 		TabStatus::Hovering => hover_background,
 		TabStatus::Idle => background,
 	};
-	let border = if focus.is_selected() || is_active {
-		focus_border_fill
-	} else {
-		border_fill
-	};
+	let border = if focus.is_selected() || is_active { focus_border_fill } else { border_fill };
 
 	rsx!(
 		rect {
@@ -146,8 +149,9 @@ pub fn Tab(children: Element, theme: Option<TabThemeWith>) -> Element {
 	)
 }
 
-///  Clickable BottomTab. Same thing as Tab but designed to be placed in the bottom of your app,
-///  usually used in combination with [`Tabsbar`], [`Link`] and [`ActivableRoute`].
+///  Clickable BottomTab. Same thing as Tab but designed to be placed in the
+/// bottom of your app,  usually used in combination with [`Tabsbar`], [`Link`]
+/// and [`ActivableRoute`].
 ///
 /// # Styling
 /// Inherits the [`BottomTabTheme`](freya_hooks::BottomTabTheme) theme.
@@ -191,10 +195,7 @@ pub fn Tab(children: Element, theme: Option<TabThemeWith>) -> Element {
 /// ```
 #[allow(non_snake_case)]
 #[component]
-pub fn BottomTab(
-	children: Element,
-	theme: Option<BottomTabThemeWith>,
-) -> Element {
+pub fn BottomTab(children:Element, theme:Option<BottomTabThemeWith>) -> Element {
 	let focus = use_focus();
 	let mut status = use_signal(TabStatus::default);
 	let platform = use_platform();
@@ -202,14 +203,8 @@ pub fn BottomTab(
 
 	let focus_id = focus.attribute();
 
-	let BottomTabTheme {
-		background,
-		hover_background,
-		padding,
-		width,
-		height,
-		font_theme,
-	} = use_applied_theme!(&theme, bottom_tab);
+	let BottomTabTheme { background, hover_background, padding, width, height, font_theme } =
+		use_applied_theme!(&theme, bottom_tab);
 
 	use_drop(move || {
 		if *status.read() == TabStatus::Hovering {

@@ -7,22 +7,18 @@ use crate::{use_editable, EditableMode, TextEditor};
 pub async fn multiple_lines_single_editor() {
 	fn use_editable_app() -> Element {
 		let mut editable = use_editable(
-			|| {
-				EditableConfig::new(
-					"Hello Rustaceans\nHello Rustaceans".to_string(),
-				)
-			},
+			|| EditableConfig::new("Hello Rustaceans\nHello Rustaceans".to_string()),
 			EditableMode::MultipleLinesSingleEditor,
 		);
 		let cursor_attr = editable.cursor_attr();
 		let editor = editable.editor().read();
 		let cursor_pos = editor.visible_cursor_pos();
 
-		let onmousedown = move |e: MouseEvent| {
+		let onmousedown = move |e:MouseEvent| {
 			editable.process_event(&EditableEvent::MouseDown(e.data, 0));
 		};
 
-		let onkeydown = move |e: Event<KeyboardData>| {
+		let onkeydown = move |e:Event<KeyboardData>| {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		};
 
@@ -66,9 +62,9 @@ pub async fn multiple_lines_single_editor() {
 
 	// Move cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	utils.wait_for_update().await;
@@ -81,10 +77,10 @@ pub async fn multiple_lines_single_editor() {
 
 	// Insert text
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Character("!".to_string()),
-		code: Code::Unidentified,
-		modifiers: Modifiers::empty(),
+		name:EventName::KeyDown,
+		key:Key::Character("!".to_string()),
+		code:Code::Unidentified,
+		modifiers:Modifiers::empty(),
 	});
 
 	utils.wait_for_update().await;
@@ -97,9 +93,9 @@ pub async fn multiple_lines_single_editor() {
 
 	// Move cursor to the begining
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (3.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(3.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	utils.wait_for_update().await;
@@ -108,10 +104,10 @@ pub async fn multiple_lines_single_editor() {
 
 	// Move cursor with arrow down
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowDown,
-		key: Key::ArrowDown,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowDown,
+		key:Key::ArrowDown,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
@@ -119,10 +115,10 @@ pub async fn multiple_lines_single_editor() {
 
 	// Move cursor with arrow right
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowRight,
-		key: Key::ArrowRight,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowRight,
+		key:Key::ArrowRight,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
@@ -130,10 +126,10 @@ pub async fn multiple_lines_single_editor() {
 
 	// Move cursor with arrow up
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowUp,
-		key: Key::ArrowUp,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowUp,
+		key:Key::ArrowUp,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
@@ -141,10 +137,10 @@ pub async fn multiple_lines_single_editor() {
 
 	// Move cursor with arrow left
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowLeft,
-		key: Key::ArrowLeft,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowLeft,
+		key:Key::ArrowLeft,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
@@ -152,38 +148,40 @@ pub async fn multiple_lines_single_editor() {
 
 	// Move cursor with arrow down, twice
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowDown,
-		key: Key::ArrowDown,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowDown,
+		key:Key::ArrowDown,
+		modifiers:Modifiers::default(),
 	});
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowDown,
-		key: Key::ArrowDown,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowDown,
+		key:Key::ArrowDown,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
-	// Because there is not a third line, the cursor will be moved to the max right
+	// Because there is not a third line, the cursor will be moved to the max
+	// right
 	assert_eq!(cursor.text(), Some("1:16"));
 
 	// Move cursor with arrow up, twice
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowUp,
-		key: Key::ArrowUp,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowUp,
+		key:Key::ArrowUp,
+		modifiers:Modifiers::default(),
 	});
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowUp,
-		key: Key::ArrowUp,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowUp,
+		key:Key::ArrowUp,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
-	// Because there is not a line above the first one, the cursor will be moved to the begining
+	// Because there is not a line above the first one, the cursor will be moved
+	// to the begining
 	assert_eq!(cursor.text(), Some("0:0"));
 }
 
@@ -197,7 +195,7 @@ pub async fn single_line_multiple_editors() {
 		let cursor_attr = editable.cursor_attr();
 		let editor = editable.editor().read();
 
-		let onkeydown = move |e: Event<KeyboardData>| {
+		let onkeydown = move |e:Event<KeyboardData>| {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		};
 
@@ -251,9 +249,9 @@ pub async fn single_line_multiple_editors() {
 
 	// Move cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	utils.wait_for_update().await;
@@ -266,10 +264,10 @@ pub async fn single_line_multiple_editors() {
 
 	// Insert text
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Character("!".to_string()),
-		code: Code::Unidentified,
-		modifiers: Modifiers::empty(),
+		name:EventName::KeyDown,
+		key:Key::Character("!".to_string()),
+		code:Code::Unidentified,
+		modifiers:Modifiers::empty(),
 	});
 
 	utils.wait_for_update().await;
@@ -298,15 +296,15 @@ pub async fn highlight_multiple_lines_single_editor() {
 		let cursor_reference = editable.cursor_attr();
 		let highlights = editable.highlights_attr(0);
 
-		let onmousedown = move |e: MouseEvent| {
+		let onmousedown = move |e:MouseEvent| {
 			editable.process_event(&EditableEvent::MouseDown(e.data, 0));
 		};
 
-		let onmouseover = move |e: MouseEvent| {
+		let onmouseover = move |e:MouseEvent| {
 			editable.process_event(&EditableEvent::MouseOver(e.data, 0));
 		};
 
-		let onkeydown = move |e: Event<KeyboardData>| {
+		let onkeydown = move |e:Event<KeyboardData>| {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		};
 
@@ -347,18 +345,18 @@ pub async fn highlight_multiple_lines_single_editor() {
 
 	// Click cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	utils.wait_for_update().await;
 
 	// Move cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseOver,
-		cursor: (80.0, 20.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseOver,
+		cursor:(80.0, 20.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	utils.wait_for_update().await;
@@ -382,7 +380,7 @@ pub async fn highlights_single_line_multiple_editors() {
 		let cursor_attr = editable.cursor_attr();
 		let editor = editable.editor().read();
 
-		let onkeydown = move |e: Event<KeyboardData>| {
+		let onkeydown = move |e:Event<KeyboardData>| {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		};
 
@@ -449,18 +447,18 @@ pub async fn highlights_single_line_multiple_editors() {
 
 	// Click cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	utils.wait_for_update().await;
 
 	// Move cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseOver,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseOver,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	utils.wait_for_update().await;
@@ -468,9 +466,9 @@ pub async fn highlights_single_line_multiple_editors() {
 
 	// Move cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseOver,
-		cursor: (80.0, 35.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseOver,
+		cursor:(80.0, 35.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	utils.wait_for_update().await;
@@ -498,11 +496,11 @@ pub async fn special_text_editing() {
 		let editor = editable.editor().read();
 		let cursor_pos = editor.visible_cursor_pos();
 
-		let onmousedown = move |e: MouseEvent| {
+		let onmousedown = move |e:MouseEvent| {
 			editable.process_event(&EditableEvent::MouseDown(e.data, 0));
 		};
 
-		let onkeydown = move |e: Event<KeyboardData>| {
+		let onkeydown = move |e:Event<KeyboardData>| {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		};
 
@@ -546,9 +544,9 @@ pub async fn special_text_editing() {
 
 	// Move cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	utils.wait_for_update().await;
@@ -565,10 +563,10 @@ pub async fn special_text_editing() {
 
 	// Insert text
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Character("🦀".to_string()),
-		code: Code::Unidentified,
-		modifiers: Modifiers::empty(),
+		name:EventName::KeyDown,
+		key:Key::Character("🦀".to_string()),
+		code:Code::Unidentified,
+		modifiers:Modifiers::empty(),
 	});
 
 	utils.wait_for_update().await;
@@ -590,9 +588,9 @@ pub async fn special_text_editing() {
 
 	// Move cursor to the begining
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (3.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(3.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	utils.wait_for_update().await;
@@ -601,10 +599,10 @@ pub async fn special_text_editing() {
 
 	// Move cursor with arrow down
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowDown,
-		key: Key::ArrowDown,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowDown,
+		key:Key::ArrowDown,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
@@ -612,10 +610,10 @@ pub async fn special_text_editing() {
 
 	// Move cursor with arrow right
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowRight,
-		key: Key::ArrowRight,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowRight,
+		key:Key::ArrowRight,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
@@ -623,10 +621,10 @@ pub async fn special_text_editing() {
 
 	// Move cursor with arrow up
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowUp,
-		key: Key::ArrowUp,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowUp,
+		key:Key::ArrowUp,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
@@ -634,10 +632,10 @@ pub async fn special_text_editing() {
 
 	// Move cursor with arrow left
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowLeft,
-		key: Key::ArrowLeft,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowLeft,
+		key:Key::ArrowLeft,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
@@ -645,38 +643,40 @@ pub async fn special_text_editing() {
 
 	// Move cursor with arrow down, twice
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowDown,
-		key: Key::ArrowDown,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowDown,
+		key:Key::ArrowDown,
+		modifiers:Modifiers::default(),
 	});
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowDown,
-		key: Key::ArrowDown,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowDown,
+		key:Key::ArrowDown,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
-	// Because there is not a third line, the cursor will be moved to the max right
+	// Because there is not a third line, the cursor will be moved to the max
+	// right
 	assert_eq!(cursor.text(), Some("1:1"));
 
 	// Move cursor with arrow up, twice
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowUp,
-		key: Key::ArrowUp,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowUp,
+		key:Key::ArrowUp,
+		modifiers:Modifiers::default(),
 	});
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		code: Code::ArrowUp,
-		key: Key::ArrowUp,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		code:Code::ArrowUp,
+		key:Key::ArrowUp,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 	let cursor = root.get(1).get(0);
-	// Because there is not a line above the first one, the cursor will be moved to the begining
+	// Because there is not a line above the first one, the cursor will be moved
+	// to the begining
 	assert_eq!(cursor.text(), Some("0:0"));
 }
 
@@ -684,22 +684,18 @@ pub async fn special_text_editing() {
 pub async fn backspace_remove() {
 	fn backspace_remove_app() -> Element {
 		let mut editable = use_editable(
-			|| {
-				EditableConfig::new(
-					"Hello Rustaceans\nHello Rustaceans".to_string(),
-				)
-			},
+			|| EditableConfig::new("Hello Rustaceans\nHello Rustaceans".to_string()),
 			EditableMode::MultipleLinesSingleEditor,
 		);
 		let cursor_attr = editable.cursor_attr();
 		let editor = editable.editor().read();
 		let cursor_pos = editor.visible_cursor_pos();
 
-		let onmousedown = move |e: MouseEvent| {
+		let onmousedown = move |e:MouseEvent| {
 			editable.process_event(&EditableEvent::MouseDown(e.data, 0));
 		};
 
-		let onkeydown = move |e: Event<KeyboardData>| {
+		let onkeydown = move |e:Event<KeyboardData>| {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		};
 
@@ -743,9 +739,9 @@ pub async fn backspace_remove() {
 
 	// Move cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	utils.wait_for_update().await;
@@ -758,10 +754,10 @@ pub async fn backspace_remove() {
 
 	// Insert text
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Character("🦀".to_string()),
-		code: Code::Unidentified,
-		modifiers: Modifiers::empty(),
+		name:EventName::KeyDown,
+		key:Key::Character("🦀".to_string()),
+		code:Code::Unidentified,
+		modifiers:Modifiers::empty(),
 	});
 
 	utils.wait_for_update().await;
@@ -775,10 +771,10 @@ pub async fn backspace_remove() {
 
 	// Remove text
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Backspace,
-		code: Code::Unidentified,
-		modifiers: Modifiers::empty(),
+		name:EventName::KeyDown,
+		key:Key::Backspace,
+		code:Code::Unidentified,
+		modifiers:Modifiers::empty(),
 	});
 
 	utils.wait_for_update().await;
@@ -803,19 +799,19 @@ pub async fn highlight_shift_click_multiple_lines_single_editor() {
 		let cursor_reference = editable.cursor_attr();
 		let highlights = editable.highlights_attr(0);
 
-		let onmousedown = move |e: MouseEvent| {
+		let onmousedown = move |e:MouseEvent| {
 			editable.process_event(&EditableEvent::MouseDown(e.data, 0));
 		};
 
-		let onmouseover = move |e: MouseEvent| {
+		let onmouseover = move |e:MouseEvent| {
 			editable.process_event(&EditableEvent::MouseOver(e.data, 0));
 		};
 
-		let onkeydown = move |e: Event<KeyboardData>| {
+		let onkeydown = move |e:Event<KeyboardData>| {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		};
 
-		let onclick = move |_: MouseEvent| {
+		let onclick = move |_:MouseEvent| {
 			editable.process_event(&EditableEvent::Click);
 		};
 
@@ -857,40 +853,40 @@ pub async fn highlight_shift_click_multiple_lines_single_editor() {
 
 	// Click cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 
 	// Press shift
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Shift,
-		code: Code::ShiftLeft,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		key:Key::Shift,
+		code:Code::ShiftLeft,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 
 	// Move cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (80.0, 20.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(80.0, 20.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 
 	// Click cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (80.0, 20.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(80.0, 20.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	utils.wait_for_update().await;
@@ -913,7 +909,7 @@ pub async fn highlights_shift_click_single_line_multiple_editors() {
 		let cursor_attr = editable.cursor_attr();
 		let editor = editable.editor().read();
 
-		let onkeydown = move |e: Event<KeyboardData>| {
+		let onkeydown = move |e:Event<KeyboardData>| {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		};
 
@@ -985,38 +981,38 @@ pub async fn highlights_shift_click_single_line_multiple_editors() {
 
 	// Click cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 
 	// Press shift
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Shift,
-		code: Code::ShiftLeft,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		key:Key::Shift,
+		code:Code::ShiftLeft,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 
 	// Click cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (80.0, 35.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(80.0, 35.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (80.0, 35.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(80.0, 35.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 
@@ -1047,19 +1043,19 @@ pub async fn highlight_all_text() {
 		let cursor_reference = editable.cursor_attr();
 		let highlights = editable.highlights_attr(0);
 
-		let onmousedown = move |e: MouseEvent| {
+		let onmousedown = move |e:MouseEvent| {
 			editable.process_event(&EditableEvent::MouseDown(e.data, 0));
 		};
 
-		let onmouseover = move |e: MouseEvent| {
+		let onmouseover = move |e:MouseEvent| {
 			editable.process_event(&EditableEvent::MouseOver(e.data, 0));
 		};
 
-		let onkeydown = move |e: Event<KeyboardData>| {
+		let onkeydown = move |e:Event<KeyboardData>| {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		};
 
-		let onclick = move |_: MouseEvent| {
+		let onclick = move |_:MouseEvent| {
 			editable.process_event(&EditableEvent::Click);
 		};
 
@@ -1107,9 +1103,9 @@ pub async fn highlight_all_text() {
 
 	// Select all text
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Character("a".to_string()),
-		code: Code::KeyA,
+		name:EventName::KeyDown,
+		key:Key::Character("a".to_string()),
+		code:Code::KeyA,
 		modifiers,
 	});
 	utils.wait_for_update().await;
@@ -1127,11 +1123,7 @@ pub async fn highlight_all_text() {
 pub async fn replace_text() {
 	fn replace_text_app() -> Element {
 		let mut editable = use_editable(
-			|| {
-				EditableConfig::new(
-					"Hello Rustaceans\nHello Rustaceans".to_string(),
-				)
-			},
+			|| EditableConfig::new("Hello Rustaceans\nHello Rustaceans".to_string()),
 			EditableMode::MultipleLinesSingleEditor,
 		);
 		let cursor_attr = editable.cursor_attr();
@@ -1139,15 +1131,15 @@ pub async fn replace_text() {
 		let cursor_pos = editor.visible_cursor_pos();
 		let highlights = editable.highlights_attr(0);
 
-		let onmousedown = move |e: MouseEvent| {
+		let onmousedown = move |e:MouseEvent| {
 			editable.process_event(&EditableEvent::MouseDown(e.data, 0));
 		};
 
-		let onkeydown = move |e: Event<KeyboardData>| {
+		let onkeydown = move |e:Event<KeyboardData>| {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		};
 
-		let onclick = move |_: MouseEvent| {
+		let onclick = move |_:MouseEvent| {
 			editable.process_event(&EditableEvent::Click);
 		};
 
@@ -1193,9 +1185,9 @@ pub async fn replace_text() {
 
 	// Move cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 
 	utils.wait_for_update().await;
@@ -1208,47 +1200,47 @@ pub async fn replace_text() {
 
 	// Click cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (35.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(35.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 
 	// Press shift
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Shift,
-		code: Code::ShiftLeft,
-		modifiers: Modifiers::default(),
+		name:EventName::KeyDown,
+		key:Key::Shift,
+		code:Code::ShiftLeft,
+		modifiers:Modifiers::default(),
 	});
 	utils.wait_for_update().await;
 
 	// Move cursor
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: (80.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:(80.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (80.0, 3.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(80.0, 3.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 
 	// Insert text
 	utils.push_event(PlatformEvent::Keyboard {
-		name: EventName::KeyDown,
-		key: Key::Character("🦀".to_string()),
-		code: Code::Unidentified,
-		modifiers: Modifiers::empty(),
+		name:EventName::KeyDown,
+		key:Key::Character("🦀".to_string()),
+		code:Code::Unidentified,
+		modifiers:Modifiers::empty(),
 	});
 
 	utils.wait_for_update().await;

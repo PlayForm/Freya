@@ -34,10 +34,10 @@ pub fn position() {
 			Size::Pixels(Length::new(200.0)),
 			Size::Pixels(Length::new(200.0)),
 			Position::Absolute(Box::new(AbsolutePosition {
-				top: Some(100.0),
-				right: None,
-				bottom: None,
-				left: Some(50.0),
+				top:Some(100.0),
+				right:None,
+				bottom:None,
+				left:Some(50.0),
 			})),
 		),
 	);
@@ -49,10 +49,10 @@ pub fn position() {
 			Size::Pixels(Length::new(200.0)),
 			Size::Pixels(Length::new(200.0)),
 			Position::Absolute(Box::new(AbsolutePosition {
-				top: Some(100.0),
-				right: Some(50.0),
-				bottom: None,
-				left: None,
+				top:Some(100.0),
+				right:Some(50.0),
+				bottom:None,
+				left:None,
 			})),
 		),
 	);
@@ -64,10 +64,10 @@ pub fn position() {
 			Size::Pixels(Length::new(200.0)),
 			Size::Pixels(Length::new(200.0)),
 			Position::Absolute(Box::new(AbsolutePosition {
-				top: None,
-				right: Some(50.0),
-				bottom: Some(100.0),
-				left: None,
+				top:None,
+				right:Some(50.0),
+				bottom:Some(100.0),
+				left:None,
 			})),
 		),
 	);
@@ -79,10 +79,10 @@ pub fn position() {
 			Size::Pixels(Length::new(200.0)),
 			Size::Pixels(Length::new(200.0)),
 			Position::Absolute(Box::new(AbsolutePosition {
-				top: None,
-				right: None,
-				bottom: Some(100.0),
-				left: Some(50.0),
+				top:None,
+				right:None,
+				bottom:Some(100.0),
+				left:Some(50.0),
 			})),
 		),
 	);

@@ -8,15 +8,26 @@ use freya_core::{
 	prelude::{EventMessage, NavigationMode},
 };
 use freya_elements::events::{
-	map_winit_key, map_winit_modifiers, map_winit_physical_key, Code, Key,
+	map_winit_key,
+	map_winit_modifiers,
+	map_winit_physical_key,
+	Code,
+	Key,
 };
 use glutin::prelude::{GlSurface, PossiblyCurrentGlContext};
 use torin::geometry::CursorPoint;
 use winit::{
 	application::ApplicationHandler,
 	event::{
-		ElementState, Ime, KeyEvent, MouseButton, MouseScrollDelta, StartCause,
-		Touch, TouchPhase, WindowEvent,
+		ElementState,
+		Ime,
+		KeyEvent,
+		MouseButton,
+		MouseScrollDelta,
+		StartCause,
+		Touch,
+		TouchPhase,
+		WindowEvent,
 	},
 	event_loop::{EventLoop, EventLoopProxy},
 	keyboard::ModifiersState,
@@ -24,33 +35,32 @@ use winit::{
 
 use crate::{
 	devtools::Devtools,
-	window_state::{
-		create_surface, CreatedState, NotCreatedState, WindowState,
-	},
-	HoveredNode, LaunchConfig,
+	window_state::{create_surface, CreatedState, NotCreatedState, WindowState},
+	HoveredNode,
+	LaunchConfig,
 };
 
-const WHEEL_SPEED_MODIFIER: f32 = 53.0;
+const WHEEL_SPEED_MODIFIER:f32 = 53.0;
 
 /// Desktop renderer using Skia, Glutin and Winit
-pub struct DesktopRenderer<'a, State: Clone + 'static> {
-	pub(crate) event_loop_proxy: EventLoopProxy<EventMessage>,
-	pub(crate) state: WindowState<'a, State>,
-	pub(crate) hovered_node: HoveredNode,
-	pub(crate) cursor_pos: CursorPoint,
-	pub(crate) mouse_state: ElementState,
-	pub(crate) modifiers_state: ModifiersState,
-	pub(crate) dropped_file_path: Option<PathBuf>,
+pub struct DesktopRenderer<'a, State:Clone + 'static> {
+	pub(crate) event_loop_proxy:EventLoopProxy<EventMessage>,
+	pub(crate) state:WindowState<'a, State>,
+	pub(crate) hovered_node:HoveredNode,
+	pub(crate) cursor_pos:CursorPoint,
+	pub(crate) mouse_state:ElementState,
+	pub(crate) modifiers_state:ModifiersState,
+	pub(crate) dropped_file_path:Option<PathBuf>,
 }
 
-impl<'a, State: Clone + 'static> DesktopRenderer<'a, State> {
+impl<'a, State:Clone + 'static> DesktopRenderer<'a, State> {
 	/// Run the Desktop Renderer.
 	pub fn launch(
-		vdom: VirtualDom,
-		sdom: SafeDOM,
-		config: LaunchConfig<State>,
-		devtools: Option<Devtools>,
-		hovered_node: HoveredNode,
+		vdom:VirtualDom,
+		sdom:SafeDOM,
+		config:LaunchConfig<State>,
+		devtools:Option<Devtools>,
+		hovered_node:HoveredNode,
 	) {
 		let event_loop = EventLoop::<EventMessage>::with_user_event()
 			.build()
@@ -62,54 +72,44 @@ impl<'a, State: Clone + 'static> DesktopRenderer<'a, State> {
 		{
 			use std::process::exit;
 			let proxy = proxy.clone();
-			dioxus_hot_reload::connect(move |msg| match msg {
-				dioxus_hot_reload::HotReloadMsg::UpdateTemplate(template) => {
-					let _ = proxy
-						.send_event(EventMessage::UpdateTemplate(template));
-				},
-				dioxus_hot_reload::HotReloadMsg::Shutdown => exit(0),
-				dioxus_hot_reload::HotReloadMsg::UpdateAsset(_) => {},
+			dioxus_hot_reload::connect(move |msg| {
+				match msg {
+					dioxus_hot_reload::HotReloadMsg::UpdateTemplate(template) => {
+						let _ = proxy.send_event(EventMessage::UpdateTemplate(template));
+					},
+					dioxus_hot_reload::HotReloadMsg::Shutdown => exit(0),
+					dioxus_hot_reload::HotReloadMsg::UpdateAsset(_) => {},
+				}
 			});
 		}
 
-		let mut desktop_renderer = DesktopRenderer::new(
-			vdom,
-			sdom,
-			config,
-			devtools,
-			hovered_node,
-			proxy,
-		);
+		let mut desktop_renderer =
+			DesktopRenderer::new(vdom, sdom, config, devtools, hovered_node, proxy);
 
 		event_loop.run_app(&mut desktop_renderer).unwrap();
 	}
 
 	pub fn new(
-		vdom: VirtualDom,
-		sdom: SafeDOM,
-		config: LaunchConfig<'a, State>,
-		devtools: Option<Devtools>,
-		hovered_node: HoveredNode,
-		proxy: EventLoopProxy<EventMessage>,
+		vdom:VirtualDom,
+		sdom:SafeDOM,
+		config:LaunchConfig<'a, State>,
+		devtools:Option<Devtools>,
+		hovered_node:HoveredNode,
+		proxy:EventLoopProxy<EventMessage>,
 	) -> Self {
 		DesktopRenderer {
-			state: WindowState::NotCreated(NotCreatedState {
-				sdom,
-				devtools,
-				vdom,
-				config,
-			}),
+			state:WindowState::NotCreated(NotCreatedState { sdom, devtools, vdom, config }),
 			hovered_node,
-			event_loop_proxy: proxy,
-			cursor_pos: CursorPoint::default(),
-			mouse_state: ElementState::Released,
-			modifiers_state: ModifiersState::default(),
-			dropped_file_path: None,
+			event_loop_proxy:proxy,
+			cursor_pos:CursorPoint::default(),
+			mouse_state:ElementState::Released,
+			modifiers_state:ModifiersState::default(),
+			dropped_file_path:None,
 		}
 	}
 
 	// Send and process an event
-	fn send_event(&mut self, event: PlatformEvent) {
+	fn send_event(&mut self, event:PlatformEvent) {
 		let scale_factor = self.scale_factor();
 		self.state.created_state().app.send_event(event, scale_factor);
 	}
@@ -117,9 +117,7 @@ impl<'a, State: Clone + 'static> DesktopRenderer<'a, State> {
 	/// Get the current scale factor of the Window
 	fn scale_factor(&self) -> f64 {
 		match &self.state {
-			WindowState::Created(CreatedState { window, .. }) => {
-				window.scale_factor()
-			},
+			WindowState::Created(CreatedState { window, .. }) => window.scale_factor(),
 			_ => 0.0,
 		}
 	}
@@ -141,10 +139,8 @@ impl<'a, State: Clone + 'static> DesktopRenderer<'a, State> {
 	}
 }
 
-impl<'a, State: Clone> ApplicationHandler<EventMessage>
-	for DesktopRenderer<'a, State>
-{
-	fn resumed(&mut self, event_loop: &winit::event_loop::ActiveEventLoop) {
+impl<'a, State:Clone> ApplicationHandler<EventMessage> for DesktopRenderer<'a, State> {
+	fn resumed(&mut self, event_loop:&winit::event_loop::ActiveEventLoop) {
 		if !self.state.has_been_created() {
 			self.state.create(event_loop, &self.event_loop_proxy);
 			self.run_on_setup();
@@ -153,19 +149,15 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 
 	fn new_events(
 		&mut self,
-		_event_loop: &winit::event_loop::ActiveEventLoop,
-		cause: winit::event::StartCause,
+		_event_loop:&winit::event_loop::ActiveEventLoop,
+		cause:winit::event::StartCause,
 	) {
 		if cause == StartCause::Init {
 			self.event_loop_proxy.send_event(EventMessage::PollVDOM).ok();
 		}
 	}
 
-	fn user_event(
-		&mut self,
-		event_loop: &winit::event_loop::ActiveEventLoop,
-		event: EventMessage,
-	) {
+	fn user_event(&mut self, event_loop:&winit::event_loop::ActiveEventLoop, event:EventMessage) {
 		let scale_factor = self.scale_factor();
 		let CreatedState { window, app, .. } = self.state.created_state();
 		match event {
@@ -178,41 +170,29 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 			EventMessage::RemeasureTextGroup(text_id) => {
 				app.measure_text_group(text_id, scale_factor);
 			},
-			EventMessage::Accessibility(
-				accesskit_winit::WindowEvent::ActionRequested(request),
-			) => {
+			EventMessage::Accessibility(accesskit_winit::WindowEvent::ActionRequested(request)) => {
 				if accesskit::Action::Focus == request.action {
 					app.focus_node(request.target, window);
 				}
 			},
-			EventMessage::Accessibility(
-				accesskit_winit::WindowEvent::InitialTreeRequested,
-			) => {
+			EventMessage::Accessibility(accesskit_winit::WindowEvent::InitialTreeRequested) => {
 				app.accessibility.process_initial_tree();
 			},
 			EventMessage::SetCursorIcon(icon) => window.set_cursor(icon),
 			EventMessage::FocusPrevAccessibilityNode => {
 				app.set_navigation_mode(NavigationMode::Keyboard);
-				app.focus_next_node(
-					AccessibilityFocusDirection::Backward,
-					window,
-				);
+				app.focus_next_node(AccessibilityFocusDirection::Backward, window);
 			},
 			EventMessage::FocusNextAccessibilityNode => {
 				app.set_navigation_mode(NavigationMode::Keyboard);
-				app.focus_next_node(
-					AccessibilityFocusDirection::Forward,
-					window,
-				);
+				app.focus_next_node(AccessibilityFocusDirection::Forward, window);
 			},
 			EventMessage::WithWindow(use_window) => (use_window)(window),
 			EventMessage::QueueFocusAccessibilityNode(node_id) => {
 				app.queue_focus_node(node_id);
 			},
 			EventMessage::ExitApp => event_loop.exit(),
-			EventMessage::PlatformEvent(platform_event) => {
-				self.send_event(platform_event)
-			},
+			EventMessage::PlatformEvent(platform_event) => self.send_event(platform_event),
 			ev => {
 				if let EventMessage::UpdateTemplate(template) = ev {
 					app.vdom_replace_template(template);
@@ -229,9 +209,9 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 
 	fn window_event(
 		&mut self,
-		event_loop: &winit::event_loop::ActiveEventLoop,
-		_window_id: winit::window::WindowId,
-		event: winit::event::WindowEvent,
+		event_loop:&winit::event_loop::ActiveEventLoop,
+		_window_id:winit::window::WindowId,
+		event:winit::event::WindowEvent,
 	) {
 		let scale_factor = self.scale_factor();
 		let CreatedState {
@@ -258,16 +238,15 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 			WindowEvent::CloseRequested => event_loop.exit(),
 			WindowEvent::Ime(Ime::Commit(text)) => {
 				self.send_event(PlatformEvent::Keyboard {
-					name: EventName::KeyDown,
-					key: Key::Character(text),
-					code: Code::Unidentified,
-					modifiers: map_winit_modifiers(self.modifiers_state),
+					name:EventName::KeyDown,
+					key:Key::Character(text),
+					code:Code::Unidentified,
+					modifiers:map_winit_modifiers(self.modifiers_state),
 				});
 			},
 			WindowEvent::RedrawRequested => {
 				app.platform_sender.send_if_modified(|state| {
-					let scale_factor_is_different =
-						state.scale_factor == scale_factor;
+					let scale_factor_is_different = state.scale_factor == scale_factor;
 					state.scale_factor = scale_factor;
 					scale_factor_is_different
 				});
@@ -292,36 +271,40 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 
 				let name = match state {
 					ElementState::Pressed => EventName::MouseDown,
-					ElementState::Released => match button {
-						MouseButton::Middle => EventName::MiddleClick,
-						MouseButton::Right => EventName::RightClick,
-						MouseButton::Left => EventName::Click,
-						_ => EventName::PointerUp,
+					ElementState::Released => {
+						match button {
+							MouseButton::Middle => EventName::MiddleClick,
+							MouseButton::Right => EventName::RightClick,
+							MouseButton::Left => EventName::Click,
+							_ => EventName::PointerUp,
+						}
 					},
 				};
 
 				self.send_event(PlatformEvent::Mouse {
 					name,
-					cursor: self.cursor_pos,
-					button: Some(button),
+					cursor:self.cursor_pos,
+					button:Some(button),
 				});
 			},
 			WindowEvent::MouseWheel { delta, phase, .. } => {
 				if TouchPhase::Moved == phase {
 					let scroll_data = {
 						match delta {
-							MouseScrollDelta::LineDelta(x, y) => (
-								(x * WHEEL_SPEED_MODIFIER) as f64,
-								(y * WHEEL_SPEED_MODIFIER) as f64,
-							),
+							MouseScrollDelta::LineDelta(x, y) => {
+								(
+									(x * WHEEL_SPEED_MODIFIER) as f64,
+									(y * WHEEL_SPEED_MODIFIER) as f64,
+								)
+							},
 							MouseScrollDelta::PixelDelta(pos) => (pos.x, pos.y),
 						}
 					};
 
 					self.send_event(PlatformEvent::Wheel {
-						name: EventName::Wheel,
-						scroll: CursorPoint::from(scroll_data),
-						cursor: self.cursor_pos,
+						name:EventName::Wheel,
+						scroll:CursorPoint::from(scroll_data),
+						cursor:self.cursor_pos,
 					});
 				}
 			},
@@ -342,9 +325,9 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 				};
 				self.send_event(PlatformEvent::Keyboard {
 					name,
-					key: map_winit_key(&logical_key),
-					code: map_winit_physical_key(&physical_key),
-					modifiers: map_winit_modifiers(self.modifiers_state),
+					key:map_winit_key(&logical_key),
+					code:map_winit_physical_key(&physical_key),
+					modifiers:map_winit_modifiers(self.modifiers_state),
 				})
 			},
 			WindowEvent::CursorLeft { .. } => {
@@ -352,9 +335,9 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 					self.cursor_pos = CursorPoint::new(-1.0, -1.0);
 
 					self.send_event(PlatformEvent::Mouse {
-						name: EventName::MouseOver,
-						cursor: self.cursor_pos,
-						button: None,
+						name:EventName::MouseOver,
+						cursor:self.cursor_pos,
+						button:None,
 					});
 				}
 			},
@@ -362,22 +345,20 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 				self.cursor_pos = CursorPoint::from((position.x, position.y));
 
 				self.send_event(PlatformEvent::Mouse {
-					name: EventName::MouseOver,
-					cursor: self.cursor_pos,
-					button: None,
+					name:EventName::MouseOver,
+					cursor:self.cursor_pos,
+					button:None,
 				});
 
 				if let Some(dropped_file_path) = self.dropped_file_path.take() {
 					self.send_event(PlatformEvent::File {
-						name: EventName::FileDrop,
-						file_path: Some(dropped_file_path),
-						cursor: self.cursor_pos,
+						name:EventName::FileDrop,
+						file_path:Some(dropped_file_path),
+						cursor:self.cursor_pos,
 					});
 				}
 			},
-			WindowEvent::Touch(Touch {
-				location, phase, id, force, ..
-			}) => {
+			WindowEvent::Touch(Touch { location, phase, id, force, .. }) => {
 				self.cursor_pos = CursorPoint::from((location.x, location.y));
 
 				let name = match phase {
@@ -389,20 +370,15 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 
 				self.send_event(PlatformEvent::Touch {
 					name,
-					location: self.cursor_pos,
-					finger_id: id,
+					location:self.cursor_pos,
+					finger_id:id,
 					phase,
 					force,
 				});
 			},
 			WindowEvent::Resized(size) => {
-				*surface = create_surface(
-					window,
-					*fb_info,
-					gr_context,
-					*num_samples,
-					*stencil_size,
-				);
+				*surface =
+					create_surface(window, *fb_info, gr_context, *num_samples, *stencil_size);
 
 				gl_surface.resize(
 					gl_context,
@@ -419,16 +395,16 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 			},
 			WindowEvent::HoveredFile(file_path) => {
 				self.send_event(PlatformEvent::File {
-					name: EventName::GlobalFileHover,
-					file_path: Some(file_path),
-					cursor: self.cursor_pos,
+					name:EventName::GlobalFileHover,
+					file_path:Some(file_path),
+					cursor:self.cursor_pos,
 				});
 			},
 			WindowEvent::HoveredFileCancelled => {
 				self.send_event(PlatformEvent::File {
-					name: EventName::GlobalFileHoverCancelled,
-					file_path: None,
-					cursor: self.cursor_pos,
+					name:EventName::GlobalFileHoverCancelled,
+					file_path:None,
+					cursor:self.cursor_pos,
 				});
 			},
 			WindowEvent::Focused(is_focused) => {
@@ -438,23 +414,15 @@ impl<'a, State: Clone> ApplicationHandler<EventMessage>
 		}
 	}
 
-	fn exiting(&mut self, _event_loop: &winit::event_loop::ActiveEventLoop) {
-		self.run_on_exit();
-	}
+	fn exiting(&mut self, _event_loop:&winit::event_loop::ActiveEventLoop) { self.run_on_exit(); }
 }
 
-impl<T: Clone> Drop for DesktopRenderer<'_, T> {
+impl<T:Clone> Drop for DesktopRenderer<'_, T> {
 	fn drop(&mut self) {
-		if let WindowState::Created(CreatedState {
-			gl_context,
-			gl_surface,
-			gr_context,
-			..
-		}) = &mut self.state
+		if let WindowState::Created(CreatedState { gl_context, gl_surface, gr_context, .. }) =
+			&mut self.state
 		{
-			if !gl_context.is_current()
-				&& gl_context.make_current(gl_surface).is_err()
-			{
+			if !gl_context.is_current() && gl_context.make_current(gl_surface).is_err() {
 				gr_context.abandon();
 			}
 		}

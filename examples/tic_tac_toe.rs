@@ -1,13 +1,8 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 #[derive(Clone, Debug, PartialEq)]
 enum Player {
@@ -25,32 +20,30 @@ impl Player {
 }
 
 struct Board {
-	pub winner: Option<Player>,
-	pub board: Vec<Vec<Option<Player>>>,
-	pub size: usize,
+	pub winner:Option<Player>,
+	pub board:Vec<Vec<Option<Player>>>,
+	pub size:usize,
 }
 
 impl Board {
-	pub fn new(size: usize) -> Self {
-		Self { winner: None, size, board: vec![vec![None; size]; size] }
+	pub fn new(size:usize) -> Self {
+		Self { winner:None, size, board:vec![vec![None; size]; size] }
 	}
 
-	pub fn put_player(&mut self, player: Player, row: usize, col: usize) {
+	pub fn put_player(&mut self, player:Player, row:usize, col:usize) {
 		*self.board.get_mut(row).unwrap().get_mut(col).unwrap() = Some(player);
 		self.evaluate_board();
 	}
 
-	pub fn get_player(&mut self, row: usize, col: usize) -> Option<Player> {
+	pub fn get_player(&mut self, row:usize, col:usize) -> Option<Player> {
 		self.board.get(row)?.get(col)?.clone()
 	}
 
 	pub fn evaluate_board(&mut self) {
 		// Horizontal checks
 		for row in self.board.iter() {
-			let is_row_filled_with_x =
-				row.iter().all(|p| *p == Some(Player::X));
-			let is_row_filled_with_o =
-				row.iter().all(|p| *p == Some(Player::O));
+			let is_row_filled_with_x = row.iter().all(|p| *p == Some(Player::X));
+			let is_row_filled_with_o = row.iter().all(|p| *p == Some(Player::O));
 
 			if is_row_filled_with_x {
 				self.winner = Some(Player::X);
@@ -63,14 +56,10 @@ impl Board {
 
 		// Vertical checks
 		for col_n in 0..self.size {
-			let is_col_filled_with_x = self
-				.board
-				.iter()
-				.all(|row| *row.get(col_n).unwrap() == Some(Player::X));
-			let is_col_filled_with_o = self
-				.board
-				.iter()
-				.all(|row| *row.get(col_n).unwrap() == Some(Player::O));
+			let is_col_filled_with_x =
+				self.board.iter().all(|row| *row.get(col_n).unwrap() == Some(Player::X));
+			let is_col_filled_with_o =
+				self.board.iter().all(|row| *row.get(col_n).unwrap() == Some(Player::O));
 
 			if is_col_filled_with_x {
 				self.winner = Some(Player::X);
@@ -85,38 +74,24 @@ impl Board {
 		for (row_n, row) in self.board.clone().iter().enumerate() {
 			for (col_n, _) in row.iter().enumerate() {
 				let lines = match row_n {
-					0 if col_n < 2 => vec![(
-						(row_n, col_n),
-						(row_n + 1, col_n + 1),
-						(row_n + 2, col_n + 2),
-					)],
-					0 if col_n > 2 => vec![(
-						(row_n, col_n),
-						(row_n - 1, col_n - 1),
-						(row_n - 2, col_n - 2),
-					)],
-					1 if col_n >= 1 => vec![
-						(
-							(row_n - 1, col_n - 1),
-							(row_n, col_n),
-							(row_n + 1, col_n + 1),
-						),
-						(
-							(row_n - 1, col_n + 1),
-							(row_n, col_n),
-							(row_n + 1, col_n - 1),
-						),
-					],
-					2 if col_n >= 2 => vec![(
-						(row_n - 2, col_n - 2),
-						(row_n - 1, col_n - 1),
-						(row_n, col_n),
-					)],
-					2 if col_n < 2 => vec![(
-						(row_n + 2, col_n + 2),
-						(row_n + 1, col_n + 1),
-						(row_n, col_n),
-					)],
+					0 if col_n < 2 => {
+						vec![((row_n, col_n), (row_n + 1, col_n + 1), (row_n + 2, col_n + 2))]
+					},
+					0 if col_n > 2 => {
+						vec![((row_n, col_n), (row_n - 1, col_n - 1), (row_n - 2, col_n - 2))]
+					},
+					1 if col_n >= 1 => {
+						vec![
+							((row_n - 1, col_n - 1), (row_n, col_n), (row_n + 1, col_n + 1)),
+							((row_n - 1, col_n + 1), (row_n, col_n), (row_n + 1, col_n - 1)),
+						]
+					},
+					2 if col_n >= 2 => {
+						vec![((row_n - 2, col_n - 2), (row_n - 1, col_n - 1), (row_n, col_n))]
+					},
+					2 if col_n < 2 => {
+						vec![((row_n + 2, col_n + 2), (row_n + 1, col_n + 1), (row_n, col_n))]
+					},
 					_ => vec![],
 				};
 

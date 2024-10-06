@@ -31,15 +31,15 @@ use freya_renderer::{DesktopRenderer, LaunchConfig, WindowConfig};
 ///     )
 /// }
 /// ```
-pub fn launch(app: AppComponent) {
+pub fn launch(app:AppComponent) {
 	launch_cfg(
 		app,
 		LaunchConfig::<()> {
-			window_config: WindowConfig {
-				size: (600.0, 600.0),
-				decorations: true,
-				transparent: false,
-				title: "Freya",
+			window_config:WindowConfig {
+				size:(600.0, 600.0),
+				decorations:true,
+				transparent:false,
+				title:"Freya",
 				..Default::default()
 			},
 			..Default::default()
@@ -76,14 +76,14 @@ pub fn launch(app: AppComponent) {
 ///     )
 /// }
 /// ```
-pub fn launch_with_title(app: AppComponent, title: &'static str) {
+pub fn launch_with_title(app:AppComponent, title:&'static str) {
 	launch_cfg(
 		app,
 		LaunchConfig::<()> {
-			window_config: WindowConfig {
-				size: (400.0, 300.0),
-				decorations: true,
-				transparent: false,
+			window_config:WindowConfig {
+				size:(400.0, 300.0),
+				decorations:true,
+				transparent:false,
 				title,
 				..Default::default()
 			},
@@ -92,7 +92,8 @@ pub fn launch_with_title(app: AppComponent, title: &'static str) {
 	)
 }
 
-/// Launch a new window with a custom title, width and height and the default config.
+/// Launch a new window with a custom title, width and height and the default
+/// config.
 ///
 /// - Decorations enabled
 /// - Transparency disabled
@@ -119,18 +120,14 @@ pub fn launch_with_title(app: AppComponent, title: &'static str) {
 ///     )
 /// }
 /// ```
-pub fn launch_with_props(
-	app: AppComponent,
-	title: &'static str,
-	(width, height): (f64, f64),
-) {
+pub fn launch_with_props(app:AppComponent, title:&'static str, (width, height):(f64, f64)) {
 	launch_cfg(
 		app,
 		LaunchConfig::<()> {
-			window_config: WindowConfig {
-				size: (width, height),
-				decorations: true,
-				transparent: false,
+			window_config:WindowConfig {
+				size:(width, height),
+				decorations:true,
+				transparent:false,
 				title,
 				..Default::default()
 			},
@@ -177,13 +174,9 @@ pub fn launch_with_props(
 ///     )
 /// }
 /// ```
-pub fn launch_cfg<T: 'static + Clone>(
-	app: AppComponent,
-	config: LaunchConfig<T>,
-) {
+pub fn launch_cfg<T:'static + Clone>(app:AppComponent, config:LaunchConfig<T>) {
 	#[cfg(feature = "performance-overlay")]
-	let config =
-		config.with_plugin(crate::plugins::PerformanceOverlayPlugin::default());
+	let config = config.with_plugin(crate::plugins::PerformanceOverlayPlugin::default());
 
 	use freya_core::prelude::{FreyaDOM, SafeDOM};
 
@@ -195,8 +188,7 @@ pub fn launch_cfg<T: 'static + Clone>(
 		use tracing::Level;
 		use tracing_subscriber::FmtSubscriber;
 
-		let subscriber =
-			FmtSubscriber::builder().with_max_level(Level::TRACE).finish();
+		let subscriber = FmtSubscriber::builder().with_max_level(Level::TRACE).finish();
 
 		tracing::subscriber::set_global_default(subscriber)
 			.expect("Setting default subscriber failed");
@@ -213,11 +205,7 @@ pub fn launch_cfg<T: 'static + Clone>(
 
 			let hovered_node = Some(Arc::new(Mutex::new(None)));
 			let (devtools, devtools_receiver) = Devtools::new();
-			let vdom = with_devtools(
-				app,
-				devtools_receiver.clone(),
-				hovered_node.clone(),
-			);
+			let vdom = with_devtools(app, devtools_receiver.clone(), hovered_node.clone());
 			(vdom, Some(devtools), hovered_node)
 		}
 
@@ -229,10 +217,7 @@ pub fn launch_cfg<T: 'static + Clone>(
 	};
 	#[cfg(not(feature = "custom-tokio-rt"))]
 	{
-		let rt = tokio::runtime::Builder::new_multi_thread()
-			.enable_all()
-			.build()
-			.unwrap();
+		let rt = tokio::runtime::Builder::new_multi_thread().enable_all().build().unwrap();
 		let _guard = rt.enter();
 
 		DesktopRenderer::launch(vdom, sdom, config, devtools, hovered_node);
@@ -245,7 +230,7 @@ pub fn launch_cfg<T: 'static + Clone>(
 #[cfg(any(not(feature = "devtools"), not(debug_assertions)))]
 use dioxus_core::VirtualDom;
 #[cfg(any(not(feature = "devtools"), not(debug_assertions)))]
-fn with_accessibility(app: AppComponent) -> VirtualDom {
+fn with_accessibility(app:AppComponent) -> VirtualDom {
 	use dioxus::prelude::Props;
 	use dioxus_core::fc_to_builder;
 	use dioxus_core_macro::rsx;
@@ -253,11 +238,11 @@ fn with_accessibility(app: AppComponent) -> VirtualDom {
 
 	#[derive(Props, Clone, PartialEq)]
 	struct RootProps {
-		app: AppComponent,
+		app:AppComponent,
 	}
 
 	#[allow(non_snake_case)]
-	fn Root(props: RootProps) -> Element {
+	fn Root(props:RootProps) -> Element {
 		#[allow(non_snake_case)]
 		let App = props.app;
 

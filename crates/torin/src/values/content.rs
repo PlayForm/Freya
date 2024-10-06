@@ -6,9 +6,7 @@ pub enum Content {
 }
 
 impl Content {
-	pub fn is_fit(&self) -> bool {
-		self == &Self::Fit
-	}
+	pub fn is_fit(&self) -> bool { self == &Self::Fit }
 }
 
 impl Content {

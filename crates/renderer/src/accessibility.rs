@@ -1,8 +1,11 @@
 use accesskit_winit::Adapter;
 use freya_core::{
 	prelude::{
-		AccessibilityFocusDirection, AccessibilityManager, EventMessage,
-		SharedAccessibilityManager, ACCESSIBILITY_ROOT_ID,
+		AccessibilityFocusDirection,
+		AccessibilityManager,
+		EventMessage,
+		SharedAccessibilityManager,
+		ACCESSIBILITY_ROOT_ID,
 	},
 	types::{AccessibilityId, NativePlatformSender},
 };
@@ -15,18 +18,16 @@ use winit::{
 
 /// Manages the accessibility integration with Accesskit.
 pub struct AccessKitManager {
-	accessibility_manager: SharedAccessibilityManager,
-	accessibility_adapter: Adapter,
-	title: String,
+	accessibility_manager:SharedAccessibilityManager,
+	accessibility_adapter:Adapter,
+	title:String,
 }
 
 impl AccessKitManager {
-	pub fn new(window: &Window, proxy: EventLoopProxy<EventMessage>) -> Self {
+	pub fn new(window:&Window, proxy:EventLoopProxy<EventMessage>) -> Self {
 		let title = window.title();
-		let accessibility_manager =
-			AccessibilityManager::new(ACCESSIBILITY_ROOT_ID).wrap();
-		let accessibility_adapter =
-			Adapter::with_event_loop_proxy(window, proxy);
+		let accessibility_manager = AccessibilityManager::new(ACCESSIBILITY_ROOT_ID).wrap();
+		let accessibility_adapter = Adapter::with_event_loop_proxy(window, proxy);
 		Self { accessibility_manager, accessibility_adapter, title }
 	}
 
@@ -37,15 +38,11 @@ impl AccessKitManager {
 	/// Focus a new accessibility node
 	pub fn focus_node(
 		&mut self,
-		id: AccessibilityId,
-		platform_sender: &NativePlatformSender,
-		window: &Window,
+		id:AccessibilityId,
+		platform_sender:&NativePlatformSender,
+		window:&Window,
 	) {
-		let tree = self
-			.accessibility_manager
-			.lock()
-			.unwrap()
-			.set_focus_with_update(id);
+		let tree = self.accessibility_manager.lock().unwrap().set_focus_with_update(id);
 		if let Some(tree) = tree {
 			// Notify the components
 			platform_sender.send_modify(|state| {
@@ -60,27 +57,17 @@ impl AccessKitManager {
 		}
 	}
 
-	fn update_ime_position(
-		&self,
-		accessibility_id: AccessibilityId,
-		window: &Window,
-	) {
+	fn update_ime_position(&self, accessibility_id:AccessibilityId, window:&Window) {
 		let accessibility_manager = self.accessibility_manager.lock().unwrap();
-		let node = accessibility_manager.nodes.iter().find_map(|(id, n)| {
-			if *id == accessibility_id {
-				Some(n)
-			} else {
-				None
-			}
-		});
+		let node = accessibility_manager
+			.nodes
+			.iter()
+			.find_map(|(id, n)| if *id == accessibility_id { Some(n) } else { None });
 		if let Some(node) = node {
 			let node_bounds = node.bounds();
 			if let Some(node_bounds) = node_bounds {
 				return window.set_ime_cursor_area(
-					LogicalPosition::new(
-						node_bounds.min_x(),
-						node_bounds.min_y(),
-					),
+					LogicalPosition::new(node_bounds.min_x(), node_bounds.min_y()),
 					LogicalSize::new(node_bounds.width(), node_bounds.height()),
 				);
 			}
@@ -93,41 +80,27 @@ impl AccessKitManager {
 	}
 
 	/// Process an accessibility event
-	pub fn process_accessibility_event(
-		&mut self,
-		event: &WindowEvent,
-		window: &Window,
-	) {
+	pub fn process_accessibility_event(&mut self, event:&WindowEvent, window:&Window) {
 		self.accessibility_adapter.process_event(window, event)
 	}
 
 	/// Remove the accessibility nodes
-	pub fn clear_accessibility(&mut self) {
-		self.accessibility_manager.lock().unwrap().clear();
-	}
+	pub fn clear_accessibility(&mut self) { self.accessibility_manager.lock().unwrap().clear(); }
 
 	/// Process the accessibility nodes
-	pub fn render_accessibility(&mut self, title: &str) {
-		let tree = self
-			.accessibility_manager
-			.lock()
-			.unwrap()
-			.process(ACCESSIBILITY_ROOT_ID, title);
+	pub fn render_accessibility(&mut self, title:&str) {
+		let tree = self.accessibility_manager.lock().unwrap().process(ACCESSIBILITY_ROOT_ID, title);
 		self.accessibility_adapter.update_if_active(|| tree);
 	}
 
 	/// Focus the next accessibility node
 	pub fn focus_next_node(
 		&mut self,
-		direction: AccessibilityFocusDirection,
-		platform_sender: &NativePlatformSender,
-		window: &Window,
+		direction:AccessibilityFocusDirection,
+		platform_sender:&NativePlatformSender,
+		window:&Window,
 	) {
-		let tree = self
-			.accessibility_manager
-			.lock()
-			.unwrap()
-			.set_focus_on_next_node(direction);
+		let tree = self.accessibility_manager.lock().unwrap().set_focus_on_next_node(direction);
 
 		// Notify the components
 		platform_sender.send_modify(|state| {

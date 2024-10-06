@@ -13,12 +13,12 @@ use crate::{
 };
 
 pub struct LayoutMetadata {
-	pub root_area: Area,
+	pub root_area:Area,
 }
 
 /// Contains the best Root node candidate from where to start measuring
 #[derive(PartialEq, Debug, Clone)]
-pub enum RootNodeCandidate<Key: NodeKey> {
+pub enum RootNodeCandidate<Key:NodeKey> {
 	/// A valid Node ID
 	Valid(Key),
 
@@ -26,23 +26,19 @@ pub enum RootNodeCandidate<Key: NodeKey> {
 	None,
 }
 
-impl<Key: NodeKey> RootNodeCandidate<Key> {
-	pub fn take(&mut self) -> Self {
-		mem::replace(self, Self::None)
-	}
+impl<Key:NodeKey> RootNodeCandidate<Key> {
+	pub fn take(&mut self) -> Self { mem::replace(self, Self::None) }
 
 	/// Propose a new root candidate
 	pub fn propose_new_candidate(
 		&mut self,
-		proposed_candidate: &Key,
-		dom_adapter: &mut impl DOMAdapter<Key>,
+		proposed_candidate:&Key,
+		dom_adapter:&mut impl DOMAdapter<Key>,
 	) {
 		if let RootNodeCandidate::Valid(current_candidate) = self {
 			if current_candidate != proposed_candidate {
-				let closest_parent = dom_adapter.closest_common_parent(
-					proposed_candidate,
-					current_candidate,
-				);
+				let closest_parent =
+					dom_adapter.closest_common_parent(proposed_candidate, current_candidate);
 
 				if let Some(closest_parent) = closest_parent {
 					*self = RootNodeCandidate::Valid(closest_parent);
@@ -54,36 +50,32 @@ impl<Key: NodeKey> RootNodeCandidate<Key> {
 	}
 }
 
-pub struct Torin<Key: NodeKey> {
+pub struct Torin<Key:NodeKey> {
 	/// Layout results of the registered Nodes
-	pub results: FxHashMap<Key, LayoutNode>,
+	pub results:FxHashMap<Key, LayoutNode>,
 
 	/// Invalid registered nodes since previous layout measurement
-	pub dirty: FxHashSet<Key>,
+	pub dirty:FxHashSet<Key>,
 
 	/// Best Root node candidate from where to start measuring
-	pub root_node_candidate: RootNodeCandidate<Key>,
+	pub root_node_candidate:RootNodeCandidate<Key>,
 }
 
-impl<Key: NodeKey> Default for Torin<Key> {
-	fn default() -> Self {
-		Self::new()
-	}
+impl<Key:NodeKey> Default for Torin<Key> {
+	fn default() -> Self { Self::new() }
 }
 
-impl<Key: NodeKey> Torin<Key> {
+impl<Key:NodeKey> Torin<Key> {
 	/// Create a new Layout
 	pub fn new() -> Self {
 		Self {
-			results: HashMap::default(),
-			dirty: FxHashSet::default(),
-			root_node_candidate: RootNodeCandidate::None,
+			results:HashMap::default(),
+			dirty:FxHashSet::default(),
+			root_node_candidate:RootNodeCandidate::None,
 		}
 	}
 
-	pub fn size(&self) -> usize {
-		self.results.len()
-	}
+	pub fn size(&self) -> usize { self.results.len() }
 
 	/// Reset the layout
 	pub fn reset(&mut self) {
@@ -93,12 +85,10 @@ impl<Key: NodeKey> Torin<Key> {
 	}
 
 	/// Read the HashSet of dirty nodes
-	pub fn get_dirty_nodes(&self) -> &FxHashSet<Key> {
-		&self.dirty
-	}
+	pub fn get_dirty_nodes(&self) -> &FxHashSet<Key> { &self.dirty }
 
 	/// Remove a Node's result and data
-	pub fn raw_remove(&mut self, node_id: Key) {
+	pub fn raw_remove(&mut self, node_id:Key) {
 		self.results.remove(&node_id);
 		self.dirty.remove(&node_id);
 		if let RootNodeCandidate::Valid(id) = self.root_node_candidate {
@@ -111,9 +101,9 @@ impl<Key: NodeKey> Torin<Key> {
 	/// Remove a Node from the layout
 	pub fn remove(
 		&mut self,
-		node_id: Key,
-		dom_adapter: &mut impl DOMAdapter<Key>,
-		invalidate_parent: bool,
+		node_id:Key,
+		dom_adapter:&mut impl DOMAdapter<Key>,
+		invalidate_parent:bool,
 	) {
 		// Remove itself
 		self.raw_remove(node_id);
@@ -130,31 +120,23 @@ impl<Key: NodeKey> Torin<Key> {
 	}
 
 	/// Safely mark as dirty a Node
-	pub fn safe_invalidate(
-		&mut self,
-		node_id: Key,
-		dom_adapter: &mut impl DOMAdapter<Key>,
-	) {
+	pub fn safe_invalidate(&mut self, node_id:Key, dom_adapter:&mut impl DOMAdapter<Key>) {
 		if dom_adapter.is_node_valid(&node_id) {
 			self.dirty.insert(node_id);
 		}
 	}
 
 	/// Mark as dirty a Node
-	pub fn invalidate(&mut self, node_id: Key) {
-		self.dirty.insert(node_id);
-	}
+	pub fn invalidate(&mut self, node_id:Key) { self.dirty.insert(node_id); }
 
 	// Mark as dirty the given Node and all the nodes that depend on it
 	pub fn check_dirty_dependants(
 		&mut self,
-		node_id: Key,
-		dom_adapter: &mut impl DOMAdapter<Key>,
-		ignore: bool,
+		node_id:Key,
+		dom_adapter:&mut impl DOMAdapter<Key>,
+		ignore:bool,
 	) {
-		if (self.dirty.contains(&node_id) && ignore)
-			|| !dom_adapter.is_node_valid(&node_id)
-		{
+		if (self.dirty.contains(&node_id) && ignore) || !dom_adapter.is_node_valid(&node_id) {
 			return;
 		}
 
@@ -187,10 +169,10 @@ impl<Key: NodeKey> Torin<Key> {
 						}
 					}
 
-					// Try using the node's parent as root candidate if it has multiple children
+					// Try using the node's parent as root candidate if it has
+					// multiple children
 					if multiple_children {
-						self.root_node_candidate
-							.propose_new_candidate(&parent_id, dom_adapter);
+						self.root_node_candidate.propose_new_candidate(&parent_id, dom_adapter);
 					}
 				}
 			}
@@ -198,12 +180,10 @@ impl<Key: NodeKey> Torin<Key> {
 	}
 
 	/// Get the Root Node candidate
-	pub fn get_root_candidate(&self) -> RootNodeCandidate<Key> {
-		self.root_node_candidate.clone()
-	}
+	pub fn get_root_candidate(&self) -> RootNodeCandidate<Key> { self.root_node_candidate.clone() }
 
 	/// Find the best root Node from where to start measuring
-	pub fn find_best_root(&mut self, dom_adapter: &mut impl DOMAdapter<Key>) {
+	pub fn find_best_root(&mut self, dom_adapter:&mut impl DOMAdapter<Key>) {
 		if self.results.is_empty() {
 			return;
 		}
@@ -215,10 +195,10 @@ impl<Key: NodeKey> Torin<Key> {
 	/// Measure dirty Nodes
 	pub fn measure(
 		&mut self,
-		suggested_root_id: Key,
-		root_area: Area,
-		measurer: &mut Option<impl LayoutMeasurer<Key>>,
-		dom_adapter: &mut impl DOMAdapter<Key>,
+		suggested_root_id:Key,
+		root_area:Area,
+		measurer:&mut Option<impl LayoutMeasurer<Key>>,
+		dom_adapter:&mut impl DOMAdapter<Key>,
 	) {
 		// If there are previosuly cached results
 		// But no dirty nodes, we can simply skip the measurement
@@ -228,9 +208,7 @@ impl<Key: NodeKey> Torin<Key> {
 		}
 
 		// Try the Root candidate otherwise use the provided Root
-		let root_id = if let RootNodeCandidate::Valid(id) =
-			self.root_node_candidate.take()
-		{
+		let root_id = if let RootNodeCandidate::Valid(id) = self.root_node_candidate.take() {
 			id
 		} else {
 			suggested_root_id
@@ -239,11 +217,11 @@ impl<Key: NodeKey> Torin<Key> {
 		let layout_node = root_parent_id
 			.and_then(|root_parent_id| self.get(root_parent_id).cloned())
 			.unwrap_or(LayoutNode {
-				area: root_area,
-				inner_area: root_area,
-				inner_sizes: Size2D::default(),
-				margin: Gaps::default(),
-				data: None,
+				area:root_area,
+				inner_area:root_area,
+				inner_sizes:Size2D::default(),
+				margin:Gaps::default(),
+				data:None,
 			});
 		let root = dom_adapter.get_node(&root_id).unwrap();
 		let root_height = dom_adapter.height(&root_id).unwrap();
@@ -260,29 +238,21 @@ impl<Key: NodeKey> Torin<Key> {
 		let mut available_area = layout_node.inner_area;
 		if let Some(root_parent_id) = root_parent_id {
 			let root_parent = dom_adapter.get_node(&root_parent_id).unwrap();
-			available_area.move_with_offsets(
-				&root_parent.offset_x,
-				&root_parent.offset_y,
-			);
+			available_area.move_with_offsets(&root_parent.offset_x, &root_parent.offset_y);
 		}
 
-		let mut measure_context = MeasureContext {
-			layout: self,
-			layout_metadata,
-			dom_adapter,
-			measurer,
-		};
+		let mut measure_context =
+			MeasureContext { layout:self, layout_metadata, dom_adapter, measurer };
 
-		let (root_revalidated, mut root_layout_node) = measure_context
-			.measure_node(
-				root_id,
-				&root,
-				&layout_node.inner_area,
-				&available_area,
-				true,
-				false,
-				Phase::Final,
-			);
+		let (root_revalidated, mut root_layout_node) = measure_context.measure_node(
+			root_id,
+			&root,
+			&layout_node.inner_area,
+			&available_area,
+			true,
+			false,
+			Phase::Final,
+		);
 
 		// Adjust the size of the area if needed
 		root_layout_node.area.adjust_size(&root);
@@ -291,8 +261,7 @@ impl<Key: NodeKey> Torin<Key> {
 		if root_revalidated {
 			if let Some(measurer) = measurer {
 				if root.has_layout_references {
-					measurer
-						.notify_layout_references(root_id, &root_layout_node);
+					measurer.notify_layout_references(root_id, &root_layout_node);
 				}
 			}
 			self.cache_node(root_id, root_layout_node);
@@ -303,12 +272,10 @@ impl<Key: NodeKey> Torin<Key> {
 	}
 
 	/// Get the layout_node of a Node
-	pub fn get(&self, node_id: Key) -> Option<&LayoutNode> {
-		self.results.get(&node_id)
-	}
+	pub fn get(&self, node_id:Key) -> Option<&LayoutNode> { self.results.get(&node_id) }
 
 	/// Cache a Node's layout_node
-	pub fn cache_node(&mut self, node_id: Key, layout_node: LayoutNode) {
+	pub fn cache_node(&mut self, node_id:Key, layout_node:LayoutNode) {
 		self.results.insert(node_id, layout_node);
 	}
 }

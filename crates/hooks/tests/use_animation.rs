@@ -10,8 +10,7 @@ use tokio::time::sleep;
 #[tokio::test]
 pub async fn track_progress() {
 	fn use_animation_app() -> Element {
-		let animation =
-			use_animation(|ctx| ctx.with(AnimNum::new(0., 100.).time(50)));
+		let animation = use_animation(|ctx| ctx.with(AnimNum::new(0., 100.).time(50)));
 
 		let progress = animation.get().read().as_f32();
 
@@ -19,7 +18,7 @@ pub async fn track_progress() {
 			animation.start();
 		});
 
-		rsx!(rect { width: "{progress}" })
+		rsx!(rect { width:"{progress}" })
 	}
 
 	let mut utils = launch_test(use_animation_app);
@@ -55,8 +54,7 @@ pub async fn track_progress() {
 #[tokio::test]
 pub async fn reverse_progress() {
 	fn use_animation_app() -> Element {
-		let animation =
-			use_animation(|ctx| ctx.with(AnimNum::new(10., 100.).time(50)));
+		let animation = use_animation(|ctx| ctx.with(AnimNum::new(10., 100.).time(50)));
 
 		let progress = animation.get().read().as_f32();
 
@@ -65,12 +63,12 @@ pub async fn reverse_progress() {
 		});
 
 		rsx!(rect {
-			background: "white",
-			height: "100%",
-			onclick: move |_| {
+			background:"white",
+			height:"100%",
+			onclick:move |_| {
 				animation.reverse();
 			},
-			width: "{progress}",
+			width:"{progress}",
 		})
 	}
 
@@ -93,9 +91,9 @@ pub async fn reverse_progress() {
 
 	// Trigger the click event to restart the animation
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: (5.0, 5.0).into(),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:(5.0, 5.0).into(),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 
@@ -115,9 +113,8 @@ pub async fn reverse_progress() {
 #[tokio::test]
 pub async fn animate_color() {
 	fn use_animation_app() -> Element {
-		let animation = use_animation(|ctx| {
-			ctx.with(AnimColor::new("red", "rgb(50, 100, 200)").time(50))
-		});
+		let animation =
+			use_animation(|ctx| ctx.with(AnimColor::new("red", "rgb(50, 100, 200)").time(50)));
 
 		let progress = animation.get().read().as_string();
 
@@ -125,7 +122,7 @@ pub async fn animate_color() {
 			animation.start();
 		});
 
-		rsx!(rect { background: "{progress}" })
+		rsx!(rect { background:"{progress}" })
 	}
 
 	let mut utils = launch_test(use_animation_app);
@@ -169,7 +166,7 @@ pub async fn auto_start() {
 
 		let progress = animation.get().read().as_f32();
 
-		rsx!(rect { background: "white", height: "100%", width: "{progress}" })
+		rsx!(rect { background:"white", height:"100%", width:"{progress}" })
 	}
 
 	let mut utils = launch_test(use_animation_app);

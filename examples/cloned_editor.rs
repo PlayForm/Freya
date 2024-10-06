@@ -23,22 +23,27 @@ fn Body() -> Element {
 
 	let mut editable = use_editable(
 		|| {
-			EditableConfig::new("Lorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet".to_string())
+			EditableConfig::new(
+				"Lorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit \
+				 amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor \
+				 sit amet\nLorem ipsum dolor sit amet"
+					.to_string(),
+			)
 		},
 		EditableMode::SingleLineMultipleEditors,
 	);
 	let cursor_reference = editable.cursor_attr();
 	let editor = editable.editor().read();
 
-	let onclick = move |_: MouseEvent| {
+	let onclick = move |_:MouseEvent| {
 		editable.process_event(&EditableEvent::Click);
 	};
 
-	let onkeydown = move |e: KeyboardEvent| {
+	let onkeydown = move |e:KeyboardEvent| {
 		editable.process_event(&EditableEvent::KeyDown(e.data));
 	};
 
-	let onkeyup = move |e: KeyboardEvent| {
+	let onkeyup = move |e:KeyboardEvent| {
 		editable.process_event(&EditableEvent::KeyUp(e.data));
 	};
 

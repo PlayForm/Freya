@@ -1,8 +1,6 @@
 pub mod accessibility_manager;
 pub use accessibility_manager::*;
-use freya_native_core::{
-	node::NodeType, real_dom::NodeImmutable, tags::TagName, NodeId,
-};
+use freya_native_core::{node::NodeType, real_dom::NodeImmutable, tags::TagName, NodeId};
 use freya_node_state::AccessibilityNodeState;
 use torin::torin::Torin;
 
@@ -46,8 +44,7 @@ impl NodeAccessibility for DioxusNode<'_> {
 			.iter()
 			.filter_map(|child| {
 				if child.node_type().is_visible_element() {
-					let node_accessibility =
-						&*child.get::<AccessibilityNodeState>().unwrap();
+					let node_accessibility = &*child.get::<AccessibilityNodeState>().unwrap();
 					node_accessibility.accessibility_id
 				} else {
 					None
@@ -58,9 +55,9 @@ impl NodeAccessibility for DioxusNode<'_> {
 }
 
 pub fn process_accessibility(
-	layout: &Torin<NodeId>,
-	rdom: &DioxusDOM,
-	accessibility_manager: &mut AccessibilityManager,
+	layout:&Torin<NodeId>,
+	rdom:&DioxusDOM,
+	accessibility_manager:&mut AccessibilityManager,
 ) {
 	rdom.traverse_depth_first_advanced(|node| {
 		if !node.node_type().is_element() {
@@ -68,8 +65,7 @@ pub fn process_accessibility(
 		}
 
 		let layout_node = layout.get(node.id()).unwrap();
-		let node_accessibility =
-			&*node.get::<AccessibilityNodeState>().unwrap();
+		let node_accessibility = &*node.get::<AccessibilityNodeState>().unwrap();
 		if let Some(accessibility_id) = node_accessibility.accessibility_id {
 			accessibility_manager.add_node(
 				&node,

@@ -1,24 +1,19 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	let mut cursor_pos_over = use_signal(|| CursorPoint::default());
 	let mut cursor_pos_click = use_signal(|| CursorPoint::default());
 
-	let onmouseover = move |e: MouseEvent| {
+	let onmouseover = move |e:MouseEvent| {
 		let cursor_pos = e.get_screen_coordinates();
 		cursor_pos_over.set(cursor_pos);
 	};
 
-	let onclick = move |e: MouseEvent| {
+	let onclick = move |e:MouseEvent| {
 		let cursor_pos = e.get_screen_coordinates();
 		cursor_pos_click.set(cursor_pos);
 	};

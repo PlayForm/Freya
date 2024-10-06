@@ -1,8 +1,14 @@
 use dioxus::prelude::*;
 use freya_elements::elements as dioxus_elements;
 use freya_hooks::{
-	theme_with, use_activable_route, use_applied_theme, use_platform,
-	ScrollViewThemeWith, SidebarItemTheme, SidebarItemThemeWith, SidebarTheme,
+	theme_with,
+	use_activable_route,
+	use_applied_theme,
+	use_platform,
+	ScrollViewThemeWith,
+	SidebarItemTheme,
+	SidebarItemThemeWith,
+	SidebarTheme,
 	SidebarThemeWith,
 };
 use winit::window::CursorIcon;
@@ -13,14 +19,13 @@ use crate::{ButtonStatus, ScrollView};
 #[component]
 pub fn Sidebar(
 	/// Theme override.
-	theme: Option<SidebarThemeWith>,
+	theme:Option<SidebarThemeWith>,
 	/// This is what is rendered next to the sidebar.
-	children: Element,
+	children:Element,
 	/// This is what is rendered in the sidebar.
-	sidebar: Element,
+	sidebar:Element,
 ) -> Element {
-	let SidebarTheme { font_theme, background } =
-		use_applied_theme!(&theme, sidebar);
+	let SidebarTheme { font_theme, background } = use_applied_theme!(&theme, sidebar);
 
 	rsx!(
 		rect {
@@ -56,11 +61,11 @@ pub fn Sidebar(
 #[component]
 pub fn SidebarItem(
 	/// Theme override.
-	theme: Option<SidebarItemThemeWith>,
+	theme:Option<SidebarItemThemeWith>,
 	/// Inner content for the SidebarItem.
-	children: Element,
+	children:Element,
 	/// Optionally handle the `onclick` event in the SidebarItem.
-	onclick: Option<EventHandler<()>>,
+	onclick:Option<EventHandler<()>>,
 ) -> Element {
 	let SidebarItemTheme { hover_background, background, font_theme } =
 		use_applied_theme!(&theme, sidebar_item);

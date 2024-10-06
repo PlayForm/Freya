@@ -1,24 +1,18 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 use reqwest::Url;
 use serde::Deserialize;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 #[derive(Deserialize)]
 struct DogApiResponse {
-	message: String,
+	message:String,
 }
 
 async fn fetch_random_dog() -> Option<Url> {
-	let res =
-		reqwest::get("https://dog.ceo/api/breeds/image/random").await.ok()?;
+	let res = reqwest::get("https://dog.ceo/api/breeds/image/random").await.ok()?;
 	let data = res.json::<DogApiResponse>().await.ok()?;
 	data.message.parse().ok()
 }

@@ -1,7 +1,4 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::{hotreload::FreyaCtx, prelude::*};
 
@@ -41,6 +38,4 @@ fn app() -> Element {
 }
 
 #[allow(non_snake_case)]
-fn Comp() -> Element {
-	rsx!(rect { width: "50%", height: "100%", background: "yellow" })
-}
+fn Comp() -> Element { rsx!(rect { width:"50%", height:"100%", background:"yellow" }) }

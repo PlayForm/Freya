@@ -1,6 +1,11 @@
 use freya_engine::prelude::*;
 use freya_node_state::{
-	Border, BorderAlignment, BorderStyle, Fill, GradientStop, LinearGradient,
+	Border,
+	BorderAlignment,
+	BorderStyle,
+	Fill,
+	GradientStop,
+	LinearGradient,
 	Parse,
 };
 
@@ -11,10 +16,10 @@ fn parse_basic_border() {
 	assert_eq!(
 		border,
 		Ok(Border {
-			width: 1.0,
-			fill: Fill::Color(Color::RED),
-			style: BorderStyle::Solid,
-			alignment: BorderAlignment::Inner
+			width:1.0,
+			fill:Fill::Color(Color::RED),
+			style:BorderStyle::Solid,
+			alignment:BorderAlignment::Inner
 		})
 	);
 }
@@ -25,16 +30,16 @@ fn parse_gradient_border() {
 	assert_eq!(
 		shadow,
 		Ok(Border {
-			width: 1.0,
-			fill: Fill::LinearGradient(LinearGradient {
-				angle: 0.0,
-				stops: vec![
-					GradientStop { color: Color::RED, offset: 0.0 },
-					GradientStop { color: Color::BLUE, offset: 1.0 }
+			width:1.0,
+			fill:Fill::LinearGradient(LinearGradient {
+				angle:0.0,
+				stops:vec![
+					GradientStop { color:Color::RED, offset:0.0 },
+					GradientStop { color:Color::BLUE, offset:1.0 }
 				]
 			}),
-			style: BorderStyle::Solid,
-			alignment: BorderAlignment::Inner
+			style:BorderStyle::Solid,
+			alignment:BorderAlignment::Inner
 		})
 	);
 }
@@ -61,19 +66,19 @@ fn parse_border_style() {
 	assert_eq!(
 		solid,
 		Ok(Border {
-			width: 1.0,
-			fill: Fill::Color(Color::RED),
-			style: BorderStyle::Solid,
-			alignment: BorderAlignment::default()
+			width:1.0,
+			fill:Fill::Color(Color::RED),
+			style:BorderStyle::Solid,
+			alignment:BorderAlignment::default()
 		})
 	);
 	assert_eq!(
 		none,
 		Ok(Border {
-			width: 1.0,
-			fill: Fill::Color(Color::RED),
-			style: BorderStyle::None,
-			alignment: BorderAlignment::default()
+			width:1.0,
+			fill:Fill::Color(Color::RED),
+			style:BorderStyle::None,
+			alignment:BorderAlignment::default()
 		})
 	);
 	assert!(invalid.is_err());

@@ -8,60 +8,71 @@ use freya_elements::{
 	events::{keyboard::Key, KeyboardEvent, MouseEvent, WheelEvent},
 };
 use freya_hooks::{
-	use_applied_theme, use_focus, use_node, ScrollBarThemeWith,
+	use_applied_theme,
+	use_focus,
+	use_node,
+	ScrollBarThemeWith,
 	ScrollViewThemeWith,
 };
 
 use crate::{
-	get_container_size, get_corrected_scroll_position,
-	get_scroll_position_from_cursor, get_scroll_position_from_wheel,
-	get_scrollbar_pos_and_size, is_scrollbar_visible, manage_key_event,
-	scroll_views::use_scroll_controller, Axis, ScrollBar, ScrollConfig,
-	ScrollController, ScrollThumb, SCROLL_SPEED_MULTIPLIER,
+	get_container_size,
+	get_corrected_scroll_position,
+	get_scroll_position_from_cursor,
+	get_scroll_position_from_wheel,
+	get_scrollbar_pos_and_size,
+	is_scrollbar_visible,
+	manage_key_event,
+	scroll_views::use_scroll_controller,
+	Axis,
+	ScrollBar,
+	ScrollConfig,
+	ScrollController,
+	ScrollThumb,
+	SCROLL_SPEED_MULTIPLIER,
 };
 
 /// Properties for the [`VirtualScrollView`] component.
 #[derive(Props, Clone)]
 pub struct VirtualScrollViewProps<
-	Builder: 'static + Clone + Fn(usize, &Option<BuilderArgs>) -> Element,
-	BuilderArgs: Clone + 'static + PartialEq = (),
+	Builder:'static + Clone + Fn(usize, &Option<BuilderArgs>) -> Element,
+	BuilderArgs:Clone + 'static + PartialEq = (),
 > {
 	/// Theme override.
-	pub theme: Option<ScrollViewThemeWith>,
+	pub theme:Option<ScrollViewThemeWith>,
 	/// Theme override for the scrollbars.
-	pub scrollbar_theme: Option<ScrollBarThemeWith>,
+	pub scrollbar_theme:Option<ScrollBarThemeWith>,
 	/// Quantity of items in the VirtualScrollView.
-	pub length: usize,
-	/// Size of the items, height for vertical direction and width for horizontal.
-	pub item_size: f32,
+	pub length:usize,
+	/// Size of the items, height for vertical direction and width for
+	/// horizontal.
+	pub item_size:f32,
 	/// The item builder function.
-	pub builder: Builder,
+	pub builder:Builder,
 	/// The values for the item builder function.
 	#[props(into)]
-	pub builder_args: Option<BuilderArgs>,
+	pub builder_args:Option<BuilderArgs>,
 	/// Direction of the VirtualScrollView, `vertical` or `horizontal`.
 	#[props(default = "vertical".to_string(), into)]
-	pub direction: String,
+	pub direction:String,
 	/// Show the scrollbar, visible by default.
 	#[props(default = true, into)]
-	pub show_scrollbar: bool,
+	pub show_scrollbar:bool,
 	/// Enable scrolling with arrow keys.
 	#[props(default = true, into)]
-	pub scroll_with_arrows: bool,
-	/// Cache elements or not, changing `builder_args` will invalidate the cache if enabled.
-	/// Default is `true`.
+	pub scroll_with_arrows:bool,
+	/// Cache elements or not, changing `builder_args` will invalidate the
+	/// cache if enabled. Default is `true`.
 	#[props(default = true, into)]
-	pub cache_elements: bool,
+	pub cache_elements:bool,
 
-	pub scroll_controller: Option<ScrollController>,
+	pub scroll_controller:Option<ScrollController>,
 }
 
-impl<
-		BuilderArgs: Clone + PartialEq,
-		Builder: Clone + Fn(usize, &Option<BuilderArgs>) -> Element,
-	> PartialEq for VirtualScrollViewProps<Builder, BuilderArgs>
+impl<BuilderArgs:Clone + PartialEq, Builder:Clone + Fn(usize, &Option<BuilderArgs>) -> Element>
+	PartialEq for VirtualScrollViewProps<Builder, BuilderArgs>
 {
-	fn eq(&self, other: &Self) -> bool {
+	fn eq(&self, other:&Self) -> bool {
 		self.theme == other.theme
 			&& self.length == other.length
 			&& self.item_size == other.item_size
@@ -74,10 +85,10 @@ impl<
 }
 
 fn get_render_range(
-	viewport_size: f32,
-	scroll_position: f32,
-	item_size: f32,
-	item_length: f32,
+	viewport_size:f32,
+	scroll_position:f32,
+	item_size:f32,
+	item_length:f32,
 ) -> Range<usize> {
 	let render_index_start = (-scroll_position) / item_size;
 	let potentially_visible_length = (viewport_size / item_size) + 1.0;
@@ -92,8 +103,9 @@ fn get_render_range(
 	render_index_start as usize..(render_index_end as usize)
 }
 
-/// One-direction scrollable area that dynamically builds and renders items based in their size and current available size,
-/// this is intended for apps using large sets of data that need good performance.
+/// One-direction scrollable area that dynamically builds and renders items
+/// based in their size and current available size, this is intended for apps
+/// using large sets of data that need good performance.
 ///
 /// Use cases: text editors, chats, etc.
 ///
@@ -103,20 +115,20 @@ fn get_render_range(
 /// # use freya::prelude::*;
 /// # use std::rc::Rc;
 /// fn app() -> Element {
-///     rsx!(VirtualScrollView {
-///         length: 5,
-///         item_size: 80.0,
-///         direction: "vertical",
-///         builder: move |i, _other_args: &Option<()>| {
-///             rsx! {
-///                 label {
-///                     key: "{i}",
-///                     height: "80",
-///                     "Number {i}"
-///                 }
-///             }
-///         }
-///     })
+/// 	rsx!(VirtualScrollView {
+/// 		length:5,
+/// 		item_size:80.0,
+/// 		direction:"vertical",
+/// 		builder:move |i, _other_args:&Option<()>| {
+/// 			rsx! {
+/// 				label {
+/// 					key: "{i}",
+/// 					height: "80",
+/// 					"Number {i}"
+/// 				}
+/// 			}
+/// 		}
+/// 	})
 /// }
 /// ```
 ///
@@ -126,34 +138,34 @@ fn get_render_range(
 /// # use freya::prelude::*;
 /// # use std::rc::Rc;
 /// fn app() -> Element {
-///     let mut scroll_controller = use_scroll_controller(|| ScrollConfig::default());
+/// 	let mut scroll_controller = use_scroll_controller(|| ScrollConfig::default());
 ///
-///     rsx!(VirtualScrollView {
-///         scroll_controller,
-///         length: 5,
-///         item_size: 80.0,
-///         direction: "vertical",
-///         builder: move |i, _other_args: &Option<()>| {
-///             rsx! {
-///                 label {
-///                     key: "{i}",
-///                     height: "80",
-///                     onclick: move |_| {
-///                          scroll_controller.scroll_to(ScrollPosition::Start, ScrollDirection::Vertical);
-///                     },
-///                     "Number {i}"
-///                 }
-///             }
-///         }
-///     })
+/// 	rsx!(VirtualScrollView {
+/// 		scroll_controller,
+/// 		length:5,
+/// 		item_size:80.0,
+/// 		direction:"vertical",
+/// 		builder:move |i, _other_args:&Option<()>| {
+/// 			rsx! {
+/// 				label {
+/// 					key: "{i}",
+/// 					height: "80",
+/// 					onclick: move |_| {
+/// 						 scroll_controller.scroll_to(ScrollPosition::Start, ScrollDirection::Vertical);
+/// 					},
+/// 					"Number {i}"
+/// 				}
+/// 			}
+/// 		}
+/// 	})
 /// }
 /// ```
 #[allow(non_snake_case)]
 pub fn VirtualScrollView<
-	Builder: Clone + Fn(usize, &Option<BuilderArgs>) -> Element,
-	BuilderArgs: Clone + PartialEq,
+	Builder:Clone + Fn(usize, &Option<BuilderArgs>) -> Element,
+	BuilderArgs:Clone + PartialEq,
 >(
-	props: VirtualScrollViewProps<Builder, BuilderArgs>,
+	props:VirtualScrollViewProps<Builder, BuilderArgs>,
 ) -> Element {
 	let mut clicking_scrollbar = use_signal::<Option<(Axis, f64)>>(|| None);
 	let mut clicking_shift = use_signal(|| false);
@@ -165,8 +177,7 @@ pub fn VirtualScrollView<
 	let (node_ref, size) = use_node();
 	let mut focus = use_focus();
 	let theme = use_applied_theme!(&props.theme, scroll_view);
-	let scrollbar_theme =
-		use_applied_theme!(&props.scrollbar_theme, scroll_bar);
+	let scrollbar_theme = use_applied_theme!(&props.scrollbar_theme, scroll_bar);
 
 	let padding = &theme.padding;
 	let user_container_width = &theme.width;
@@ -188,46 +199,27 @@ pub fn VirtualScrollView<
 	let horizontal_scrollbar_is_visible = user_direction != "vertical"
 		&& is_scrollbar_visible(show_scrollbar, inner_size, size.area.width());
 
-	let container_width = get_container_size(
-		vertical_scrollbar_is_visible,
-		&scrollbar_theme.size,
-	);
-	let container_height = get_container_size(
-		horizontal_scrollbar_is_visible,
-		&scrollbar_theme.size,
-	);
+	let container_width = get_container_size(vertical_scrollbar_is_visible, &scrollbar_theme.size);
+	let container_height =
+		get_container_size(horizontal_scrollbar_is_visible, &scrollbar_theme.size);
 
-	let corrected_scrolled_y = get_corrected_scroll_position(
-		inner_size,
-		size.area.height(),
-		*scrolled_y.read() as f32,
-	);
-	let corrected_scrolled_x = get_corrected_scroll_position(
-		inner_size,
-		size.area.width(),
-		*scrolled_x.read() as f32,
-	);
+	let corrected_scrolled_y =
+		get_corrected_scroll_position(inner_size, size.area.height(), *scrolled_y.read() as f32);
+	let corrected_scrolled_x =
+		get_corrected_scroll_position(inner_size, size.area.width(), *scrolled_x.read() as f32);
 
-	let (scrollbar_y, scrollbar_height) = get_scrollbar_pos_and_size(
-		inner_size,
-		size.area.height(),
-		corrected_scrolled_y,
-	);
-	let (scrollbar_x, scrollbar_width) = get_scrollbar_pos_and_size(
-		inner_size,
-		size.area.width(),
-		corrected_scrolled_x,
-	);
+	let (scrollbar_y, scrollbar_height) =
+		get_scrollbar_pos_and_size(inner_size, size.area.height(), corrected_scrolled_y);
+	let (scrollbar_x, scrollbar_width) =
+		get_scrollbar_pos_and_size(inner_size, size.area.width(), corrected_scrolled_x);
 
 	// Moves the Y axis when the user scrolls in the container
-	let onwheel = move |e: WheelEvent| {
-		let speed_multiplier =
-			if *clicking_alt.peek() { SCROLL_SPEED_MULTIPLIER } else { 1.0 };
+	let onwheel = move |e:WheelEvent| {
+		let speed_multiplier = if *clicking_alt.peek() { SCROLL_SPEED_MULTIPLIER } else { 1.0 };
 
 		let wheel_movement = e.get_delta_y() as f32 * speed_multiplier;
 
-		let scroll_vertically_or_not = (direction_is_vertical
-			&& !*clicking_shift.peek())
+		let scroll_vertically_or_not = (direction_is_vertical && !*clicking_shift.peek())
 			|| !direction_is_vertical && *clicking_shift.peek();
 
 		if scroll_vertically_or_not {
@@ -266,29 +258,23 @@ pub fn VirtualScrollView<
 	};
 
 	// Drag the scrollbars
-	let onmouseover = move |e: MouseEvent| {
+	let onmouseover = move |e:MouseEvent| {
 		let clicking_scrollbar = clicking_scrollbar.peek();
 
 		if let Some((Axis::Y, y)) = *clicking_scrollbar {
 			let coordinates = e.get_element_coordinates();
 			let cursor_y = coordinates.y - y - size.area.min_y() as f64;
 
-			let scroll_position = get_scroll_position_from_cursor(
-				cursor_y as f32,
-				inner_size,
-				size.area.height(),
-			);
+			let scroll_position =
+				get_scroll_position_from_cursor(cursor_y as f32, inner_size, size.area.height());
 
 			*scrolled_y.write() = scroll_position;
 		} else if let Some((Axis::X, x)) = *clicking_scrollbar {
 			let coordinates = e.get_element_coordinates();
 			let cursor_x = coordinates.x - x - size.area.min_x() as f64;
 
-			let scroll_position = get_scroll_position_from_cursor(
-				cursor_x as f32,
-				inner_size,
-				size.area.width(),
-			);
+			let scroll_position =
+				get_scroll_position_from_cursor(cursor_x as f32, inner_size, size.area.width());
 
 			*scrolled_x.write() = scroll_position;
 		}
@@ -298,7 +284,7 @@ pub fn VirtualScrollView<
 		}
 	};
 
-	let onkeydown = move |e: KeyboardEvent| {
+	let onkeydown = move |e:KeyboardEvent| {
 		match &e.key {
 			Key::Shift => {
 				clicking_shift.set(true);
@@ -313,7 +299,8 @@ pub fn VirtualScrollView<
 
 				if !scroll_with_arrows
 					&& (k == &Key::ArrowUp
-						|| k == &Key::ArrowRight || k == &Key::ArrowDown
+						|| k == &Key::ArrowRight
+						|| k == &Key::ArrowDown
 						|| k == &Key::ArrowLeft)
 				{
 					return;
@@ -341,7 +328,7 @@ pub fn VirtualScrollView<
 		};
 	};
 
-	let onkeyup = move |e: KeyboardEvent| {
+	let onkeyup = move |e:KeyboardEvent| {
 		if e.key == Key::Shift {
 			clicking_shift.set(false);
 		} else if e.key == Key::Alt {
@@ -350,29 +337,26 @@ pub fn VirtualScrollView<
 	};
 
 	// Mark the Y axis scrollbar as the one being dragged
-	let onmousedown_y = move |e: MouseEvent| {
+	let onmousedown_y = move |e:MouseEvent| {
 		let coordinates = e.get_element_coordinates();
 		*clicking_scrollbar.write() = Some((Axis::Y, coordinates.y));
 	};
 
 	// Mark the X axis scrollbar as the one being dragged
-	let onmousedown_x = move |e: MouseEvent| {
+	let onmousedown_x = move |e:MouseEvent| {
 		let coordinates = e.get_element_coordinates();
 		*clicking_scrollbar.write() = Some((Axis::X, coordinates.x));
 	};
 
 	// Unmark any scrollbar
-	let onclick = move |_: MouseEvent| {
+	let onclick = move |_:MouseEvent| {
 		if clicking_scrollbar.peek().is_some() {
 			*clicking_scrollbar.write() = None;
 		}
 	};
 
-	let horizontal_scrollbar_size = if horizontal_scrollbar_is_visible {
-		&scrollbar_theme.size
-	} else {
-		"0"
-	};
+	let horizontal_scrollbar_size =
+		if horizontal_scrollbar_is_visible { &scrollbar_theme.size } else { "0" };
 
 	let vertical_scrollbar_size =
 		if vertical_scrollbar_is_visible { &scrollbar_theme.size } else { "0" };
@@ -384,12 +368,8 @@ pub fn VirtualScrollView<
 	};
 
 	// Calculate from what to what items must be rendered
-	let render_range = get_render_range(
-		viewport_size,
-		scroll_position,
-		items_size,
-		items_length as f32,
-	);
+	let render_range =
+		get_render_range(viewport_size, scroll_position, items_size, items_length as f32);
 
 	let children = if props.cache_elements {
 		let children = use_memo(use_reactive(
@@ -403,24 +383,16 @@ pub fn VirtualScrollView<
 		));
 		rsx!({ children.read().iter() })
 	} else {
-		let children =
-			render_range.map(|i| (props.builder)(i, &props.builder_args));
+		let children = render_range.map(|i| (props.builder)(i, &props.builder_args));
 		rsx!({ children })
 	};
 
-	let is_scrolling_x = clicking_scrollbar
-		.read()
-		.as_ref()
-		.map(|f| f.0 == Axis::X)
-		.unwrap_or_default();
-	let is_scrolling_y = clicking_scrollbar
-		.read()
-		.as_ref()
-		.map(|f| f.0 == Axis::Y)
-		.unwrap_or_default();
+	let is_scrolling_x =
+		clicking_scrollbar.read().as_ref().map(|f| f.0 == Axis::X).unwrap_or_default();
+	let is_scrolling_y =
+		clicking_scrollbar.read().as_ref().map(|f| f.0 == Axis::Y).unwrap_or_default();
 
-	let offset_y_min =
-		(-corrected_scrolled_y / items_size).floor() * items_size;
+	let offset_y_min = (-corrected_scrolled_y / items_size).floor() * items_size;
 	let offset_y = -corrected_scrolled_y - offset_y_min;
 
 	let focus_id = focus.attribute();
@@ -496,10 +468,10 @@ mod test {
 			let values = use_signal(|| ["Hello, World!"].repeat(30));
 
 			rsx!(VirtualScrollView {
-				length: values.read().len(),
-				item_size: 50.0,
-				direction: "vertical",
-				builder: move |index, _: &Option<()>| {
+				length:values.read().len(),
+				item_size:50.0,
+				direction:"vertical",
+				builder:move |index, _:&Option<()>| {
 					let value = values.read()[index];
 					rsx! {
 						label {
@@ -521,19 +493,17 @@ mod test {
 		let content = root.get(0).get(0).get(0);
 		assert_eq!(content.children_ids().len(), 11);
 
-		// Check that visible items are from indexes 0 to 11, because 500 / 50 = 10 + 1 (for smooth scrolling) = 11.
+		// Check that visible items are from indexes 0 to 11, because 500 / 50 =
+		// 10 + 1 (for smooth scrolling) = 11.
 		for (n, i) in (0..11).enumerate() {
 			let child = content.get(n);
-			assert_eq!(
-				child.get(0).text(),
-				Some(format!("{i} Hello, World!").as_str())
-			);
+			assert_eq!(child.get(0).text(), Some(format!("{i} Hello, World!").as_str()));
 		}
 
 		utils.push_event(PlatformEvent::Wheel {
-			name: EventName::Wheel,
-			scroll: (0., -300.).into(),
-			cursor: (5., 5.).into(),
+			name:EventName::Wheel,
+			scroll:(0., -300.).into(),
+			cursor:(5., 5.).into(),
 		});
 
 		utils.wait_for_update().await;
@@ -542,14 +512,12 @@ mod test {
 		let content = root.get(0).get(0).get(0);
 		assert_eq!(content.children_ids().len(), 11);
 
-		// It has scrolled 300 pixels, which equals to 6 items since because 300 / 50 = 6
-		// So we must start checking from 6 to +10, 16 in this case because 6 + 10 = 16 + 1 (for smooths scrolling) = 17.
+		// It has scrolled 300 pixels, which equals to 6 items since because 300
+		// / 50 = 6 So we must start checking from 6 to +10, 16 in this case
+		// because 6 + 10 = 16 + 1 (for smooths scrolling) = 17.
 		for (n, i) in (6..17).enumerate() {
 			let child = content.get(n);
-			assert_eq!(
-				child.get(0).text(),
-				Some(format!("{i} Hello, World!").as_str())
-			);
+			assert_eq!(child.get(0).text(), Some(format!("{i} Hello, World!").as_str()));
 		}
 	}
 
@@ -559,10 +527,10 @@ mod test {
 			let values = use_signal(|| ["Hello, World!"].repeat(30));
 
 			rsx!(VirtualScrollView {
-				length: values.read().len(),
-				item_size: 50.0,
-				direction: "vertical",
-				builder: move |index, _: &Option<()>| {
+				length:values.read().len(),
+				item_size:50.0,
+				direction:"vertical",
+				builder:move |index, _:&Option<()>| {
 					let value = values.read()[index];
 					rsx! {
 						label {
@@ -585,35 +553,33 @@ mod test {
 		let content = root.get(0).get(0).get(0);
 		assert_eq!(content.children_ids().len(), 11);
 
-		// Check that visible items are from indexes 0 to 10, because 500 / 50 = 10 + 1 (for smooth scrolling) = 11.
+		// Check that visible items are from indexes 0 to 10, because 500 / 50 =
+		// 10 + 1 (for smooth scrolling) = 11.
 		for (n, i) in (0..11).enumerate() {
 			let child = content.get(n);
-			assert_eq!(
-				child.get(0).text(),
-				Some(format!("{i} Hello, World!").as_str())
-			);
+			assert_eq!(child.get(0).text(), Some(format!("{i} Hello, World!").as_str()));
 		}
 
 		// Simulate the user dragging the scrollbar
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (490., 20.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(490., 20.).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseDown,
-			cursor: (490., 20.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseDown,
+			cursor:(490., 20.).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (490., 320.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(490., 320.).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (490., 320.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(490., 320.).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
@@ -625,19 +591,16 @@ mod test {
 		// It has dragged the scrollbar 300 pixels
 		for (n, i) in (18..29).enumerate() {
 			let child = content.get(n);
-			assert_eq!(
-				child.get(0).text(),
-				Some(format!("{i} Hello, World!").as_str())
-			);
+			assert_eq!(child.get(0).text(), Some(format!("{i} Hello, World!").as_str()));
 		}
 
 		// Scroll up with arrows
 		for _ in 0..11 {
 			utils.push_event(PlatformEvent::Keyboard {
-				name: EventName::KeyDown,
-				key: Key::ArrowUp,
-				code: Code::ArrowUp,
-				modifiers: Modifiers::default(),
+				name:EventName::KeyDown,
+				key:Key::ArrowUp,
+				code:Code::ArrowUp,
+				modifiers:Modifiers::default(),
 			});
 			utils.wait_for_update().await;
 		}
@@ -647,18 +610,15 @@ mod test {
 
 		for (n, i) in (0..11).enumerate() {
 			let child = content.get(n);
-			assert_eq!(
-				child.get(0).text(),
-				Some(format!("{i} Hello, World!").as_str())
-			);
+			assert_eq!(child.get(0).text(), Some(format!("{i} Hello, World!").as_str()));
 		}
 
 		// Scroll to the bottom with arrows
 		utils.push_event(PlatformEvent::Keyboard {
-			name: EventName::KeyDown,
-			key: Key::End,
-			code: Code::End,
-			modifiers: Modifiers::default(),
+			name:EventName::KeyDown,
+			key:Key::End,
+			code:Code::End,
+			modifiers:Modifiers::default(),
 		});
 		utils.wait_for_update().await;
 		utils.wait_for_update().await;
@@ -668,10 +628,7 @@ mod test {
 
 		for (n, i) in (21..30).enumerate() {
 			let child = content.get(n);
-			assert_eq!(
-				child.get(0).text(),
-				Some(format!("{i} Hello, World!").as_str())
-			);
+			assert_eq!(child.get(0).text(), Some(format!("{i} Hello, World!").as_str()));
 		}
 	}
 }

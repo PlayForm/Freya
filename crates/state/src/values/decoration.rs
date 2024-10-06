@@ -3,7 +3,7 @@ use freya_engine::prelude::*;
 use crate::{Parse, ParseError};
 
 impl Parse for TextDecoration {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		let mut decoration = TextDecoration::default();
 		let values = value.split_ascii_whitespace();
 
@@ -24,7 +24,7 @@ impl Parse for TextDecoration {
 }
 
 impl Parse for TextDecorationStyle {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		Ok(match value {
 			"solid" => TextDecorationStyle::Solid,
 			"double" => TextDecorationStyle::Double,

@@ -14,9 +14,7 @@ fn parse_rgb_color() {
 }
 
 #[test]
-fn parse_hsl_color() {
-	_ = Color::parse("hsl(28deg, 80%, 50%, 25%)").unwrap();
-}
+fn parse_hsl_color() { _ = Color::parse("hsl(28deg, 80%, 50%, 25%)").unwrap(); }
 
 #[test]
 fn parse_argb_color_u8() {

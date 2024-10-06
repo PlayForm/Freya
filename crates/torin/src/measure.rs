@@ -7,8 +7,13 @@ use crate::{
 	geometry::{Area, Size2D},
 	node::Node,
 	prelude::{
-		AlignAxis, Alignment, AlignmentDirection, AreaModel, DirectionMode,
-		LayoutMetadata, Torin,
+		AlignAxis,
+		Alignment,
+		AlignmentDirection,
+		AreaModel,
+		DirectionMode,
+		LayoutMetadata,
+		Torin,
 	},
 };
 
@@ -24,12 +29,11 @@ pub struct MeasureContext<'a, Key, L, D>
 where
 	Key: NodeKey,
 	L: LayoutMeasurer<Key>,
-	D: DOMAdapter<Key>,
-{
-	pub layout: &'a mut Torin<Key>,
-	pub measurer: &'a mut Option<L>,
-	pub dom_adapter: &'a mut D,
-	pub layout_metadata: LayoutMetadata,
+	D: DOMAdapter<Key>, {
+	pub layout:&'a mut Torin<Key>,
+	pub measurer:&'a mut Option<L>,
+	pub dom_adapter:&'a mut D,
+	pub layout_metadata:LayoutMetadata,
 }
 
 impl<Key, L, D> MeasureContext<'_, Key, L, D>
@@ -44,19 +48,19 @@ where
 	pub fn measure_node(
 		&mut self,
 		// ID for this Node
-		node_id: Key,
+		node_id:Key,
 		// Data of this Node
-		node: &Node,
+		node:&Node,
 		// Area occupied by it's parent
-		parent_area: &Area,
+		parent_area:&Area,
 		// Area that is available to use by the children of the parent
-		available_parent_area: &Area,
+		available_parent_area:&Area,
 		// Whether to cache the measurements of this Node's children
-		must_cache_children: bool,
+		must_cache_children:bool,
 		// Parent Node is dirty.
-		parent_is_dirty: bool,
+		parent_is_dirty:bool,
 		// Current phase of measurement
-		phase: Phase,
+		phase:Phase,
 	) -> (bool, LayoutNode) {
 		// 1. If parent is dirty
 		// 2. If this Node has been marked as dirty
@@ -66,10 +70,10 @@ where
 			|| !self.layout.results.contains_key(&node_id);
 		if must_revalidate {
 			// Create the initial Node area size
-			let mut area_size =
-				Size2D::new(node.padding.horizontal(), node.padding.vertical());
+			let mut area_size = Size2D::new(node.padding.horizontal(), node.padding.vertical());
 
-			// Compute the width and height given the size, the minimum size, the maximum size and margins
+			// Compute the width and height given the size, the minimum size,
+			// the maximum size and margins
 			area_size.width = node.width.min_max(
 				area_size.width,
 				parent_area.size.width,
@@ -94,26 +98,23 @@ where
 			);
 
 			// If available, run a custom layout measure function
-			// This is useful when you use third-party libraries (e.g. rust-skia, cosmic-text) to measure text layouts
-			// When a Node is measured by a custom measurer function the inner children will be skipped
-			let (measure_inner_children, node_data) = if let Some(measurer) =
-				self.measurer
-			{
-				let most_fitting_width = *node.width.most_fitting_size(
-					&area_size.width,
-					&available_parent_area.size.width,
-				);
-				let most_fitting_height = *node.height.most_fitting_size(
-					&area_size.height,
-					&available_parent_area.size.height,
-				);
+			// This is useful when you use third-party libraries (e.g.
+			// rust-skia, cosmic-text) to measure text layouts When a Node is
+			// measured by a custom measurer function the inner children will be
+			// skipped
+			let (measure_inner_children, node_data) = if let Some(measurer) = self.measurer {
+				let most_fitting_width = *node
+					.width
+					.most_fitting_size(&area_size.width, &available_parent_area.size.width);
+				let most_fitting_height = *node
+					.height
+					.most_fitting_size(&area_size.height, &available_parent_area.size.height);
 
-				let most_fitting_area_size =
-					Size2D::new(most_fitting_width, most_fitting_height);
-				let res =
-					measurer.measure(node_id, node, &most_fitting_area_size);
+				let most_fitting_area_size = Size2D::new(most_fitting_width, most_fitting_height);
+				let res = measurer.measure(node_id, node, &most_fitting_area_size);
 
-				// Compute the width and height again using the new custom area sizes
+				// Compute the width and height again using the new custom area
+				// sizes
 				if let Some((custom_size, node_data)) = res {
 					if node.width.inner_sized() {
 						area_size.width = node.width.min_max(
@@ -151,19 +152,21 @@ where
 				(true, None)
 			};
 
-			// There is no need to measure inner children in the initial phase if this Node size
-			// isn't decided by his children
+			// There is no need to measure inner children in the initial phase
+			// if this Node size isn't decided by his children
 			let phase_measure_inner_children = if phase == Phase::Initial {
 				node.width.inner_sized() || node.height.inner_sized()
 			} else {
 				true
 			};
 
-			// Compute the inner size of the Node, which is basically the size inside the margins and paddings
+			// Compute the inner size of the Node, which is basically the size
+			// inside the margins and paddings
 			let inner_size = {
 				let mut inner_size = area_size;
 
-				// When having an unsized bound we set it to whatever is still available in the parent's area
+				// When having an unsized bound we set it to whatever is still
+				// available in the parent's area
 				if node.width.inner_sized() {
 					inner_size.width = node.width.min_max(
 						available_parent_area.width(),
@@ -194,11 +197,8 @@ where
 			};
 
 			// Create the areas
-			let area_origin = node.position.get_origin(
-				available_parent_area,
-				parent_area,
-				&area_size,
-			);
+			let area_origin =
+				node.position.get_origin(available_parent_area, parent_area, &area_size);
 			let mut area = Rect::new(area_origin, area_size);
 			let mut inner_area = Rect::new(area_origin, inner_size)
 				.without_gaps(&node.padding)
@@ -207,11 +207,11 @@ where
 			let mut inner_sizes = Size2D::default();
 
 			if measure_inner_children && phase_measure_inner_children {
-				// Create an area containing the available space inside the inner area
+				// Create an area containing the available space inside the
+				// inner area
 				let mut available_area = inner_area;
 
-				available_area
-					.move_with_offsets(&node.offset_x, &node.offset_y);
+				available_area.move_with_offsets(&node.offset_x, &node.offset_y);
 
 				// Measure the layout of this Node's children
 				self.measure_children(
@@ -228,13 +228,7 @@ where
 
 			(
 				must_cache_children,
-				LayoutNode {
-					area,
-					margin: node.margin,
-					inner_area,
-					inner_sizes,
-					data: node_data,
-				},
+				LayoutNode { area, margin:node.margin, inner_area, inner_sizes, data:node_data },
 			)
 		} else {
 			let layout_node = self.layout.get(node_id).unwrap().clone();
@@ -274,28 +268,29 @@ where
 	#[inline(always)]
 	pub fn measure_children(
 		&mut self,
-		parent_node_id: &Key,
-		parent_node: &Node,
+		parent_node_id:&Key,
+		parent_node:&Node,
 		// Area available inside the Node
-		available_area: &mut Area,
+		available_area:&mut Area,
 		// Accumulated sizes in both axis in the Node
-		inner_sizes: &mut Size2D,
+		inner_sizes:&mut Size2D,
 		// Whether to cache the measurements of this Node's children
-		must_cache_children: bool,
+		must_cache_children:bool,
 		// Parent area.
-		area: &mut Area,
+		area:&mut Area,
 		// Inner area of the parent.
-		inner_area: &mut Area,
+		inner_area:&mut Area,
 		// Parent Node is dirty.
-		parent_is_dirty: bool,
+		parent_is_dirty:bool,
 	) {
 		let children = self.dom_adapter.children_of(parent_node_id);
 
 		let mut initial_phase_sizes = FxHashMap::default();
 		let mut initial_phase_inner_sizes = *inner_sizes;
 
-		// Initial phase: Measure the size and position of the children if the parent has a
-		// non-start cross alignment, non-start main aligment of a fit-content.
+		// Initial phase: Measure the size and position of the children if the
+		// parent has a non-start cross alignment, non-start main aligment of
+		// a fit-content.
 		if parent_node.cross_alignment.is_not_start()
 			|| parent_node.main_alignment.is_not_start()
 			|| parent_node.content.is_fit()
@@ -306,8 +301,7 @@ where
 
 			//  Measure the children
 			for child_id in &children {
-				let Some(child_data) = self.dom_adapter.get_node(child_id)
-				else {
+				let Some(child_data) = self.dom_adapter.get_node(child_id) else {
 					continue;
 				};
 
@@ -343,8 +337,7 @@ where
 				if parent_node.cross_alignment.is_not_start()
 					|| parent_node.main_alignment.is_spaced()
 				{
-					initial_phase_sizes
-						.insert(*child_id, child_areas.area.size);
+					initial_phase_sizes.insert(*child_id, child_areas.area.size);
 				}
 			}
 
@@ -369,9 +362,7 @@ where
 				);
 			}
 
-			if parent_node.cross_alignment.is_not_start()
-				|| parent_node.content.is_fit()
-			{
+			if parent_node.cross_alignment.is_not_start() || parent_node.content.is_fit() {
 				// Adjust the available and inner areas of the Cross axis
 				Self::shrink_area_to_fit_when_unbounded(
 					available_area,
@@ -385,7 +376,8 @@ where
 
 		let initial_available_area = *available_area;
 
-		// Final phase: measure the children with all the axis and sizes adjusted
+		// Final phase: measure the children with all the axis and sizes
+		// adjusted
 		for (child_n, child_id) in children.into_iter().enumerate() {
 			let Some(child_data) = self.dom_adapter.get_node(&child_id) else {
 				continue;
@@ -448,13 +440,13 @@ where
 				&child_data,
 			);
 
-			// Cache the child layout if it was mutated and children must be cached
+			// Cache the child layout if it was mutated and children must be
+			// cached
 			if child_revalidated && must_cache_children {
 				// In case of any layout listener, notify it with the new areas.
 				if child_data.has_layout_references {
 					if let Some(measurer) = self.measurer {
-						measurer
-							.notify_layout_references(child_id, &child_areas);
+						measurer.notify_layout_references(child_id, &child_areas);
 					}
 				}
 
@@ -466,40 +458,41 @@ where
 
 	/// Align the content of this node.
 	fn align_content(
-		available_area: &mut Area,
-		inner_area: &Area,
-		contents_size: &Size2D,
-		alignment: &Alignment,
-		direction: &DirectionMode,
-		alignment_direction: AlignmentDirection,
+		available_area:&mut Area,
+		inner_area:&Area,
+		contents_size:&Size2D,
+		alignment:&Alignment,
+		direction:&DirectionMode,
+		alignment_direction:AlignmentDirection,
 	) {
 		let axis = AlignAxis::new(direction, alignment_direction);
 
 		match axis {
-			AlignAxis::Height => match alignment {
-				Alignment::Center => {
-					let new_origin_y = (inner_area.height() / 2.0)
-						- (contents_size.height / 2.0);
+			AlignAxis::Height => {
+				match alignment {
+					Alignment::Center => {
+						let new_origin_y =
+							(inner_area.height() / 2.0) - (contents_size.height / 2.0);
 
-					available_area.origin.y = inner_area.min_y() + new_origin_y;
-				},
-				Alignment::End => {
-					available_area.origin.y =
-						inner_area.max_y() - contents_size.height;
-				},
-				_ => {},
+						available_area.origin.y = inner_area.min_y() + new_origin_y;
+					},
+					Alignment::End => {
+						available_area.origin.y = inner_area.max_y() - contents_size.height;
+					},
+					_ => {},
+				}
 			},
-			AlignAxis::Width => match alignment {
-				Alignment::Center => {
-					let new_origin_x = (inner_area.width() / 2.0)
-						- (contents_size.width / 2.0);
-					available_area.origin.x = inner_area.min_x() + new_origin_x;
-				},
-				Alignment::End => {
-					available_area.origin.x =
-						inner_area.max_x() - contents_size.width;
-				},
-				_ => {},
+			AlignAxis::Width => {
+				match alignment {
+					Alignment::Center => {
+						let new_origin_x = (inner_area.width() / 2.0) - (contents_size.width / 2.0);
+						available_area.origin.x = inner_area.min_x() + new_origin_x;
+					},
+					Alignment::End => {
+						available_area.origin.x = inner_area.max_x() - contents_size.width;
+					},
+					_ => {},
+				}
 			},
 		}
 	}
@@ -507,86 +500,80 @@ where
 	/// Align the position of this node.
 	#[allow(clippy::too_many_arguments)]
 	fn align_position(
-		alignment_direction: AlignmentDirection,
-		available_area: &mut Area,
-		initial_available_area: &Area,
-		inner_sizes: &Size2D,
-		alignment: &Alignment,
-		direction: &DirectionMode,
-		siblings_len: usize,
-		child_position: usize,
+		alignment_direction:AlignmentDirection,
+		available_area:&mut Area,
+		initial_available_area:&Area,
+		inner_sizes:&Size2D,
+		alignment:&Alignment,
+		direction:&DirectionMode,
+		siblings_len:usize,
+		child_position:usize,
 	) {
 		let axis = AlignAxis::new(direction, alignment_direction);
 
 		match axis {
-			AlignAxis::Height => match alignment {
-				Alignment::SpaceBetween if child_position > 0 => {
-					let all_gaps_sizes =
-						initial_available_area.height() - inner_sizes.height;
-					let gap_size = all_gaps_sizes / (siblings_len - 1) as f32;
-					available_area.origin.y += gap_size;
-				},
-				Alignment::SpaceEvenly => {
-					let all_gaps_sizes =
-						initial_available_area.height() - inner_sizes.height;
-					let gap_size = all_gaps_sizes / (siblings_len + 1) as f32;
-					available_area.origin.y += gap_size;
-				},
-				Alignment::SpaceAround => {
-					let all_gaps_sizes =
-						initial_available_area.height() - inner_sizes.height;
-					let one_gap_size = all_gaps_sizes / siblings_len as f32;
-					let gap_size = if child_position == 0
-						|| child_position == siblings_len
-					{
-						one_gap_size / 2.
-					} else {
-						one_gap_size
-					};
-					available_area.origin.y += gap_size;
-				},
-				_ => {},
+			AlignAxis::Height => {
+				match alignment {
+					Alignment::SpaceBetween if child_position > 0 => {
+						let all_gaps_sizes = initial_available_area.height() - inner_sizes.height;
+						let gap_size = all_gaps_sizes / (siblings_len - 1) as f32;
+						available_area.origin.y += gap_size;
+					},
+					Alignment::SpaceEvenly => {
+						let all_gaps_sizes = initial_available_area.height() - inner_sizes.height;
+						let gap_size = all_gaps_sizes / (siblings_len + 1) as f32;
+						available_area.origin.y += gap_size;
+					},
+					Alignment::SpaceAround => {
+						let all_gaps_sizes = initial_available_area.height() - inner_sizes.height;
+						let one_gap_size = all_gaps_sizes / siblings_len as f32;
+						let gap_size = if child_position == 0 || child_position == siblings_len {
+							one_gap_size / 2.
+						} else {
+							one_gap_size
+						};
+						available_area.origin.y += gap_size;
+					},
+					_ => {},
+				}
 			},
-			AlignAxis::Width => match alignment {
-				Alignment::SpaceBetween if child_position > 0 => {
-					let all_gaps_sizes =
-						initial_available_area.width() - inner_sizes.width;
-					let gap_size = all_gaps_sizes / (siblings_len - 1) as f32;
-					available_area.origin.x += gap_size;
-				},
-				Alignment::SpaceEvenly => {
-					let all_gaps_sizes =
-						initial_available_area.width() - inner_sizes.width;
-					let gap_size = all_gaps_sizes / (siblings_len + 1) as f32;
-					available_area.origin.x += gap_size;
-				},
-				Alignment::SpaceAround => {
-					let all_gaps_sizes =
-						initial_available_area.width() - inner_sizes.width;
-					let one_gap_size = all_gaps_sizes / siblings_len as f32;
-					let gap_size = if child_position == 0
-						|| child_position == siblings_len
-					{
-						one_gap_size / 2.
-					} else {
-						one_gap_size
-					};
-					available_area.origin.x += gap_size;
-				},
-				_ => {},
+			AlignAxis::Width => {
+				match alignment {
+					Alignment::SpaceBetween if child_position > 0 => {
+						let all_gaps_sizes = initial_available_area.width() - inner_sizes.width;
+						let gap_size = all_gaps_sizes / (siblings_len - 1) as f32;
+						available_area.origin.x += gap_size;
+					},
+					Alignment::SpaceEvenly => {
+						let all_gaps_sizes = initial_available_area.width() - inner_sizes.width;
+						let gap_size = all_gaps_sizes / (siblings_len + 1) as f32;
+						available_area.origin.x += gap_size;
+					},
+					Alignment::SpaceAround => {
+						let all_gaps_sizes = initial_available_area.width() - inner_sizes.width;
+						let one_gap_size = all_gaps_sizes / siblings_len as f32;
+						let gap_size = if child_position == 0 || child_position == siblings_len {
+							one_gap_size / 2.
+						} else {
+							one_gap_size
+						};
+						available_area.origin.x += gap_size;
+					},
+					_ => {},
+				}
 			},
 		}
 	}
 
 	/// Stack a child Node into its parent
 	fn stack_child(
-		available_area: &mut Area,
-		parent_node: &Node,
-		parent_area: &mut Area,
-		inner_area: &mut Area,
-		inner_sizes: &mut Size2D,
-		child_area: &Area,
-		child_node: &Node,
+		available_area:&mut Area,
+		parent_node:&Node,
+		parent_area:&mut Area,
+		inner_area:&mut Area,
+		inner_sizes:&mut Size2D,
+		child_area:&Area,
+		child_node:&Node,
 	) {
 		// No need to stack a node that is positioned absolutely
 		if child_node.position.is_absolute() {
@@ -599,8 +586,7 @@ where
 				available_area.origin.x = child_area.max_x();
 				available_area.size.width -= child_area.size.width;
 
-				inner_sizes.height =
-					child_area.height().max(inner_sizes.height);
+				inner_sizes.height = child_area.height().max(inner_sizes.height);
 				inner_sizes.width += child_area.width();
 
 				// Keep the biggest height
@@ -650,44 +636,47 @@ where
 		}
 	}
 
-	/// Shrink the available area and inner area of a parent node when for example height is set to "auto",
-	/// direction is vertical and main_alignment is set to "center" or "end" or the content is set to "fit".
-	/// The intended usage is to call this after the first measurement and before the second,
-	/// this way the second measurement will align the content relatively to the parent element instead
-	/// of overflowing due to being aligned relatively to the upper parent element
+	/// Shrink the available area and inner area of a parent node when for
+	/// example height is set to "auto", direction is vertical and
+	/// main_alignment is set to "center" or "end" or the content is set to
+	/// "fit". The intended usage is to call this after the first measurement
+	/// and before the second, this way the second measurement will align the
+	/// content relatively to the parent element instead of overflowing due to
+	/// being aligned relatively to the upper parent element
 	fn shrink_area_to_fit_when_unbounded(
-		available_area: &mut Area,
-		parent_area: &Area,
-		inner_area: &mut Area,
-		parent_node: &Node,
-		alignment_direction: AlignmentDirection,
+		available_area:&mut Area,
+		parent_area:&Area,
+		inner_area:&mut Area,
+		parent_node:&Node,
+		alignment_direction:AlignmentDirection,
 	) {
 		struct NodeData<'a> {
-			pub inner_origin: &'a mut f32,
-			pub inner_size: &'a mut f32,
-			pub area_origin: f32,
-			pub area_size: f32,
-			pub one_side_padding: f32,
-			pub two_sides_padding: f32,
-			pub one_side_margin: f32,
-			pub two_sides_margin: f32,
-			pub available_size: &'a mut f32,
+			pub inner_origin:&'a mut f32,
+			pub inner_size:&'a mut f32,
+			pub area_origin:f32,
+			pub area_size:f32,
+			pub one_side_padding:f32,
+			pub two_sides_padding:f32,
+			pub one_side_margin:f32,
+			pub two_sides_margin:f32,
+			pub available_size:&'a mut f32,
 		}
 
 		let axis = AlignAxis::new(&parent_node.direction, alignment_direction);
-		let (is_vertical_not_start, is_horizontal_not_start) =
-			match parent_node.direction {
-				DirectionMode::Vertical => (
+		let (is_vertical_not_start, is_horizontal_not_start) = match parent_node.direction {
+			DirectionMode::Vertical => {
+				(
 					parent_node.main_alignment.is_not_start(),
-					parent_node.cross_alignment.is_not_start()
-						|| parent_node.content.is_fit(),
-				),
-				DirectionMode::Horizontal => (
-					parent_node.cross_alignment.is_not_start()
-						|| parent_node.content.is_fit(),
+					parent_node.cross_alignment.is_not_start() || parent_node.content.is_fit(),
+				)
+			},
+			DirectionMode::Horizontal => {
+				(
+					parent_node.cross_alignment.is_not_start() || parent_node.content.is_fit(),
 					parent_node.main_alignment.is_not_start(),
-				),
-			};
+				)
+			},
+		};
 		let NodeData {
 			inner_origin,
 			inner_size,
@@ -699,44 +688,40 @@ where
 			two_sides_margin,
 			available_size,
 		} = match axis {
-			AlignAxis::Height
-				if parent_node.height.inner_sized()
-					&& is_vertical_not_start =>
-			{
+			AlignAxis::Height if parent_node.height.inner_sized() && is_vertical_not_start => {
 				NodeData {
-					inner_origin: &mut inner_area.origin.y,
-					inner_size: &mut inner_area.size.height,
-					area_origin: parent_area.origin.y,
-					area_size: parent_area.size.height,
-					one_side_padding: parent_node.padding.top(),
-					two_sides_padding: parent_node.padding.vertical(),
-					one_side_margin: parent_node.margin.top(),
-					two_sides_margin: parent_node.margin.vertical(),
-					available_size: &mut available_area.size.height,
+					inner_origin:&mut inner_area.origin.y,
+					inner_size:&mut inner_area.size.height,
+					area_origin:parent_area.origin.y,
+					area_size:parent_area.size.height,
+					one_side_padding:parent_node.padding.top(),
+					two_sides_padding:parent_node.padding.vertical(),
+					one_side_margin:parent_node.margin.top(),
+					two_sides_margin:parent_node.margin.vertical(),
+					available_size:&mut available_area.size.height,
 				}
 			},
-			AlignAxis::Width
-				if parent_node.width.inner_sized()
-					&& is_horizontal_not_start =>
-			{
+			AlignAxis::Width if parent_node.width.inner_sized() && is_horizontal_not_start => {
 				NodeData {
-					inner_origin: &mut inner_area.origin.x,
-					inner_size: &mut inner_area.size.width,
-					area_origin: parent_area.origin.x,
-					area_size: parent_area.size.width,
-					one_side_padding: parent_node.padding.left(),
-					two_sides_padding: parent_node.padding.horizontal(),
-					one_side_margin: parent_node.margin.left(),
-					two_sides_margin: parent_node.margin.horizontal(),
-					available_size: &mut available_area.size.width,
+					inner_origin:&mut inner_area.origin.x,
+					inner_size:&mut inner_area.size.width,
+					area_origin:parent_area.origin.x,
+					area_size:parent_area.size.width,
+					one_side_padding:parent_node.padding.left(),
+					two_sides_padding:parent_node.padding.horizontal(),
+					one_side_margin:parent_node.margin.left(),
+					two_sides_margin:parent_node.margin.horizontal(),
+					available_size:&mut available_area.size.width,
 				}
 			},
 			_ => return,
 		};
 
-		// Set the origin of the inner area to the origin of the area plus the padding and margin for the given axis
+		// Set the origin of the inner area to the origin of the area plus the
+		// padding and margin for the given axis
 		*inner_origin = area_origin + one_side_padding + one_side_margin;
-		// Set the size of the inner area to the size of the area minus the padding and margin for the given axis
+		// Set the size of the inner area to the size of the area minus the
+		// padding and margin for the given axis
 		*inner_size = area_size - two_sides_padding - two_sides_margin;
 		// Set the same available size as the inner area for the given axis
 		*available_size = *inner_size;

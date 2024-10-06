@@ -1,14 +1,12 @@
 use dioxus::prelude::*;
 use freya_elements::{elements as dioxus_elements, events::MouseEvent};
-use freya_hooks::{
-	use_applied_theme, use_get_theme, FontTheme, TableTheme, TableThemeWith,
-};
+use freya_hooks::{use_applied_theme, use_get_theme, FontTheme, TableTheme, TableThemeWith};
 
 use crate::icons::ArrowIcon;
 
 #[allow(non_snake_case)]
 #[component]
-fn TableArrow(order_direction: OrderDirection) -> Element {
+fn TableArrow(order_direction:OrderDirection) -> Element {
 	let theme = use_get_theme();
 	let TableTheme { arrow_fill, .. } = theme.table;
 	let rotate = match order_direction {
@@ -16,19 +14,19 @@ fn TableArrow(order_direction: OrderDirection) -> Element {
 		OrderDirection::Up => "180",
 	};
 
-	rsx!(ArrowIcon { rotate: "{rotate}", fill: "{arrow_fill}" })
+	rsx!(ArrowIcon { rotate:"{rotate}", fill:"{arrow_fill}" })
 }
 
 /// Properties for the [`TableHead`] component.
 #[derive(Props, Clone, PartialEq)]
 pub struct TableHeadProps {
 	/// The content of this table head.
-	pub children: Element,
+	pub children:Element,
 }
 
 /// The head of a [`Table`]. Use [`TableRow`] inside.
 #[allow(non_snake_case)]
-pub fn TableHead(TableHeadProps { children }: TableHeadProps) -> Element {
+pub fn TableHead(TableHeadProps { children }:TableHeadProps) -> Element {
 	rsx!(
 		rect { width: "100%", {children} }
 	)
@@ -38,12 +36,12 @@ pub fn TableHead(TableHeadProps { children }: TableHeadProps) -> Element {
 #[derive(Props, Clone, PartialEq)]
 pub struct TableBodyProps {
 	/// The content of this table body.
-	pub children: Element,
+	pub children:Element,
 }
 
 /// The body of a [`Table`].
 #[allow(non_snake_case)]
-pub fn TableBody(TableBodyProps { children }: TableBodyProps) -> Element {
+pub fn TableBody(TableBodyProps { children }:TableBodyProps) -> Element {
 	rsx!(
 		rect { width: "100%", {children} }
 	)
@@ -53,12 +51,13 @@ pub fn TableBody(TableBodyProps { children }: TableBodyProps) -> Element {
 #[derive(Props, Clone, PartialEq)]
 pub struct TableRowProps {
 	/// Theme override.
-	pub theme: Option<TableThemeWith>,
+	pub theme:Option<TableThemeWith>,
 	/// The content of this row.
-	children: Element,
-	/// Show the row with a different background, this allows to have a zebra-style table.
+	children:Element,
+	/// Show the row with a different background, this allows to have a
+	/// zebra-style table.
 	#[props(default = false)]
-	alternate_colors: bool,
+	alternate_colors:bool,
 }
 
 /// Table row for [`Table`]. Use [`TableCell`] inside.
@@ -66,21 +65,10 @@ pub struct TableRowProps {
 /// # Styling
 /// Inherits the [`TableTheme`](freya_hooks::TableTheme) theme.
 #[allow(non_snake_case)]
-pub fn TableRow(
-	TableRowProps { theme, children, alternate_colors }: TableRowProps,
-) -> Element {
+pub fn TableRow(TableRowProps { theme, children, alternate_colors }:TableRowProps) -> Element {
 	let theme = use_applied_theme!(&theme, table);
-	let TableTheme {
-		divider_fill,
-		alternate_row_background,
-		row_background,
-		..
-	} = theme;
-	let background = if alternate_colors {
-		alternate_row_background
-	} else {
-		row_background
-	};
+	let TableTheme { divider_fill, alternate_row_background, row_background, .. } = theme;
+	let background = if alternate_colors { alternate_row_background } else { row_background };
 
 	rsx!(
 		rect {
@@ -111,29 +99,29 @@ pub enum OrderDirection {
 #[derive(Props, Clone, PartialEq)]
 pub struct TableCellProps {
 	/// The content of this cell.
-	pub children: Element,
+	pub children:Element,
 	/// Onclick event handler for the TableCell.
-	pub onclick: Option<EventHandler<MouseEvent>>,
+	pub onclick:Option<EventHandler<MouseEvent>>,
 	/// The direction in which this TableCell's column will be ordered.
 	///
-	/// **This is only a visual change (it changes the icon), you need to sort stuff yourself.**
+	/// **This is only a visual change (it changes the icon), you need to sort
+	/// stuff yourself.**
 	#[props(into)]
-	pub order_direction: Option<Option<OrderDirection>>,
+	pub order_direction:Option<Option<OrderDirection>>,
 	/// The padding of the cell.
 	#[props(default = "5 25".to_string(), into)]
-	pub padding: String,
+	pub padding:String,
 	/// The height of the cell.
 	#[props(default = "35".to_string(), into)]
-	pub height: String,
+	pub height:String,
 }
 
 /// Cell for a [`Table`]. You can place anything inside.
 #[allow(non_snake_case)]
-pub fn TableCell(props: TableCellProps) -> Element {
+pub fn TableCell(props:TableCellProps) -> Element {
 	let config = consume_context::<TableConfig>();
 	let width = 100.0 / config.columns as f32;
-	let TableCellProps { children, order_direction, padding, height, .. } =
-		&props;
+	let TableCellProps { children, order_direction, padding, height, .. } = &props;
 
 	rsx!(
 		rect {
@@ -170,11 +158,11 @@ pub fn TableCell(props: TableCellProps) -> Element {
 #[derive(Props, Clone, PartialEq)]
 pub struct TableProps {
 	/// Theme override.
-	pub theme: Option<TableThemeWith>,
+	pub theme:Option<TableThemeWith>,
 	/// Number of columns used in the table.
-	pub columns: usize,
+	pub columns:usize,
 	/// The content of the table.
-	pub children: Element,
+	pub children:Element,
 }
 
 /// Table component, composed with [`TableHead`] and [`TableBody`].
@@ -182,7 +170,7 @@ pub struct TableProps {
 /// # Styling
 /// Inherits the [`TableTheme`](freya_hooks::TableTheme) theme.
 #[allow(non_snake_case)]
-pub fn Table(TableProps { theme, columns, children }: TableProps) -> Element {
+pub fn Table(TableProps { theme, columns, children }:TableProps) -> Element {
 	let TableTheme {
 		background,
 		height,
@@ -207,5 +195,5 @@ pub fn Table(TableProps { theme, columns, children }: TableProps) -> Element {
 #[doc(hidden)]
 #[derive(Clone)]
 pub struct TableConfig {
-	columns: usize,
+	columns:usize,
 }

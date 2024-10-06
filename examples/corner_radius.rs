@@ -1,18 +1,13 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	let mut radius = use_signal(|| 30f32);
 
-	let onwheel = move |e: WheelEvent| {
+	let onwheel = move |e:WheelEvent| {
 		let y = e.get_delta_y() as f32;
 		radius.with_mut(|radius| *radius = (*radius + y).clamp(0.0, 300.0));
 	};

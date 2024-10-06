@@ -1,7 +1,8 @@
 //! ### Size Units
 //!
 //! #### Auto
-//! Will use it's inner children as size, so in this case, the `rect` width will be equivalent to the width of `label`:
+//! Will use it's inner children as size, so in this case, the `rect` width will
+//! be equivalent to the width of `label`:
 //!
 //! ```rust, no_run
 //! # use freya::prelude::*;
@@ -22,12 +23,7 @@
 //!
 //! ```rust, no_run
 //! # use freya::prelude::*;
-//! fn app() -> Element {
-//!     rsx!(rect {
-//!         width: "50",
-//!         height: "33"
-//!     })
-//! }
+//! fn app() -> Element { rsx!(rect { width:"50", height:"33" }) }
 //! ```
 //!
 //! ##### Parent percentage
@@ -36,10 +32,10 @@
 //! ```rust, no_run
 //! # use freya::prelude::*;
 //! fn app() -> Element {
-//!     rsx!(rect {
-//!         width: "50%",  // Half the parent
-//!         height: "75%"  // 3/4 the parent
-//!     })
+//! 	rsx!(rect {
+//! 		width:"50%",  // Half the parent
+//! 		height:"75%"  // 3/4 the parent
+//! 	})
 //! }
 //! ```
 //!
@@ -50,10 +46,10 @@
 //! ```rust, no_run
 //! # use freya::prelude::*;
 //! fn app() -> Element {
-//!     rsx!(rect {
-//!         width: "calc(33% - 60 + 15%)", // (1/3 of the parent minus 60) plus 15% of parent
-//!         height: "calc(100% - 10)"      // 100% of the parent minus 10
-//!     })
+//! 	rsx!(rect {
+//! 		width:"calc(33% - 60 + 15%)", // (1/3 of the parent minus 60) plus 15% of parent
+//! 		height:"calc(100% - 10)"      // 100% of the parent minus 10
+//! 	})
 //! }
 //! ```
 //!
@@ -81,8 +77,8 @@
 //! ```
 //!
 //! #### fill-min
-//! Will have the same size of the biggest sibling element inside a container who has `content: fit`.
-//! For an example, see `content`.
+//! Will have the same size of the biggest sibling element inside a container
+//! who has `content: fit`. For an example, see `content`.
 //!
 //! #### Viewport percentage
 //! Relative percentage to the viewport (Window) equivalent value.

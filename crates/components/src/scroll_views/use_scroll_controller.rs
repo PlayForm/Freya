@@ -1,8 +1,15 @@
 use std::collections::HashSet;
 
 use dioxus::prelude::{
-	current_scope_id, schedule_update_any, use_drop, use_hook, Readable,
-	ScopeId, Signal, Writable, WritableVecExt,
+	current_scope_id,
+	schedule_update_any,
+	use_drop,
+	use_hook,
+	Readable,
+	ScopeId,
+	Signal,
+	Writable,
+	WritableVecExt,
 };
 
 #[derive(Default, PartialEq, Eq)]
@@ -22,56 +29,46 @@ pub enum ScrollDirection {
 
 #[derive(Default)]
 pub struct ScrollConfig {
-	pub default_vertical_position: ScrollPosition,
-	pub default_horizontal_position: ScrollPosition,
+	pub default_vertical_position:ScrollPosition,
+	pub default_horizontal_position:ScrollPosition,
 }
 
 pub struct ScrollRequest {
-	pub(crate) position: ScrollPosition,
-	pub(crate) direction: ScrollDirection,
-	pub(crate) init: bool,
-	pub(crate) applied_by: HashSet<ScopeId>,
+	pub(crate) position:ScrollPosition,
+	pub(crate) direction:ScrollDirection,
+	pub(crate) init:bool,
+	pub(crate) applied_by:HashSet<ScopeId>,
 }
 
 impl ScrollRequest {
-	pub fn new(
-		position: ScrollPosition,
-		direction: ScrollDirection,
-	) -> ScrollRequest {
-		ScrollRequest {
-			position,
-			direction,
-			init: false,
-			applied_by: HashSet::default(),
-		}
+	pub fn new(position:ScrollPosition, direction:ScrollDirection) -> ScrollRequest {
+		ScrollRequest { position, direction, init:false, applied_by:HashSet::default() }
 	}
 }
 
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub struct ScrollController {
-	requests_subscribers: Signal<HashSet<ScopeId>>,
-	requests: Signal<Vec<ScrollRequest>>,
-	x: Signal<i32>,
-	y: Signal<i32>,
+	requests_subscribers:Signal<HashSet<ScopeId>>,
+	requests:Signal<Vec<ScrollRequest>>,
+	x:Signal<i32>,
+	y:Signal<i32>,
 }
 
 impl From<ScrollController> for (Signal<i32>, Signal<i32>) {
-	fn from(val: ScrollController) -> Self {
-		(val.x, val.y)
-	}
+	fn from(val:ScrollController) -> Self { (val.x, val.y) }
 }
 
 impl ScrollController {
-	pub fn new(x: i32, y: i32, initial_requests: Vec<ScrollRequest>) -> Self {
+	pub fn new(x:i32, y:i32, initial_requests:Vec<ScrollRequest>) -> Self {
 		Self {
-			x: Signal::new(x),
-			y: Signal::new(y),
-			requests_subscribers: Signal::new(HashSet::new()),
-			requests: Signal::new(initial_requests),
+			x:Signal::new(x),
+			y:Signal::new(y),
+			requests_subscribers:Signal::new(HashSet::new()),
+			requests:Signal::new(initial_requests),
 		}
 	}
 
-	pub fn use_apply(&mut self, width: f32, height: f32) {
+	pub fn use_apply(&mut self, width:f32, height:f32) {
 		let scope_id = current_scope_id().unwrap();
 
 		if !self.requests_subscribers.peek().contains(&scope_id) {
@@ -133,21 +130,12 @@ impl ScrollController {
 		});
 	}
 
-	pub fn scroll_to_x(&mut self, to: i32) {
-		self.x.set(to);
-	}
+	pub fn scroll_to_x(&mut self, to:i32) { self.x.set(to); }
 
-	pub fn scroll_to_y(&mut self, to: i32) {
-		self.y.set(to);
-	}
+	pub fn scroll_to_y(&mut self, to:i32) { self.y.set(to); }
 
-	pub fn scroll_to(
-		&mut self,
-		scroll_position: ScrollPosition,
-		scroll_direction: ScrollDirection,
-	) {
-		self.requests
-			.push(ScrollRequest::new(scroll_position, scroll_direction));
+	pub fn scroll_to(&mut self, scroll_position:ScrollPosition, scroll_direction:ScrollDirection) {
+		self.requests.push(ScrollRequest::new(scroll_position, scroll_direction));
 		let schedule = schedule_update_any();
 		for scope_id in self.requests_subscribers.read().iter() {
 			schedule(*scope_id);
@@ -155,9 +143,7 @@ impl ScrollController {
 	}
 }
 
-pub fn use_scroll_controller(
-	init: impl FnOnce() -> ScrollConfig,
-) -> ScrollController {
+pub fn use_scroll_controller(init:impl FnOnce() -> ScrollConfig) -> ScrollController {
 	use_hook(|| {
 		let config = init();
 		ScrollController::new(
@@ -165,16 +151,16 @@ pub fn use_scroll_controller(
 			0,
 			vec![
 				ScrollRequest {
-					position: config.default_vertical_position,
-					direction: ScrollDirection::Vertical,
-					init: true,
-					applied_by: HashSet::default(),
+					position:config.default_vertical_position,
+					direction:ScrollDirection::Vertical,
+					init:true,
+					applied_by:HashSet::default(),
 				},
 				ScrollRequest {
-					position: config.default_horizontal_position,
-					direction: ScrollDirection::Horizontal,
-					init: true,
-					applied_by: HashSet::default(),
+					position:config.default_horizontal_position,
+					direction:ScrollDirection::Horizontal,
+					init:true,
+					applied_by:HashSet::default(),
 				},
 			],
 		)
@@ -189,11 +175,9 @@ mod test {
 	#[tokio::test]
 	pub async fn controlled_scroll_view() {
 		fn scroll_view_app() -> Element {
-			let mut scroll_controller =
-				use_scroll_controller(|| ScrollConfig {
-					default_vertical_position: ScrollPosition::End,
-					..Default::default()
-				});
+			let mut scroll_controller = use_scroll_controller(|| {
+				ScrollConfig { default_vertical_position:ScrollPosition::End, ..Default::default() }
+			});
 
 			rsx!(
 				ScrollView {
@@ -247,9 +231,9 @@ mod test {
 
 		// Click on the button to scroll up
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15., 480.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15., 480.).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -261,9 +245,9 @@ mod test {
 
 		// Click on the button to scroll down
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15., 15.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15., 15.).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;

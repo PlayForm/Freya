@@ -1,24 +1,19 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch_with_props(app, "Simple editor", (900.0, 650.0));
-}
+fn main() { launch_with_props(app, "Simple editor", (900.0, 650.0)); }
 
 fn app() -> Element {
 	let mut editable = use_editable(
 		|| {
 			EditableConfig::new(
-                "你好世界 👋| Hello World! 🙍‍♂️| Hola Mundo! 🚀| Hola Món! 🦀\n"
-                    .repeat(15)
-                    .trim()
-                    .to_string(),
-            )
-            .with_allow_tabs(true)
+				"你好世界 👋| Hello World! 🙍‍♂️| Hola Mundo! 🚀| Hola Món! 🦀\n"
+					.repeat(15)
+					.trim()
+					.to_string(),
+			)
+			.with_allow_tabs(true)
 		},
 		EditableMode::MultipleLinesSingleEditor,
 	);
@@ -28,23 +23,23 @@ fn app() -> Element {
 	let editor = editable.editor().read();
 	let cursor_char = editor.visible_cursor_pos();
 
-	let onmousedown = move |e: MouseEvent| {
+	let onmousedown = move |e:MouseEvent| {
 		editable.process_event(&EditableEvent::MouseDown(e.data, 0));
 	};
 
-	let onmouseover = move |e: MouseEvent| {
+	let onmouseover = move |e:MouseEvent| {
 		editable.process_event(&EditableEvent::MouseOver(e.data, 0));
 	};
 
-	let onclick = move |_: MouseEvent| {
+	let onclick = move |_:MouseEvent| {
 		editable.process_event(&EditableEvent::Click);
 	};
 
-	let onkeydown = move |e: KeyboardEvent| {
+	let onkeydown = move |e:KeyboardEvent| {
 		editable.process_event(&EditableEvent::KeyDown(e.data));
 	};
 
-	let onkeyup = move |e: KeyboardEvent| {
+	let onkeyup = move |e:KeyboardEvent| {
 		editable.process_event(&EditableEvent::KeyUp(e.data));
 	};
 

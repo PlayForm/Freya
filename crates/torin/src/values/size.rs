@@ -17,35 +17,26 @@ pub enum Size {
 }
 
 impl Default for Size {
-	fn default() -> Self {
-		Self::Inner
-	}
+	fn default() -> Self { Self::Inner }
 }
 
 impl Size {
 	pub fn inner_sized(&self) -> bool {
-		matches!(
-			self,
-			Self::Inner | Self::FillMinimum | Self::InnerPercentage(_)
-		)
+		matches!(self, Self::Inner | Self::FillMinimum | Self::InnerPercentage(_))
 	}
 
-	pub fn inner_percentage_sized(&self) -> bool {
-		matches!(self, Self::InnerPercentage(_))
-	}
+	pub fn inner_percentage_sized(&self) -> bool { matches!(self, Self::InnerPercentage(_)) }
 
 	pub fn pretty(&self) -> String {
 		match self {
 			Size::Inner => "auto".to_string(),
 			Size::Pixels(s) => format!("{}", s.get()),
-			Size::DynamicCalculations(calcs) => format!(
-				"calc({})",
-				calcs
-					.iter()
-					.map(|c| c.to_string())
-					.collect::<Vec<String>>()
-					.join(" ")
-			),
+			Size::DynamicCalculations(calcs) => {
+				format!(
+					"calc({})",
+					calcs.iter().map(|c| c.to_string()).collect::<Vec<String>>().join(" ")
+				)
+			},
 			Size::Percentage(p) => format!("{}%", p.get()),
 			Size::Fill => "fill".to_string(),
 			Size::FillMinimum => "fill-min".to_string(),
@@ -56,11 +47,11 @@ impl Size {
 
 	pub fn eval(
 		&self,
-		parent_value: f32,
-		available_parent_value: f32,
-		parent_margin: f32,
-		root_value: f32,
-		phase: Phase,
+		parent_value:f32,
+		available_parent_value:f32,
+		parent_margin:f32,
+		root_value:f32,
+		phase:Phase,
 	) -> Option<f32> {
 		match self {
 			Size::Pixels(px) => Some(px.get() + parent_margin),
@@ -84,42 +75,25 @@ impl Size {
 	#[allow(clippy::too_many_arguments)]
 	pub fn min_max(
 		&self,
-		value: f32,
-		parent_value: f32,
-		available_parent_value: f32,
-		single_margin: f32,
-		margin: f32,
-		minimum: &Self,
-		maximum: &Self,
-		root_value: f32,
-		phase: Phase,
+		value:f32,
+		parent_value:f32,
+		available_parent_value:f32,
+		single_margin:f32,
+		margin:f32,
+		minimum:&Self,
+		maximum:&Self,
+		root_value:f32,
+		phase:Phase,
 	) -> f32 {
 		let value = self
-			.eval(
-				parent_value,
-				available_parent_value,
-				margin,
-				root_value,
-				phase,
-			)
+			.eval(parent_value, available_parent_value, margin, root_value, phase)
 			.unwrap_or(value + margin);
 
 		let minimum_value = minimum
-			.eval(
-				parent_value,
-				available_parent_value,
-				margin,
-				root_value,
-				phase,
-			)
+			.eval(parent_value, available_parent_value, margin, root_value, phase)
 			.map(|v| v + single_margin);
-		let maximum_value = maximum.eval(
-			parent_value,
-			available_parent_value,
-			margin,
-			root_value,
-			phase,
-		);
+		let maximum_value =
+			maximum.eval(parent_value, available_parent_value, margin, root_value, phase);
 
 		let mut final_value = value;
 
@@ -138,11 +112,7 @@ impl Size {
 		final_value
 	}
 
-	pub fn most_fitting_size<'a>(
-		&self,
-		size: &'a f32,
-		available_size: &'a f32,
-	) -> &'a f32 {
+	pub fn most_fitting_size<'a>(&self, size:&'a f32, available_size:&'a f32) -> &'a f32 {
 		match self {
 			Self::Inner | Self::InnerPercentage(_) => available_size,
 			_ => size,
@@ -151,7 +121,7 @@ impl Size {
 }
 
 impl Scaled for Size {
-	fn scale(&mut self, scale_factor: f32) {
+	fn scale(&mut self, scale_factor:f32) {
 		match self {
 			Size::Pixels(s) => *s *= scale_factor,
 			Size::DynamicCalculations(calcs) => {
@@ -173,7 +143,7 @@ pub enum DynamicCalculation {
 }
 
 impl Scaled for DynamicCalculation {
-	fn scale(&mut self, scale_factor: f32) {
+	fn scale(&mut self, scale_factor:f32) {
 		if let DynamicCalculation::Pixels(s) = self {
 			*s *= scale_factor;
 		}
@@ -181,15 +151,13 @@ impl Scaled for DynamicCalculation {
 }
 
 impl std::fmt::Display for DynamicCalculation {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
 			DynamicCalculation::Sub => f.write_str("-"),
 			DynamicCalculation::Mul => f.write_str("*"),
 			DynamicCalculation::Div => f.write_str("/"),
 			DynamicCalculation::Add => f.write_str("+"),
-			DynamicCalculation::Percentage(p) => {
-				f.write_fmt(format_args!("{p}%"))
-			},
+			DynamicCalculation::Percentage(p) => f.write_fmt(format_args!("{p}%")),
 			DynamicCalculation::Pixels(s) => f.write_fmt(format_args!("{s}")),
 		}
 	}
@@ -197,11 +165,11 @@ impl std::fmt::Display for DynamicCalculation {
 
 /// Calculate some chained operations with a given value.
 /// This value could be for example the width of a node's parent area.
-pub fn run_calculations(calcs: &[DynamicCalculation], value: f32) -> f32 {
-	let mut prev_number: Option<f32> = None;
-	let mut prev_op: Option<DynamicCalculation> = None;
+pub fn run_calculations(calcs:&[DynamicCalculation], value:f32) -> f32 {
+	let mut prev_number:Option<f32> = None;
+	let mut prev_op:Option<DynamicCalculation> = None;
 
-	let mut calc_with_op = |val: f32, prev_op: Option<DynamicCalculation>| {
+	let mut calc_with_op = |val:f32, prev_op:Option<DynamicCalculation>| {
 		if let Some(op) = prev_op {
 			match op {
 				DynamicCalculation::Sub => {

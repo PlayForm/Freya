@@ -3,15 +3,16 @@ mod light;
 
 #[doc(hidden)]
 pub use core::default::Default;
+#[doc(hidden)]
+pub use std::borrow::Cow;
+
 pub use dark::*;
 pub use light::*;
 #[doc(hidden)]
 pub use paste::paste;
-#[doc(hidden)]
-pub use std::borrow::Cow;
 
-/// Alias for `Cow::Borrowed`, because that's used a million times so shortening it is nice.
-/// Makes the code more readable.
+/// Alias for `Cow::Borrowed`, because that's used a million times so shortening
+/// it is nice. Makes the code more readable.
 #[macro_export]
 macro_rules! cow_borrowed {
 	($val:expr) => {
@@ -30,17 +31,17 @@ macro_rules! cow_borrowed {
 /// # #[derive(Clone, Debug, PartialEq, Eq)]
 /// # struct Foo;
 /// define_theme! {
-///     %[component]
-///     pub Test<'a> {
-///         %[cows]
-///         cow_string: str,
-///         %[borrowed]
-///         borrowed_data: &'a Foo,
-///         %[owned]
-///         owned_data: Bar,
-///         %[subthemes]
-///         font_theme: FontTheme,
-///     }
+/// 	%[component]
+/// 	pub Test<'a> {
+/// 		%[cows]
+/// 		cow_string: str,
+/// 		%[borrowed]
+/// 		borrowed_data: &'a Foo,
+/// 		%[owned]
+/// 		owned_data: Bar,
+/// 		%[subthemes]
+/// 		font_theme: FontTheme,
+/// 	}
 /// }
 /// ```
 #[macro_export]
@@ -162,7 +163,8 @@ macro_rules! define_theme {
     };
 }
 
-/// Create `FooThemeWith` structs without having to deal with the verbose syntax.
+/// Create `FooThemeWith` structs without having to deal with the verbose
+/// syntax.
 ///
 /// # Examples
 ///
@@ -172,16 +174,16 @@ macro_rules! define_theme {
 /// # use freya::prelude::*;
 /// # fn theme_with_example_no_macro() -> Element {
 /// rsx! {
-///     Button {
-///         theme: ButtonThemeWith {
-///             background: Some("blue".into()),
-///             font_theme: FontThemeWith {
-///                 color: Some("white".into()),
-///                 ..Default::default()
-///             }.into(),
-///             ..Default::default()
-///         }
-///     }
+/// 	Button {
+/// 		theme: ButtonThemeWith {
+/// 			background: Some("blue".into()),
+/// 			font_theme: FontThemeWith {
+/// 				color: Some("white".into()),
+/// 				..Default::default()
+/// 			}.into(),
+/// 			..Default::default()
+/// 		}
+/// 	}
 /// }
 /// # }
 /// ```
@@ -192,14 +194,14 @@ macro_rules! define_theme {
 /// # use freya::prelude::*;
 /// # fn theme_with_example_no_macro() -> Element {
 /// rsx! {
-///     Button {
-///         theme: theme_with!(ButtonTheme {
-///             background: "blue".into(),
-///             font_theme: theme_with!(FontTheme {
-///                 color: "white".into(),
-///             }),
-///         })
-///     }
+/// 	Button {
+/// 		theme: theme_with!(ButtonTheme {
+/// 			background: "blue".into(),
+/// 			font_theme: theme_with!(FontTheme {
+/// 				color: "white".into(),
+/// 			}),
+/// 		})
+/// 	}
 /// }
 /// # }
 /// ```
@@ -573,41 +575,39 @@ define_theme! {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Theme {
-	pub name: &'static str,
-	pub body: BodyTheme,
-	pub button: ButtonTheme,
-	pub switch: SwitchTheme,
-	pub scroll_bar: ScrollBarTheme,
-	pub scroll_view: ScrollViewTheme,
-	pub slider: SliderTheme,
-	pub tooltip: TooltipTheme,
-	pub dropdown: DropdownTheme,
-	pub dropdown_item: DropdownItemTheme,
-	pub accordion: AccordionTheme,
-	pub loader: LoaderTheme,
-	pub link: LinkTheme,
-	pub progress_bar: ProgressBarTheme,
-	pub table: TableTheme,
-	pub input: InputTheme,
-	pub canvas: CanvasTheme,
-	pub graph: GraphTheme,
-	pub network_image: NetworkImageTheme,
-	pub icon: IconTheme,
-	pub sidebar: SidebarTheme,
-	pub sidebar_item: SidebarItemTheme,
-	pub tile: TileTheme,
-	pub radio: RadioTheme,
-	pub checkbox: CheckboxTheme,
-	pub menu_item: MenuItemTheme,
-	pub menu_container: MenuContainerTheme,
-	pub snackbar: SnackBarTheme,
-	pub popup: PopupTheme,
-	pub tab: TabTheme,
-	pub bottom_tab: BottomTabTheme,
+	pub name:&'static str,
+	pub body:BodyTheme,
+	pub button:ButtonTheme,
+	pub switch:SwitchTheme,
+	pub scroll_bar:ScrollBarTheme,
+	pub scroll_view:ScrollViewTheme,
+	pub slider:SliderTheme,
+	pub tooltip:TooltipTheme,
+	pub dropdown:DropdownTheme,
+	pub dropdown_item:DropdownItemTheme,
+	pub accordion:AccordionTheme,
+	pub loader:LoaderTheme,
+	pub link:LinkTheme,
+	pub progress_bar:ProgressBarTheme,
+	pub table:TableTheme,
+	pub input:InputTheme,
+	pub canvas:CanvasTheme,
+	pub graph:GraphTheme,
+	pub network_image:NetworkImageTheme,
+	pub icon:IconTheme,
+	pub sidebar:SidebarTheme,
+	pub sidebar_item:SidebarItemTheme,
+	pub tile:TileTheme,
+	pub radio:RadioTheme,
+	pub checkbox:CheckboxTheme,
+	pub menu_item:MenuItemTheme,
+	pub menu_container:MenuContainerTheme,
+	pub snackbar:SnackBarTheme,
+	pub popup:PopupTheme,
+	pub tab:TabTheme,
+	pub bottom_tab:BottomTabTheme,
 }
 
 impl Default for Theme {
-	fn default() -> Self {
-		LIGHT_THEME
-	}
+	fn default() -> Self { LIGHT_THEME }
 }

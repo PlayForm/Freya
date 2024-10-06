@@ -8,29 +8,25 @@ use freya_native_core::{
 	tags::TagName,
 	NodeId,
 };
-use freya_node_state::{
-	CursorState, FontStyleState, HighlightMode, LayoutState, TextOverflow,
-};
-use torin::prelude::{
-	Alignment, Area, LayoutMeasurer, LayoutNode, Node, Point2D, Size2D,
-};
+use freya_node_state::{CursorState, FontStyleState, HighlightMode, LayoutState, TextOverflow};
+use torin::prelude::{Alignment, Area, LayoutMeasurer, LayoutNode, Node, Point2D, Size2D};
 
 use crate::dom::*;
 
 /// Provides Text measurements using Skia APIs like SkParagraph
 pub struct SkiaMeasurer<'a> {
-	pub font_collection: &'a FontCollection,
-	pub rdom: &'a DioxusDOM,
-	pub default_fonts: &'a [String],
-	pub scale_factor: f32,
+	pub font_collection:&'a FontCollection,
+	pub rdom:&'a DioxusDOM,
+	pub default_fonts:&'a [String],
+	pub scale_factor:f32,
 }
 
 impl<'a> SkiaMeasurer<'a> {
 	pub fn new(
-		rdom: &'a DioxusDOM,
-		font_collection: &'a FontCollection,
-		default_fonts: &'a [String],
-		scale_factor: f32,
+		rdom:&'a DioxusDOM,
+		font_collection:&'a FontCollection,
+		default_fonts:&'a [String],
+		scale_factor:f32,
 	) -> Self {
 		Self { font_collection, rdom, default_fonts, scale_factor }
 	}
@@ -39,17 +35,15 @@ impl<'a> SkiaMeasurer<'a> {
 impl<'a> LayoutMeasurer<NodeId> for SkiaMeasurer<'a> {
 	fn measure(
 		&mut self,
-		node_id: NodeId,
-		_node: &Node,
-		area_size: &Size2D,
+		node_id:NodeId,
+		_node:&Node,
+		area_size:&Size2D,
 	) -> Option<(Size2D, Arc<SendAnyMap>)> {
 		let node = self.rdom.get(node_id).unwrap();
 		let node_type = node.node_type();
 
 		match &*node_type {
-			NodeType::Element(ElementNode { tag, .. })
-				if tag == &TagName::Label =>
-			{
+			NodeType::Element(ElementNode { tag, .. }) if tag == &TagName::Label => {
 				let label = create_label(
 					&node,
 					area_size,
@@ -62,9 +56,7 @@ impl<'a> LayoutMeasurer<NodeId> for SkiaMeasurer<'a> {
 				map.insert(CachedParagraph(label));
 				Some((res, Arc::new(map)))
 			},
-			NodeType::Element(ElementNode { tag, .. })
-				if tag == &TagName::Paragraph =>
-			{
+			NodeType::Element(ElementNode { tag, .. }) if tag == &TagName::Paragraph => {
 				let paragraph = create_paragraph(
 					&node,
 					area_size,
@@ -73,8 +65,7 @@ impl<'a> LayoutMeasurer<NodeId> for SkiaMeasurer<'a> {
 					self.default_fonts,
 					self.scale_factor,
 				);
-				let res =
-					Size2D::new(paragraph.longest_line(), paragraph.height());
+				let res = Size2D::new(paragraph.longest_line(), paragraph.height());
 				let mut map = SendAnyMap::new();
 				map.insert(CachedParagraph(paragraph));
 				Some((res, Arc::new(map)))
@@ -83,9 +74,9 @@ impl<'a> LayoutMeasurer<NodeId> for SkiaMeasurer<'a> {
 		}
 	}
 
-	fn should_measure_inner_children(&mut self, node_id: NodeId) -> bool {
+	fn should_measure_inner_children(&mut self, node_id:NodeId) -> bool {
 		let node = self.rdom.get(node_id).unwrap();
-		let node_type: &NodeType<_> = &node.node_type();
+		let node_type:&NodeType<_> = &node.node_type();
 
 		node_type
 			.tag()
@@ -93,19 +84,13 @@ impl<'a> LayoutMeasurer<NodeId> for SkiaMeasurer<'a> {
 			.unwrap_or_default()
 	}
 
-	fn notify_layout_references(
-		&self,
-		node_id: NodeId,
-		layout_node: &LayoutNode,
-	) {
+	fn notify_layout_references(&self, node_id:NodeId, layout_node:&LayoutNode) {
 		let node = self.rdom.get(node_id).unwrap();
 		let size_state = &*node.get::<LayoutState>().unwrap();
 
 		if let Some(reference) = &size_state.node_ref {
-			let mut node_layout = NodeReferenceLayout {
-				area: layout_node.area,
-				inner: layout_node.inner_sizes,
-			};
+			let mut node_layout =
+				NodeReferenceLayout { area:layout_node.area, inner:layout_node.inner_sizes };
 			node_layout.div(self.scale_factor);
 			reference.0.send(node_layout).ok();
 		}
@@ -113,11 +98,11 @@ impl<'a> LayoutMeasurer<NodeId> for SkiaMeasurer<'a> {
 }
 
 pub fn create_label(
-	node: &DioxusNode,
-	area_size: &Size2D,
-	font_collection: &FontCollection,
-	default_font_family: &[String],
-	scale_factor: f32,
+	node:&DioxusNode,
+	area_size:&Size2D,
+	font_collection:&FontCollection,
+	default_font_family:&[String],
+	scale_factor:f32,
 ) -> Paragraph {
 	let font_style = &*node.get::<FontStyleState>().unwrap();
 
@@ -132,8 +117,7 @@ pub fn create_label(
 		paragraph_style.set_ellipsis(ellipsis);
 	}
 
-	let mut paragraph_builder =
-		ParagraphBuilder::new(&paragraph_style, font_collection);
+	let mut paragraph_builder = ParagraphBuilder::new(&paragraph_style, font_collection);
 
 	for child in node.children() {
 		if let NodeType::Text(text) = &*child.node_type() {
@@ -148,17 +132,16 @@ pub fn create_label(
 
 /// Align the Y axis of the highlights and cursor of a paragraph
 pub fn align_highlights_and_cursor_paragraph(
-	node: &DioxusNode,
-	area: &Area,
-	paragraph: &Paragraph,
-	cursor_rect: &TextBox,
-	width: Option<f32>,
+	node:&DioxusNode,
+	area:&Area,
+	paragraph:&Paragraph,
+	cursor_rect:&TextBox,
+	width:Option<f32>,
 ) -> (Point2D, Point2D) {
 	let cursor_state = node.get::<CursorState>().unwrap();
 
 	let x = area.min_x() + cursor_rect.rect.left;
-	let x2 =
-		x + width.unwrap_or(cursor_rect.rect.right - cursor_rect.rect.left);
+	let x2 = x + width.unwrap_or(cursor_rect.rect.right - cursor_rect.rect.left);
 
 	match cursor_state.highlight_mode {
 		HighlightMode::Fit => {
@@ -179,11 +162,7 @@ pub fn align_highlights_and_cursor_paragraph(
 }
 
 /// Align the main alignment of a paragraph
-pub fn align_main_align_paragraph(
-	node: &DioxusNode,
-	area: &Area,
-	paragraph: &Paragraph,
-) -> f32 {
+pub fn align_main_align_paragraph(node:&DioxusNode, area:&Area, paragraph:&Paragraph) -> f32 {
 	let layout = node.get::<LayoutState>().unwrap();
 
 	match layout.main_alignment {
@@ -198,12 +177,12 @@ pub fn align_main_align_paragraph(
 
 /// Compose a new SkParagraph
 pub fn create_paragraph(
-	node: &DioxusNode,
-	area_size: &Size2D,
-	font_collection: &FontCollection,
-	is_rendering: bool,
-	default_font_family: &[String],
-	scale_factor: f32,
+	node:&DioxusNode,
+	area_size:&Size2D,
+	font_collection:&FontCollection,
+	is_rendering:bool,
+	default_font_family:&[String],
+	scale_factor:f32,
 ) -> Paragraph {
 	let font_style = &*node.get::<FontStyleState>().unwrap();
 
@@ -216,23 +195,19 @@ pub fn create_paragraph(
 		paragraph_style.set_ellipsis("…");
 	}
 
-	let mut paragraph_builder =
-		ParagraphBuilder::new(&paragraph_style, font_collection);
+	let mut paragraph_builder = ParagraphBuilder::new(&paragraph_style, font_collection);
 
 	let text_style = font_style.text_style(default_font_family, scale_factor);
 	paragraph_builder.push_style(&text_style);
 
 	for text_span in node.children() {
 		match &*text_span.node_type() {
-			NodeType::Element(ElementNode { tag, .. })
-				if tag == &TagName::Text =>
-			{
+			NodeType::Element(ElementNode { tag, .. }) if tag == &TagName::Text => {
 				let text_nodes = text_span.children();
 				let text_node = *text_nodes.first().unwrap();
 				let text_node_type = &*text_node.node_type();
 				let font_style = text_span.get::<FontStyleState>().unwrap();
-				let text_style =
-					font_style.text_style(default_font_family, scale_factor);
+				let text_style = font_style.text_style(default_font_family, scale_factor);
 				paragraph_builder.push_style(&text_style);
 
 				if let NodeType::Text(text) = text_node_type {
@@ -244,7 +219,8 @@ pub fn create_paragraph(
 	}
 
 	if is_rendering {
-		// This is very tricky, but it works! It allows freya to render the cursor at the end of a line.
+		// This is very tricky, but it works! It allows freya to render the
+		// cursor at the end of a line.
 		paragraph_builder.add_text(" ");
 	}
 

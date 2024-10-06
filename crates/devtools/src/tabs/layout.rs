@@ -8,7 +8,7 @@ use crate::{hooks::use_node_info, NodeIdSerializer};
 
 #[allow(non_snake_case)]
 #[component]
-pub fn NodeInspectorLayout(node_id: String) -> Element {
+pub fn NodeInspectorLayout(node_id:String) -> Element {
 	let node_id = NodeId::deserialize(&node_id);
 	let node = use_node_info(node_id)?;
 
@@ -17,11 +17,7 @@ pub fn NodeInspectorLayout(node_id: String) -> Element {
 		node.layout_node.inner_area.width(),
 		node.layout_node.inner_area.height()
 	);
-	let area = format!(
-		"{}x{}",
-		node.layout_node.area.width(),
-		node.layout_node.area.height()
-	);
+	let area = format!("{}x{}", node.layout_node.area.width(), node.layout_node.area.height());
 	let paddings = node.state.size.padding;
 
 	rsx!(

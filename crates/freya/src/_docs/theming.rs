@@ -1,6 +1,7 @@
 //! # Theming
 //!
-//! <div class="warning">⚠️ As of 2023-12-19, extending the base theme is not supported.</div>
+//! <div class="warning">⚠️ As of 2023-12-19, extending the base theme is not
+//! supported.</div>
 //!
 //! Freya has built-in support for Theming.
 //!
@@ -34,7 +35,8 @@
 //!
 //! ## Custom default theme
 //!
-//! By default, the selected theme is `LIGHT_THEME`. You can use the alternative, `DARK_THEME`.
+//! By default, the selected theme is `LIGHT_THEME`. You can use the
+//! alternative, `DARK_THEME`.
 //!
 //! ```rust, no_run
 //! # use freya::prelude::*;
@@ -63,7 +65,8 @@
 //!
 //! ## Change the theme
 //!
-//! Changing the selected theme at runtime is possible by using the `use_theme` hook.
+//! Changing the selected theme at runtime is possible by using the `use_theme`
+//! hook.
 //!
 //! ```rust, no_run
 //! # use freya::prelude::*;
@@ -102,52 +105,55 @@
 //! ```rust,no_run
 //! # use freya::prelude::*;
 //! fn app() -> Element {
-//!     rsx! {
-//!         Button {
-//!             theme: ButtonThemeWith {
-//!                 background: Some("blue".into()),
-//!                 font_theme: Some(FontThemeWith {
-//!                     color: Some("white".into()),
-//!                     ..Default::default()
-//!                 }),
-//!                 ..Default::default()
-//!             },
-//!             label { "I'm blue now" }
-//!         }
-//!     }
+//! 	rsx! {
+//! 		Button {
+//! 			theme: ButtonThemeWith {
+//! 				background: Some("blue".into()),
+//! 				font_theme: Some(FontThemeWith {
+//! 					color: Some("white".into()),
+//! 					..Default::default()
+//! 				}),
+//! 				..Default::default()
+//! 			},
+//! 			label { "I'm blue now" }
+//! 		}
+//! 	}
 //! }
 //! ```
 //!
 //! You need to use a different "type" of theme.
-//! In the "ThemeWith" structs, each field is optional, so that the component knows what to override and
-//! what to keep.
-//! Also, you need to spread `..Default::default`, to make all the other fields `None`.
+//! In the "ThemeWith" structs, each field is optional, so that the component
+//! knows what to override and what to keep.
+//! Also, you need to spread `..Default::default`, to make all the other fields
+//! `None`.
 //!
 //! To make this less verbose, you can use the `theme_with!` macro:
 //!
 //! ```rust,no_run
 //! # use freya::prelude::*;
 //! fn app() -> Element {
-//!     rsx! {
-//!         Button {
-//!             theme: theme_with!(ButtonTheme {
-//!                 background: "blue".into(),
-//!                 font_theme: theme_with!(FontTheme {
-//!                     color: "white".into(),
-//!                 }),
-//!             }),
-//!             label { "I'm blue now" }
-//!         }
-//!     }
+//! 	rsx! {
+//! 		Button {
+//! 			theme: theme_with!(ButtonTheme {
+//! 				background: "blue".into(),
+//! 				font_theme: theme_with!(FontTheme {
+//! 					color: "white".into(),
+//! 				}),
+//! 			}),
+//! 			label { "I'm blue now" }
+//! 		}
+//! 	}
 //! }
 //! ```
 //!
-//! As you can see, it removes the need for the "With" suffix, because that is already in the macro name.
-//! More importantly, though, it wraps each field in a `Some`, and adds the spread.
+//! As you can see, it removes the need for the "With" suffix, because that is
+//! already in the macro name. More importantly, though, it wraps each field in
+//! a `Some`, and adds the spread.
 //!
 //! ## Custom theme
 //!
-//! You can build themes from scratch or extended from others, like here with `LIGHT_THEME`:
+//! You can build themes from scratch or extended from others, like here with
+//! `LIGHT_THEME`:
 //!
 //! ```rust, no_run
 //! # use freya::prelude::*;

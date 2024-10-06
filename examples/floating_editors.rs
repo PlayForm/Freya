@@ -1,13 +1,8 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::{events::MouseEvent, prelude::*};
 
-fn main() {
-	launch_with_props(app, "Floating Editors", (700., 600.))
-}
+fn main() { launch_with_props(app, "Floating Editors", (700., 600.)) }
 
 fn app() -> Element {
 	use_init_theme(|| DARK_THEME);
@@ -17,41 +12,35 @@ fn app() -> Element {
 	let mut clicking = use_signal::<Option<(f64, f64)>>(|| None);
 	let mut clicking_drag = use_signal::<Option<(usize, (f64, f64))>>(|| None);
 
-	let onmouseleave = move |_: MouseEvent| {
+	let onmouseleave = move |_:MouseEvent| {
 		if clicking.peek().is_none() {
 			hovering.set(false);
 		}
 	};
 
-	let onmouseover = move |e: MouseEvent| {
+	let onmouseover = move |e:MouseEvent| {
 		hovering.set(true);
 		if let Some(clicking_cords) = *clicking.peek() {
 			let coordinates = e.get_screen_coordinates();
-			canvas_pos.set((
-				coordinates.x + clicking_cords.0,
-				coordinates.y + clicking_cords.1,
-			));
+			canvas_pos.set((coordinates.x + clicking_cords.0, coordinates.y + clicking_cords.1));
 		}
 		if let Some((node_id, clicking_cords)) = *clicking_drag.peek() {
 			let coordinates = e.get_screen_coordinates();
 
 			let mut node = nodes.get_mut(node_id).unwrap();
 			node.0 = coordinates.x - clicking_cords.0 - canvas_pos.peek().0;
-			node.1 =
-				coordinates.y - clicking_cords.1 - canvas_pos.peek().1 - 25.0;
+			node.1 = coordinates.y - clicking_cords.1 - canvas_pos.peek().1 - 25.0;
 			// The 25 is because of label from below.
 		}
 	};
 
-	let onmousedown = move |e: MouseEvent| {
+	let onmousedown = move |e:MouseEvent| {
 		let coordinates = e.get_screen_coordinates();
-		clicking.set(Some((
-			canvas_pos.peek().0 - coordinates.x,
-			canvas_pos.peek().1 - coordinates.y,
-		)));
+		clicking
+			.set(Some((canvas_pos.peek().0 - coordinates.x, canvas_pos.peek().1 - coordinates.y)));
 	};
 
-	let onclick = move |_: MouseEvent| {
+	let onclick = move |_:MouseEvent| {
 		clicking.set(None);
 		clicking_drag.set(None);
 	};
@@ -149,7 +138,12 @@ fn Editor() -> Element {
 	let mut focus_manager = use_focus();
 	let mut editable = use_editable(
 		|| {
-			EditableConfig::new("Lorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet".to_string())
+			EditableConfig::new(
+				"Lorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit \
+				 amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor sit amet\nLorem ipsum dolor \
+				 sit amet\nLorem ipsum dolor sit amet"
+					.to_string(),
+			)
 		},
 		EditableMode::SingleLineMultipleEditors,
 	);
@@ -173,19 +167,19 @@ fn Editor() -> Element {
 		focus_manager.queue_focus();
 	});
 
-	let onclick = move |_: MouseEvent| {
+	let onclick = move |_:MouseEvent| {
 		if !focus_manager.is_focused() {
 			focus_manager.focus();
 		}
 	};
 
-	let onkeydown = move |e: KeyboardEvent| {
+	let onkeydown = move |e:KeyboardEvent| {
 		if focus_manager.is_focused() {
 			editable.process_event(&EditableEvent::KeyDown(e.data));
 		}
 	};
 
-	let onkeyup = move |e: KeyboardEvent| {
+	let onkeyup = move |e:KeyboardEvent| {
 		if focus_manager.is_focused() {
 			editable.process_event(&EditableEvent::KeyUp(e.data));
 		}

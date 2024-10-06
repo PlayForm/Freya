@@ -2,25 +2,23 @@ use ropey::Rope;
 
 #[derive(Clone)]
 pub enum HistoryChange {
-	InsertChar { idx: usize, char: char },
-	InsertText { idx: usize, text: String },
-	Remove { idx: usize, text: String },
+	InsertChar { idx:usize, char:char },
+	InsertText { idx:usize, text:String },
+	Remove { idx:usize, text:String },
 }
 
 #[derive(Default, Clone)]
 pub struct EditorHistory {
-	pub changes: Vec<HistoryChange>,
-	pub current_change: usize,
+	pub changes:Vec<HistoryChange>,
+	pub current_change:usize,
 	// Incremental counter for every change.
-	pub version: usize,
+	pub version:usize,
 }
 
 impl EditorHistory {
-	pub fn new() -> Self {
-		Self::default()
-	}
+	pub fn new() -> Self { Self::default() }
 
-	pub fn push_change(&mut self, change: HistoryChange) {
+	pub fn push_change(&mut self, change:HistoryChange) {
 		if self.can_redo() {
 			self.changes.drain(self.current_change..);
 		}
@@ -31,23 +29,15 @@ impl EditorHistory {
 		self.version += 1;
 	}
 
-	pub fn current_change(&self) -> usize {
-		self.current_change
-	}
+	pub fn current_change(&self) -> usize { self.current_change }
 
-	pub fn any_pending_changes(&self) -> usize {
-		self.changes.len() - self.current_change
-	}
+	pub fn any_pending_changes(&self) -> usize { self.changes.len() - self.current_change }
 
-	pub fn can_undo(&self) -> bool {
-		self.current_change > 0
-	}
+	pub fn can_undo(&self) -> bool { self.current_change > 0 }
 
-	pub fn can_redo(&self) -> bool {
-		self.current_change < self.changes.len()
-	}
+	pub fn can_redo(&self) -> bool { self.current_change < self.changes.len() }
 
-	pub fn undo(&mut self, rope: &mut Rope) -> Option<usize> {
+	pub fn undo(&mut self, rope:&mut Rope) -> Option<usize> {
 		if !self.can_undo() {
 			return None;
 		}
@@ -76,7 +66,7 @@ impl EditorHistory {
 		}
 	}
 
-	pub fn redo(&mut self, rope: &mut Rope) -> Option<usize> {
+	pub fn redo(&mut self, rope:&mut Rope) -> Option<usize> {
 		if !self.can_redo() {
 			return None;
 		}
@@ -125,10 +115,7 @@ mod test {
 
 		// New change
 		rope.insert(11, "\n!!!!");
-		history.push_change(HistoryChange::InsertText {
-			idx: 11,
-			text: "\n!!!!".to_owned(),
-		});
+		history.push_change(HistoryChange::InsertText { idx:11, text:"\n!!!!".to_owned() });
 
 		assert!(history.can_undo());
 		assert!(!history.can_redo());
@@ -143,20 +130,11 @@ mod test {
 
 		// More changes
 		rope.insert(11, "\n!!!!");
-		history.push_change(HistoryChange::InsertText {
-			idx: 11,
-			text: "\n!!!!".to_owned(),
-		});
+		history.push_change(HistoryChange::InsertText { idx:11, text:"\n!!!!".to_owned() });
 		rope.insert(16, "\n!!!!");
-		history.push_change(HistoryChange::InsertText {
-			idx: 16,
-			text: "\n!!!!".to_owned(),
-		});
+		history.push_change(HistoryChange::InsertText { idx:16, text:"\n!!!!".to_owned() });
 		rope.insert(21, "\n!!!!");
-		history.push_change(HistoryChange::InsertText {
-			idx: 21,
-			text: "\n!!!!".to_owned(),
-		});
+		history.push_change(HistoryChange::InsertText { idx:21, text:"\n!!!!".to_owned() });
 
 		assert_eq!(history.any_pending_changes(), 0);
 		assert!(history.can_undo());
@@ -199,7 +177,7 @@ mod test {
 
 		// Dischard any changes that could have been redone
 		rope.insert_char(0, '.');
-		history.push_change(HistoryChange::InsertChar { idx: 0, char: '.' });
+		history.push_change(HistoryChange::InsertChar { idx:0, char:'.' });
 		assert_eq!(history.any_pending_changes(), 0);
 	}
 }

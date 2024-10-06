@@ -1,8 +1,14 @@
 use dioxus::prelude::*;
 use freya_elements::{elements as dioxus_elements, events::MouseEvent};
 use freya_hooks::{
-	use_animation, use_applied_theme, use_platform, AccordionTheme,
-	AccordionThemeWith, AnimNum, Ease, Function,
+	use_animation,
+	use_applied_theme,
+	use_platform,
+	AccordionTheme,
+	AccordionThemeWith,
+	AnimNum,
+	Ease,
+	Function,
 };
 use winit::window::CursorIcon;
 
@@ -20,11 +26,11 @@ pub enum AccordionStatus {
 #[derive(Props, Clone, PartialEq)]
 pub struct AccordionProps {
 	/// Theme override.
-	pub theme: Option<AccordionThemeWith>,
+	pub theme:Option<AccordionThemeWith>,
 	/// Inner children for the Accordion.
-	pub children: Element,
+	pub children:Element,
 	/// Summary element.
-	pub summary: Element,
+	pub summary:Element,
 }
 
 /// Show other elements under a collapsable box.
@@ -32,16 +38,11 @@ pub struct AccordionProps {
 /// # Styling
 /// Inherits the [`AccordionTheme`](freya_hooks::AccordionTheme)
 #[allow(non_snake_case)]
-pub fn Accordion(props: AccordionProps) -> Element {
+pub fn Accordion(props:AccordionProps) -> Element {
 	let theme = use_applied_theme!(&props.theme, accordion);
 	let mut open = use_signal(|| false);
 	let animation = use_animation(move |ctx| {
-		ctx.with(
-			AnimNum::new(0., 100.)
-				.time(300)
-				.function(Function::Expo)
-				.ease(Ease::Out),
-		)
+		ctx.with(AnimNum::new(0., 100.).time(300).function(Function::Expo).ease(Ease::Out))
 	});
 	let mut status = use_signal(AccordionStatus::default);
 	let platform = use_platform();
@@ -49,7 +50,7 @@ pub fn Accordion(props: AccordionProps) -> Element {
 	let animation_value = animation.get().read().as_f32();
 	let AccordionTheme { background, color, border_fill } = theme;
 
-	let onclick = move |_: MouseEvent| {
+	let onclick = move |_:MouseEvent| {
 		open.toggle();
 		if *open.read() {
 			animation.start();
@@ -103,25 +104,23 @@ pub fn Accordion(props: AccordionProps) -> Element {
 #[derive(Props, Clone, PartialEq)]
 pub struct AccordionSummaryProps {
 	/// Inner children for the AccordionSummary.
-	children: Element,
+	children:Element,
 }
 
 /// Intended to use as summary for an [`Accordion`].
 #[allow(non_snake_case)]
-pub fn AccordionSummary(props: AccordionSummaryProps) -> Element {
-	rsx!({ props.children })
-}
+pub fn AccordionSummary(props:AccordionSummaryProps) -> Element { rsx!({ props.children }) }
 
 /// Properties for the [`AccordionBody`] component.
 #[derive(Props, Clone, PartialEq)]
 pub struct AccordionBodyProps {
 	/// Inner children for the AccordionBody.
-	children: Element,
+	children:Element,
 }
 
 /// Intended to wrap the body of an [`Accordion`].
 #[allow(non_snake_case)]
-pub fn AccordionBody(props: AccordionBodyProps) -> Element {
+pub fn AccordionBody(props:AccordionBodyProps) -> Element {
 	rsx!(rect {
 		width: "100%",
 		padding: "15 0 0 0",
@@ -170,9 +169,9 @@ mod test {
 
 		// Click on the accordion
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (5., 5.).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(5., 5.).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;

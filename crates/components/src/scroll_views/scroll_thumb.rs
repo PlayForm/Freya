@@ -6,13 +6,13 @@ use freya_hooks::{use_applied_theme, ScrollBarThemeWith};
 #[derive(Props, Clone, PartialEq)]
 pub struct ScrollThumbProps {
 	/// Theme override.
-	pub theme: Option<ScrollBarThemeWith>,
-	pub clicking_scrollbar: bool,
-	pub onmousedown: EventHandler<MouseEvent>,
+	pub theme:Option<ScrollBarThemeWith>,
+	pub clicking_scrollbar:bool,
+	pub onmousedown:EventHandler<MouseEvent>,
 	#[props(into)]
-	pub width: String,
+	pub width:String,
 	#[props(into)]
-	pub height: String,
+	pub height:String,
 }
 
 enum ScrollThumbState {
@@ -20,16 +20,11 @@ enum ScrollThumbState {
 	Hovering,
 }
 
-/// Scroll thumb used for [`crate::ScrollView`] and [`crate::VirtualScrollView`].
+/// Scroll thumb used for [`crate::ScrollView`] and
+/// [`crate::VirtualScrollView`].
 #[allow(non_snake_case)]
 pub fn ScrollThumb(
-	ScrollThumbProps {
-        theme,
-        clicking_scrollbar,
-        onmousedown,
-        width,
-        height,
-    }: ScrollThumbProps,
+	ScrollThumbProps { theme, clicking_scrollbar, onmousedown, width, height }:ScrollThumbProps,
 ) -> Element {
 	let theme = use_applied_theme!(&theme, scroll_bar);
 	let mut state = use_signal(|| ScrollThumbState::Idle);

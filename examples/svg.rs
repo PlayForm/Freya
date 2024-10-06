@@ -1,15 +1,10 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
-static FERRIS: &[u8] = include_bytes!("./ferris.svg");
+static FERRIS:&[u8] = include_bytes!("./ferris.svg");
 
 fn app() -> Element {
 	let ferris_a = static_bytes(FERRIS);

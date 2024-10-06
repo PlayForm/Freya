@@ -1,18 +1,13 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use std::{sync::Arc, time::Instant};
 
 use freya::prelude::*;
 use skia_safe::{Color, Data, Paint, Rect, RuntimeEffect};
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
-const SHADER: &str = "
+const SHADER:&str = "
  uniform vec2 u_resolution;
  uniform float u_time;
 
@@ -52,20 +47,13 @@ fn app() -> Element {
 			let mut builder = UniformsBuilder::default();
 			builder.set(
 				"u_resolution",
-				UniformValue::FloatVec(vec![
-					ctx.area.width(),
-					ctx.area.height(),
-				]),
+				UniformValue::FloatVec(vec![ctx.area.width(), ctx.area.height()]),
 			);
-			builder.set(
-				"u_time",
-				UniformValue::Float(instant.elapsed().as_secs_f32()),
-			);
+			builder.set("u_time", UniformValue::Float(instant.elapsed().as_secs_f32()));
 
 			let uniforms = Data::new_copy(&builder.build(&shader_wrapper.0));
 
-			let shader =
-				shader_wrapper.0.make_shader(uniforms, &[], None).unwrap();
+			let shader = shader_wrapper.0.make_shader(uniforms, &[], None).unwrap();
 
 			let mut paint = Paint::default();
 			paint.set_anti_alias(true);
@@ -73,12 +61,7 @@ fn app() -> Element {
 			paint.set_shader(shader);
 
 			ctx.canvas.draw_rect(
-				Rect::new(
-					ctx.area.min_x(),
-					ctx.area.min_y(),
-					ctx.area.max_x(),
-					ctx.area.max_y(),
-				),
+				Rect::new(ctx.area.min_x(), ctx.area.min_y(), ctx.area.max_x(), ctx.area.max_y()),
 				&paint,
 			);
 		})

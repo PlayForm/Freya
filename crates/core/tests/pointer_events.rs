@@ -48,22 +48,20 @@ pub async fn pointer_events_from_mouse() {
 
 	assert_eq!(label.get(0).text(), Some("[]"));
 
-	// Moving the mouse for the first time will cause `mouseenter` and `mouseover` events
+	// Moving the mouse for the first time will cause `mouseenter` and
+	// `mouseover` events
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseOver,
-		cursor: CursorPoint::new(100.0, 100.0),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseOver,
+		cursor:CursorPoint::new(100.0, 100.0),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
-	assert_eq!(
-		label.get(0).text(),
-		Some(format!("{:?}", vec!["enter", "over"]).as_str())
-	);
+	assert_eq!(label.get(0).text(), Some(format!("{:?}", vec!["enter", "over"]).as_str()));
 
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseDown,
-		cursor: CursorPoint::new(100.0, 100.0),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseDown,
+		cursor:CursorPoint::new(100.0, 100.0),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	assert_eq!(
@@ -72,9 +70,9 @@ pub async fn pointer_events_from_mouse() {
 	);
 
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::Click,
-		cursor: CursorPoint::new(100.0, 100.0),
-		button: Some(MouseButton::Left),
+		name:EventName::Click,
+		cursor:CursorPoint::new(100.0, 100.0),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	assert_eq!(
@@ -83,34 +81,25 @@ pub async fn pointer_events_from_mouse() {
 	);
 
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::MouseOver,
-		cursor: CursorPoint::new(0.0, 0.0),
-		button: Some(MouseButton::Left),
+		name:EventName::MouseOver,
+		cursor:CursorPoint::new(0.0, 0.0),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	assert_eq!(
 		label.get(0).text(),
-		Some(
-			format!("{:?}", vec!["enter", "over", "down", "up", "leave"])
-				.as_str()
-		)
+		Some(format!("{:?}", vec!["enter", "over", "down", "up", "leave"]).as_str())
 	);
 
 	utils.push_event(PlatformEvent::Mouse {
-		name: EventName::PointerUp,
-		cursor: CursorPoint::new(0.0, 0.0),
-		button: Some(MouseButton::Left),
+		name:EventName::PointerUp,
+		cursor:CursorPoint::new(0.0, 0.0),
+		button:Some(MouseButton::Left),
 	});
 	utils.wait_for_update().await;
 	assert_eq!(
 		label.get(0).text(),
-		Some(
-			format!(
-				"{:?}",
-				vec!["enter", "over", "down", "up", "leave", "globalup"]
-			)
-			.as_str()
-		)
+		Some(format!("{:?}", vec!["enter", "over", "down", "up", "leave", "globalup"]).as_str())
 	);
 }
 
@@ -154,24 +143,21 @@ pub async fn pointer_events_from_touch() {
 	assert_eq!(label.get(0).text(), Some("[]"));
 
 	utils.push_event(PlatformEvent::Touch {
-		name: EventName::TouchMove,
-		location: CursorPoint::new(100.0, 100.0),
-		finger_id: 1,
-		phase: TouchPhase::Moved,
-		force: None,
+		name:EventName::TouchMove,
+		location:CursorPoint::new(100.0, 100.0),
+		finger_id:1,
+		phase:TouchPhase::Moved,
+		force:None,
 	});
 	utils.wait_for_update().await;
-	assert_eq!(
-		label.get(0).text(),
-		Some(format!("{:?}", vec!["enter", "over"]).as_str())
-	);
+	assert_eq!(label.get(0).text(), Some(format!("{:?}", vec!["enter", "over"]).as_str()));
 
 	utils.push_event(PlatformEvent::Touch {
-		name: EventName::TouchStart,
-		location: CursorPoint::new(100.0, 100.0),
-		finger_id: 1,
-		phase: TouchPhase::Started,
-		force: None,
+		name:EventName::TouchStart,
+		location:CursorPoint::new(100.0, 100.0),
+		finger_id:1,
+		phase:TouchPhase::Started,
+		force:None,
 	});
 	utils.wait_for_update().await;
 	assert_eq!(
@@ -180,11 +166,11 @@ pub async fn pointer_events_from_touch() {
 	);
 
 	utils.push_event(PlatformEvent::Touch {
-		name: EventName::TouchEnd,
-		location: CursorPoint::new(100.0, 100.0),
-		finger_id: 1,
-		phase: TouchPhase::Ended,
-		force: None,
+		name:EventName::TouchEnd,
+		location:CursorPoint::new(100.0, 100.0),
+		finger_id:1,
+		phase:TouchPhase::Ended,
+		force:None,
 	});
 	utils.wait_for_update().await;
 	assert_eq!(

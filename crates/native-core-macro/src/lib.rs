@@ -8,22 +8,19 @@ use syn::{parse_macro_input, ItemImpl, Type, TypePath, TypeTuple};
 
 /// A helper attribute for deriving `State` for a struct.
 #[proc_macro_attribute]
-pub fn partial_derive_state(_: TokenStream, input: TokenStream) -> TokenStream {
-	let impl_block: syn::ItemImpl = parse_macro_input!(input as syn::ItemImpl);
+pub fn partial_derive_state(_:TokenStream, input:TokenStream) -> TokenStream {
+	let impl_block:syn::ItemImpl = parse_macro_input!(input as syn::ItemImpl);
 
 	let has_create_fn = impl_block
-        .items
-        .iter()
-        .any(|item| matches!(item, syn::ImplItem::Fn(method) if method.sig.ident == "create"));
+		.items
+		.iter()
+		.any(|item| matches!(item, syn::ImplItem::Fn(method) if method.sig.ident == "create"));
 
 	let parent_dependencies = impl_block
 		.items
 		.iter()
 		.find_map(|item| {
-			if let syn::ImplItem::Type(syn::ImplItemType {
-				ident, ty, ..
-			}) = item
-			{
+			if let syn::ImplItem::Type(syn::ImplItemType { ident, ty, .. }) = item {
 				(ident == "ParentDependencies").then_some(ty)
 			} else {
 				None
@@ -34,10 +31,7 @@ pub fn partial_derive_state(_: TokenStream, input: TokenStream) -> TokenStream {
 		.items
 		.iter()
 		.find_map(|item| {
-			if let syn::ImplItem::Type(syn::ImplItemType {
-				ident, ty, ..
-			}) = item
-			{
+			if let syn::ImplItem::Type(syn::ImplItemType { ident, ty, .. }) = item {
 				(ident == "ChildDependencies").then_some(ty)
 			} else {
 				None
@@ -48,10 +42,7 @@ pub fn partial_derive_state(_: TokenStream, input: TokenStream) -> TokenStream {
 		.items
 		.iter()
 		.find_map(|item| {
-			if let syn::ImplItem::Type(syn::ImplItemType {
-				ident, ty, ..
-			}) = item
-			{
+			if let syn::ImplItem::Type(syn::ImplItemType { ident, ty, .. }) = item {
 				(ident == "NodeDependencies").then_some(ty)
 			} else {
 				None
@@ -60,24 +51,23 @@ pub fn partial_derive_state(_: TokenStream, input: TokenStream) -> TokenStream {
 		.expect("NodeDependencies must be defined");
 
 	let this_type = &impl_block.self_ty;
-	let this_type = extract_type_path(this_type).unwrap_or_else(|| {
-		panic!("Self must be a type path, found {}", quote!(#this_type))
-	});
+	let this_type = extract_type_path(this_type)
+		.unwrap_or_else(|| panic!("Self must be a type path, found {}", quote!(#this_type)));
 
 	let mut combined_dependencies = HashSet::new();
 
-	let self_path: TypePath = syn::parse_quote!(Self);
+	let self_path:TypePath = syn::parse_quote!(Self);
 
 	let parent_dependencies = match extract_tuple(parent_dependencies) {
 		Some(tuple) => {
 			let mut parent_dependencies = Vec::new();
 			for type_ in &tuple.elems {
 				let mut type_ = extract_type_path(type_).unwrap_or_else(|| {
-                    panic!(
-                        "ParentDependencies must be a tuple of type paths, found {}",
-                        quote!(#type_)
-                    )
-                });
+					panic!(
+						"ParentDependencies must be a tuple of type paths, found {}",
+						quote!(#type_)
+					)
+				});
 				if type_ == self_path {
 					type_ = this_type.clone();
 				}
@@ -86,21 +76,20 @@ pub fn partial_derive_state(_: TokenStream, input: TokenStream) -> TokenStream {
 			}
 			parent_dependencies
 		},
-		_ => panic!(
-			"ParentDependencies must be a tuple, found {}",
-			quote!(#parent_dependencies)
-		),
+		_ => {
+			panic!("ParentDependencies must be a tuple, found {}", quote!(#parent_dependencies))
+		},
 	};
 	let child_dependencies = match extract_tuple(child_dependencies) {
 		Some(tuple) => {
 			let mut child_dependencies = Vec::new();
 			for type_ in &tuple.elems {
 				let mut type_ = extract_type_path(type_).unwrap_or_else(|| {
-                    panic!(
-                        "ChildDependencies must be a tuple of type paths, found {}",
-                        quote!(#type_)
-                    )
-                });
+					panic!(
+						"ChildDependencies must be a tuple of type paths, found {}",
+						quote!(#type_)
+					)
+				});
 				if type_ == self_path {
 					type_ = this_type.clone();
 				}
@@ -109,21 +98,20 @@ pub fn partial_derive_state(_: TokenStream, input: TokenStream) -> TokenStream {
 			}
 			child_dependencies
 		},
-		_ => panic!(
-			"ChildDependencies must be a tuple, found {}",
-			quote!(#child_dependencies)
-		),
+		_ => {
+			panic!("ChildDependencies must be a tuple, found {}", quote!(#child_dependencies))
+		},
 	};
 	let node_dependencies = match extract_tuple(node_dependencies) {
 		Some(tuple) => {
 			let mut node_dependencies = Vec::new();
 			for type_ in &tuple.elems {
 				let mut type_ = extract_type_path(type_).unwrap_or_else(|| {
-                    panic!(
-                        "NodeDependencies must be a tuple of type paths, found {}",
-                        quote!(#type_)
-                    )
-                });
+					panic!(
+						"NodeDependencies must be a tuple of type paths, found {}",
+						quote!(#type_)
+					)
+				});
 				if type_ == self_path {
 					type_ = this_type.clone();
 				}
@@ -132,32 +120,24 @@ pub fn partial_derive_state(_: TokenStream, input: TokenStream) -> TokenStream {
 			}
 			node_dependencies
 		},
-		_ => panic!(
-			"NodeDependencies must be a tuple, found {}",
-			quote!(#node_dependencies)
-		),
+		_ => {
+			panic!("NodeDependencies must be a tuple, found {}", quote!(#node_dependencies))
+		},
 	};
 	combined_dependencies.insert(this_type.clone());
 
-	let combined_dependencies: Vec<_> =
-		combined_dependencies.into_iter().collect();
-	let parent_dependancies_idxes: Vec<_> = parent_dependencies
+	let combined_dependencies:Vec<_> = combined_dependencies.into_iter().collect();
+	let parent_dependancies_idxes:Vec<_> = parent_dependencies
 		.iter()
-		.filter_map(|ident| {
-			combined_dependencies.iter().position(|i| i == ident)
-		})
+		.filter_map(|ident| combined_dependencies.iter().position(|i| i == ident))
 		.collect();
-	let child_dependencies_idxes: Vec<_> = child_dependencies
+	let child_dependencies_idxes:Vec<_> = child_dependencies
 		.iter()
-		.filter_map(|ident| {
-			combined_dependencies.iter().position(|i| i == ident)
-		})
+		.filter_map(|ident| combined_dependencies.iter().position(|i| i == ident))
 		.collect();
-	let node_dependencies_idxes: Vec<_> = node_dependencies
+	let node_dependencies_idxes:Vec<_> = node_dependencies
 		.iter()
-		.filter_map(|ident| {
-			combined_dependencies.iter().position(|i| i == ident)
-		})
+		.filter_map(|ident| combined_dependencies.iter().position(|i| i == ident))
 		.collect();
 	let this_type_idx = combined_dependencies
 		.iter()
@@ -166,32 +146,22 @@ pub fn partial_derive_state(_: TokenStream, input: TokenStream) -> TokenStream {
 		.unwrap();
 	let this_view = format_ident!("__data{}", this_type_idx);
 
-	let combined_dependencies_quote =
-		combined_dependencies.iter().map(|ident| {
-			if ident == &this_type {
-				quote! {shipyard::ViewMut<#ident>}
-			} else {
-				quote! {shipyard::View<#ident>}
-			}
-		});
-	let combined_dependencies_quote =
-		quote!((#(#combined_dependencies_quote,)*));
+	let combined_dependencies_quote = combined_dependencies.iter().map(|ident| {
+		if ident == &this_type {
+			quote! {shipyard::ViewMut<#ident>}
+		} else {
+			quote! {shipyard::View<#ident>}
+		}
+	});
+	let combined_dependencies_quote = quote!((#(#combined_dependencies_quote,)*));
 
 	let ItemImpl {
-		attrs,
-		defaultness,
-		unsafety,
-		impl_token,
-		generics,
-		trait_,
-		self_ty,
-		items,
-		..
+		attrs, defaultness, unsafety, impl_token, generics, trait_, self_ty, items, ..
 	} = impl_block;
 	let for_ = trait_.as_ref().map(|t| t.2);
 	let trait_ = trait_.map(|t| t.1);
 
-	let split_views: Vec<_> = (0..combined_dependencies.len())
+	let split_views:Vec<_> = (0..combined_dependencies.len())
 		.map(|i| {
 			let ident = format_ident!("__data{}", i);
 			if i == this_type_idx {
@@ -310,11 +280,11 @@ pub fn partial_derive_state(_: TokenStream, input: TokenStream) -> TokenStream {
 		}
 	};
 
-	let trait_generics =
-		trait_.as_ref().unwrap().segments.last().unwrap().arguments.clone();
+	let trait_generics = trait_.as_ref().unwrap().segments.last().unwrap().arguments.clone();
 
 	// if a create function is defined, we don't generate one
-	// otherwise we generate a default one that uses the update function and the default constructor
+	// otherwise we generate a default one that uses the update function and the
+	// default constructor
 	let create_fn = (!has_create_fn).then(|| {
 		quote! {
 			fn create<'a>(
@@ -385,7 +355,7 @@ pub fn partial_derive_state(_: TokenStream, input: TokenStream) -> TokenStream {
     .into()
 }
 
-fn extract_tuple(ty: &Type) -> Option<TypeTuple> {
+fn extract_tuple(ty:&Type) -> Option<TypeTuple> {
 	match ty {
 		Type::Tuple(tuple) => Some(tuple.clone()),
 		Type::Group(group) => extract_tuple(&group.elem),
@@ -393,7 +363,7 @@ fn extract_tuple(ty: &Type) -> Option<TypeTuple> {
 	}
 }
 
-fn extract_type_path(ty: &Type) -> Option<TypePath> {
+fn extract_type_path(ty:&Type) -> Option<TypePath> {
 	match ty {
 		Type::Path(path) => Some(path.clone()),
 		Type::Group(group) => extract_type_path(&group.elem),

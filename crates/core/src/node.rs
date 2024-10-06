@@ -1,8 +1,17 @@
 use freya_engine::prelude::*;
 use freya_native_core::real_dom::NodeImmutable;
 use freya_node_state::{
-	Border, CornerRadius, CursorState, Fill, FontStyleState, LayoutState,
-	ReferencesState, Shadow, StyleState, TextOverflow, TransformState,
+	Border,
+	CornerRadius,
+	CursorState,
+	Fill,
+	FontStyleState,
+	LayoutState,
+	ReferencesState,
+	Shadow,
+	StyleState,
+	TextOverflow,
+	TransformState,
 };
 use torin::{
 	alignment::Alignment,
@@ -16,27 +25,21 @@ use crate::dom::DioxusNode;
 
 #[derive(Clone, PartialEq)]
 pub struct NodeState {
-	pub cursor: CursorState,
-	pub font_style: FontStyleState,
-	pub references: ReferencesState,
-	pub size: LayoutState,
-	pub style: StyleState,
-	pub transform: TransformState,
+	pub cursor:CursorState,
+	pub font_style:FontStyleState,
+	pub references:ReferencesState,
+	pub size:LayoutState,
+	pub style:StyleState,
+	pub transform:TransformState,
 }
 
-pub fn get_node_state(node: &DioxusNode) -> NodeState {
-	let cursor =
-		node.get::<CursorState>().as_deref().cloned().unwrap_or_default();
-	let font_style =
-		node.get::<FontStyleState>().as_deref().cloned().unwrap_or_default();
-	let references =
-		node.get::<ReferencesState>().as_deref().cloned().unwrap_or_default();
-	let size =
-		node.get::<LayoutState>().as_deref().cloned().unwrap_or_default();
-	let style =
-		node.get::<StyleState>().as_deref().cloned().unwrap_or_default();
-	let transform =
-		node.get::<TransformState>().as_deref().cloned().unwrap_or_default();
+pub fn get_node_state(node:&DioxusNode) -> NodeState {
+	let cursor = node.get::<CursorState>().as_deref().cloned().unwrap_or_default();
+	let font_style = node.get::<FontStyleState>().as_deref().cloned().unwrap_or_default();
+	let references = node.get::<ReferencesState>().as_deref().cloned().unwrap_or_default();
+	let size = node.get::<LayoutState>().as_deref().cloned().unwrap_or_default();
+	let style = node.get::<StyleState>().as_deref().cloned().unwrap_or_default();
+	let transform = node.get::<TransformState>().as_deref().cloned().unwrap_or_default();
 
 	NodeState { cursor, font_style, references, size, style, transform }
 }
@@ -54,53 +57,26 @@ impl NodeState {
 			("padding", AttributeType::Measures(self.size.padding)),
 			("margin", AttributeType::Measures(self.size.margin)),
 			("position", AttributeType::Position(&self.size.position)),
-			(
-				"main_alignment",
-				AttributeType::Alignment(&self.size.main_alignment),
-			),
-			(
-				"cross_alignment",
-				AttributeType::Alignment(&self.size.cross_alignment),
-			),
+			("main_alignment", AttributeType::Alignment(&self.size.main_alignment)),
+			("cross_alignment", AttributeType::Alignment(&self.size.cross_alignment)),
 			{
 				let background = &self.style.background;
 				let fill = match *background {
 					Fill::Color(_) => AttributeType::Color(background.clone()),
-					Fill::LinearGradient(_) => {
-						AttributeType::Gradient(background.clone())
-					},
-					Fill::RadialGradient(_) => {
-						AttributeType::Gradient(background.clone())
-					},
-					Fill::ConicGradient(_) => {
-						AttributeType::Gradient(background.clone())
-					},
+					Fill::LinearGradient(_) => AttributeType::Gradient(background.clone()),
+					Fill::RadialGradient(_) => AttributeType::Gradient(background.clone()),
+					Fill::ConicGradient(_) => AttributeType::Gradient(background.clone()),
 				};
 				("background", fill)
 			},
 			("border", AttributeType::Border(&self.style.border)),
-			(
-				"corner_radius",
-				AttributeType::CornerRadius(self.style.corner_radius),
-			),
+			("corner_radius", AttributeType::CornerRadius(self.style.corner_radius)),
 			("color", AttributeType::Color(self.font_style.color.into())),
-			(
-				"font_family",
-				AttributeType::Text(self.font_style.font_family.join(",")),
-			),
+			("font_family", AttributeType::Text(self.font_style.font_family.join(","))),
 			("font_size", AttributeType::Measure(self.font_style.font_size)),
-			(
-				"line_height",
-				AttributeType::Measure(self.font_style.line_height),
-			),
-			(
-				"text_align",
-				AttributeType::TextAlignment(&self.font_style.text_align),
-			),
-			(
-				"text_overflow",
-				AttributeType::TextOverflow(&self.font_style.text_overflow),
-			),
+			("line_height", AttributeType::Measure(self.font_style.line_height)),
+			("text_align", AttributeType::TextAlignment(&self.font_style.text_align)),
+			("text_overflow", AttributeType::TextOverflow(&self.font_style.text_overflow)),
 			("offset_x", AttributeType::Measure(self.size.offset_x.get())),
 			("offset_y", AttributeType::Measure(self.size.offset_y.get())),
 			("content", AttributeType::Content(&self.size.content)),
@@ -114,8 +90,7 @@ impl NodeState {
 		let text_shadows = &self.font_style.text_shadows;
 
 		for text_shadow in text_shadows {
-			attributes
-				.push(("text_shadow", AttributeType::TextShadow(text_shadow)));
+			attributes.push(("text_shadow", AttributeType::TextShadow(text_shadow)));
 		}
 
 		attributes

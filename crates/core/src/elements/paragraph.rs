@@ -7,9 +7,7 @@ use torin::geometry::Area;
 use super::utils::ElementUtils;
 use crate::{
 	dom::DioxusNode,
-	prelude::{
-		align_highlights_and_cursor_paragraph, align_main_align_paragraph,
-	},
+	prelude::{align_highlights_and_cursor_paragraph, align_main_align_paragraph},
 	skia::create_paragraph,
 };
 
@@ -18,21 +16,20 @@ pub struct ParagraphElement;
 impl ElementUtils for ParagraphElement {
 	fn render(
 		self,
-		layout_node: &torin::prelude::LayoutNode,
-		node_ref: &DioxusNode,
-		canvas: &Canvas,
-		font_collection: &mut FontCollection,
-		_font_manager: &FontMgr,
-		default_fonts: &[String],
-		scale_factor: f32,
+		layout_node:&torin::prelude::LayoutNode,
+		node_ref:&DioxusNode,
+		canvas:&Canvas,
+		font_collection:&mut FontCollection,
+		_font_manager:&FontMgr,
+		default_fonts:&[String],
+		scale_factor:f32,
 	) {
 		let area = layout_node.visible_area();
 		let node_cursor_state = &*node_ref.get::<CursorState>().unwrap();
 
-		let paint = |paragraph: &Paragraph| {
+		let paint = |paragraph:&Paragraph| {
 			let x = area.min_x();
-			let y = area.min_y()
-				+ align_main_align_paragraph(node_ref, &area, paragraph);
+			let y = area.min_y() + align_main_align_paragraph(node_ref, &area, paragraph);
 
 			// Draw the highlights if specified
 			draw_cursor_highlights(&area, paragraph, canvas, node_ref);
@@ -54,23 +51,17 @@ impl ElementUtils for ParagraphElement {
 			);
 			paint(&paragraph);
 		} else {
-			let paragraph = &layout_node
-				.data
-				.as_ref()
-				.unwrap()
-				.get::<CachedParagraph>()
-				.unwrap()
-				.0;
+			let paragraph = &layout_node.data.as_ref().unwrap().get::<CachedParagraph>().unwrap().0;
 			paint(paragraph);
 		};
 	}
 }
 
 fn draw_cursor_highlights(
-	area: &Area,
-	paragraph: &Paragraph,
-	canvas: &Canvas,
-	node_ref: &DioxusNode,
+	area:&Area,
+	paragraph:&Paragraph,
+	canvas:&Canvas,
+	node_ref:&DioxusNode,
 ) -> Option<()> {
 	let node_cursor_state = &*node_ref.get::<CursorState>().unwrap();
 
@@ -78,13 +69,7 @@ fn draw_cursor_highlights(
 	let highlight_color = node_cursor_state.highlight_color;
 
 	for (from, to) in highlights.iter() {
-		let (from, to) = {
-			if from < to {
-				(from, to)
-			} else {
-				(to, from)
-			}
-		};
+		let (from, to) = { if from < to { (from, to) } else { (to, from) } };
 		let cursor_rects = paragraph.get_rects_for_range(
 			*from..*to,
 			RectHeightStyle::Tight,
@@ -112,10 +97,10 @@ fn draw_cursor_highlights(
 }
 
 fn draw_cursor(
-	area: &Area,
-	paragraph: &Paragraph,
-	canvas: &Canvas,
-	node_ref: &DioxusNode,
+	area:&Area,
+	paragraph:&Paragraph,
+	canvas:&Canvas,
+	node_ref:&DioxusNode,
 ) -> Option<()> {
 	let node_cursor_state = &*node_ref.get::<CursorState>().unwrap();
 
@@ -130,13 +115,8 @@ fn draw_cursor(
 	);
 	let cursor_rect = cursor_rects.first()?;
 
-	let (start, end) = align_highlights_and_cursor_paragraph(
-		node_ref,
-		area,
-		paragraph,
-		cursor_rect,
-		Some(1.0),
-	);
+	let (start, end) =
+		align_highlights_and_cursor_paragraph(node_ref, area, paragraph, cursor_rect, Some(1.0));
 
 	let mut paint = Paint::default();
 	paint.set_anti_alias(true);

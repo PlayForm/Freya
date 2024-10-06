@@ -1,18 +1,13 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	rsx!(App {
-		navbar: rsx!(Navbar { title: "Top Navbar" }),
-		body: rsx!(
+		navbar:rsx!(Navbar { title:"Top Navbar" }),
+		body:rsx!(
 			ScrollView {
 				theme: theme_with!(ScrollViewTheme {
 					height: "calc(100% - 75 - 75)".into(),
@@ -70,11 +65,11 @@ fn app() -> Element {
 
 #[derive(Props, Clone, PartialEq)]
 struct NavbarProps {
-	title: String,
+	title:String,
 }
 
 #[allow(non_snake_case)]
-fn Navbar(NavbarProps { title }: NavbarProps) -> Element {
+fn Navbar(NavbarProps { title }:NavbarProps) -> Element {
 	rsx!(
 		rect {
 			overflow: "clip",
@@ -94,12 +89,12 @@ fn Navbar(NavbarProps { title }: NavbarProps) -> Element {
 #[allow(dead_code)]
 #[derive(Props, PartialEq, Clone)]
 struct AppProps {
-	body: Element,
-	navbar: Element,
+	body:Element,
+	navbar:Element,
 }
 
 #[allow(non_snake_case)]
-fn App(props: AppProps) -> Element {
+fn App(props:AppProps) -> Element {
 	rsx!(
 		rect {
 			color: "white",
@@ -117,12 +112,12 @@ fn App(props: AppProps) -> Element {
 
 #[derive(Props, Clone, PartialEq)]
 struct CardProps {
-	title: String,
-	content: String,
+	title:String,
+	content:String,
 }
 
 #[allow(non_snake_case)]
-fn Card(props: CardProps) -> Element {
+fn Card(props:CardProps) -> Element {
 	rsx!(
 		rect {
 			width: "100%",
@@ -156,7 +151,7 @@ fn Area() -> Element {
 	let mut cursor_pos_over = use_signal(|| (0f64, 0f64));
 	let mut cursor_pos_click = use_signal(|| (0f64, 0f64));
 
-	let cursor_moved = move |e: MouseEvent| {
+	let cursor_moved = move |e:MouseEvent| {
 		let pos = e.get_screen_coordinates();
 		cursor_pos_over.with_mut(|cursor_pos| {
 			cursor_pos.0 = pos.x;
@@ -164,7 +159,7 @@ fn Area() -> Element {
 		});
 	};
 
-	let cursor_clicked = move |e: MouseEvent| {
+	let cursor_clicked = move |e:MouseEvent| {
 		let pos = e.get_screen_coordinates();
 		cursor_pos_click.with_mut(|cursor_pos| {
 			cursor_pos.0 = pos.x;

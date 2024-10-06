@@ -10,7 +10,7 @@ pub enum HighlightMode {
 }
 
 impl Parse for HighlightMode {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		match value {
 			"expanded" => Ok(HighlightMode::Expanded),
 			_ => Ok(HighlightMode::Fit),

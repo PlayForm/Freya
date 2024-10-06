@@ -45,7 +45,8 @@
 //!
 //! ## Features flags
 //!
-//! - `devtools`: enables a side panel to inspect your App tree, styles and computed layout.
+//! - `devtools`: enables a side panel to inspect your App tree, styles and
+//!   computed layout.
 //! - `use_camera`: enables the `use_camera` hook.
 //! - `log`: enables internal logs.
 
@@ -110,9 +111,7 @@ pub mod prelude {
 	pub use freya_core::prelude::PreferredTheme;
 	pub use freya_elements::{elements as dioxus_elements, events::*};
 	pub use freya_hooks::*;
-	pub use freya_node_state::{
-		dynamic_bytes, static_bytes, CustomAttributeValues,
-	};
+	pub use freya_node_state::{dynamic_bytes, static_bytes, CustomAttributeValues};
 	pub use freya_renderer::*;
 	pub use torin::prelude::*;
 

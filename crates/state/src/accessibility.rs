@@ -13,25 +13,22 @@ use crate::{CustomAttributeValues, ParseAttribute, ParseError};
 
 #[derive(Clone, Debug, PartialEq, Eq, Default, Component)]
 pub struct AccessibilityNodeState {
-	pub accessibility_id: Option<AccessibilityId>,
-	pub role: Option<Role>,
-	pub alt: Option<String>,
-	pub name: Option<String>,
-	pub focusable: bool,
+	pub accessibility_id:Option<AccessibilityId>,
+	pub role:Option<Role>,
+	pub alt:Option<String>,
+	pub name:Option<String>,
+	pub focusable:bool,
 }
 
 impl ParseAttribute for AccessibilityNodeState {
 	fn parse_attribute(
 		&mut self,
-		attr: freya_native_core::prelude::OwnedAttributeView<
-			CustomAttributeValues,
-		>,
+		attr:freya_native_core::prelude::OwnedAttributeView<CustomAttributeValues>,
 	) -> Result<(), crate::ParseError> {
 		match attr.attribute {
 			AttributeName::FocusId => {
-				if let OwnedAttributeValue::Custom(
-					CustomAttributeValues::AccessibilityId(id),
-				) = attr.value
+				if let OwnedAttributeValue::Custom(CustomAttributeValues::AccessibilityId(id)) =
+					attr.value
 				{
 					self.accessibility_id = Some(*id);
 				}
@@ -68,14 +65,12 @@ impl ParseAttribute for AccessibilityNodeState {
 
 #[partial_derive_state]
 impl State<CustomAttributeValues> for AccessibilityNodeState {
+	type ChildDependencies = ();
+	type NodeDependencies = ();
 	type ParentDependencies = ();
 
-	type ChildDependencies = ();
-
-	type NodeDependencies = ();
-
-	const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new()
-		.with_attrs(AttributeMaskBuilder::Some(&[
+	const NODE_MASK:NodeMaskBuilder<'static> =
+		NodeMaskBuilder::new().with_attrs(AttributeMaskBuilder::Some(&[
 			AttributeName::FocusId,
 			AttributeName::Role,
 			AttributeName::Alt,
@@ -85,15 +80,11 @@ impl State<CustomAttributeValues> for AccessibilityNodeState {
 
 	fn update<'a>(
 		&mut self,
-		node_view: NodeView<CustomAttributeValues>,
-		_node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-		_parent: Option<
-			<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		_children: Vec<
-			<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		_context: &SendAnyMap,
+		node_view:NodeView<CustomAttributeValues>,
+		_node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+		_parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+		_children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+		_context:&SendAnyMap,
 	) -> bool {
 		let mut accessibility = AccessibilityNodeState::default();
 

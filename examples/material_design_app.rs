@@ -1,7 +1,4 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
@@ -44,13 +41,11 @@ fn main() {
 
 #[derive(Props, Clone, PartialEq)]
 struct FloatingButtonProps {
-	children: Element,
+	children:Element,
 }
 
 #[allow(non_snake_case)]
-fn FloatingButton(
-	FloatingButtonProps { children }: FloatingButtonProps,
-) -> Element {
+fn FloatingButton(FloatingButtonProps { children }:FloatingButtonProps) -> Element {
 	rsx!(
 		rect {
 			main_align: "center",
@@ -70,15 +65,14 @@ fn FloatingButton(
 
 #[derive(Props, Clone, PartialEq)]
 struct ScaffoldProps {
-	navbar: Option<Element>,
-	floating_button: Option<Element>,
-	children: Element,
+	navbar:Option<Element>,
+	floating_button:Option<Element>,
+	children:Element,
 }
 
 #[allow(non_snake_case)]
-fn Scaffold(props: ScaffoldProps) -> Element {
-	let height =
-		if props.navbar.is_some() { "calc(100% - 50)" } else { "100%" };
+fn Scaffold(props:ScaffoldProps) -> Element {
+	let height = if props.navbar.is_some() { "calc(100% - 50)" } else { "100%" };
 
 	rsx!(
 		rect {
@@ -115,11 +109,11 @@ fn Scaffold(props: ScaffoldProps) -> Element {
 
 #[derive(Props, Clone, PartialEq)]
 struct NavbarProps {
-	title: Option<Element>,
+	title:Option<Element>,
 }
 
 #[allow(non_snake_case)]
-fn Navbar(NavbarProps { title }: NavbarProps) -> Element {
+fn Navbar(NavbarProps { title }:NavbarProps) -> Element {
 	rsx!(
 		rect {
 			height: "50",
@@ -141,12 +135,12 @@ fn Navbar(NavbarProps { title }: NavbarProps) -> Element {
 
 #[derive(Props, Clone, PartialEq)]
 struct CardProps {
-	title: String,
-	content: String,
+	title:String,
+	content:String,
 }
 
 #[allow(non_snake_case)]
-fn Card(CardProps { title, content }: CardProps) -> Element {
+fn Card(CardProps { title, content }:CardProps) -> Element {
 	rsx!(
 		rect {
 			margin: "7 0",

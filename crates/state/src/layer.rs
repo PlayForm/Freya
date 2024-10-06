@@ -12,16 +12,14 @@ use crate::{CustomAttributeValues, ParseAttribute, ParseError};
 
 #[derive(Default, PartialEq, Clone, Debug, Component)]
 pub struct LayerState {
-	pub layer: i16,
-	pub layer_for_children: i16,
+	pub layer:i16,
+	pub layer_for_children:i16,
 }
 
 impl ParseAttribute for LayerState {
 	fn parse_attribute(
 		&mut self,
-		attr: freya_native_core::prelude::OwnedAttributeView<
-			CustomAttributeValues,
-		>,
+		attr:freya_native_core::prelude::OwnedAttributeView<CustomAttributeValues>,
 	) -> Result<(), crate::ParseError> {
 		#[allow(clippy::single_match)]
 		match attr.attribute {
@@ -41,39 +39,32 @@ impl ParseAttribute for LayerState {
 
 #[partial_derive_state]
 impl State<CustomAttributeValues> for LayerState {
+	type ChildDependencies = ();
+	type NodeDependencies = ();
 	type ParentDependencies = (Self,);
 
-	type ChildDependencies = ();
-
-	type NodeDependencies = ();
-
-	const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new()
+	const NODE_MASK:NodeMaskBuilder<'static> = NodeMaskBuilder::new()
 		.with_attrs(AttributeMaskBuilder::Some(&[AttributeName::Layer]))
 		.with_tag();
 
 	fn update<'a>(
 		&mut self,
-		node_view: NodeView<CustomAttributeValues>,
-		_node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-		parent: Option<
-			<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		_children: Vec<
-			<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-		>,
-		context: &SendAnyMap,
+		node_view:NodeView<CustomAttributeValues>,
+		_node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+		parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+		_children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+		context:&SendAnyMap,
 	) -> bool {
 		if !node_view.node_type().is_visible_element() {
 			return false;
 		}
 
 		let layers = context.get::<Layers>().unwrap();
-		let inherited_layer =
-			parent.map(|(p,)| p.layer_for_children).unwrap_or(0i16);
+		let inherited_layer = parent.map(|(p,)| p.layer_for_children).unwrap_or(0i16);
 
 		let mut layer_state = LayerState {
-			layer: node_view.height() as i16 - inherited_layer,
-			layer_for_children: inherited_layer,
+			layer:node_view.height() as i16 - inherited_layer,
+			layer_for_children:inherited_layer,
 		};
 
 		if let Some(attributes) = node_view.attributes() {

@@ -1,13 +1,8 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-fn main() {
-	launch(app);
-}
+fn main() { launch(app); }
 
 fn app() -> Element {
 	let labels = use_hook(|| {
@@ -37,12 +32,9 @@ fn app() -> Element {
 				"rgb(210, 83, 128)",
 				vec![Some(20), Some(50), Some(80), Some(110), Some(140)],
 			),
-			GraphLine::new(
-				"rgb(90, 5, 180)",
-				vec![None, None, Some(5), Some(60), Some(100)],
-			),
+			GraphLine::new("rgb(90, 5, 180)", vec![None, None, Some(5), Some(60), Some(100)]),
 		]
 	});
 
-	rsx!(Graph { labels: labels.clone(), data: data.read().clone() })
+	rsx!(Graph { labels:labels.clone(), data:data.read().clone() })
 }

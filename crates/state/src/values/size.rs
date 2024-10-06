@@ -6,7 +6,7 @@ use torin::{
 use crate::{Parse, ParseError};
 
 impl Parse for Size {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		if value == "auto" {
 			Ok(Size::Inner)
 		} else if value == "fill" {
@@ -17,36 +17,23 @@ impl Parse for Size {
 			Ok(Size::DynamicCalculations(Box::new(parse_calc(value)?)))
 		} else if value.contains('%') {
 			Ok(Size::Percentage(Length::new(
-				value
-					.replace('%', "")
-					.parse::<f32>()
-					.map_err(|_| ParseError)?,
+				value.replace('%', "").parse::<f32>().map_err(|_| ParseError)?,
 			)))
 		} else if value.contains('v') {
 			Ok(Size::RootPercentage(Length::new(
-				value
-					.replace('v', "")
-					.parse::<f32>()
-					.map_err(|_| ParseError)?,
+				value.replace('v', "").parse::<f32>().map_err(|_| ParseError)?,
 			)))
 		} else if value.contains('a') {
 			Ok(Size::InnerPercentage(Length::new(
-				value
-					.replace('a', "")
-					.parse::<f32>()
-					.map_err(|_| ParseError)?,
+				value.replace('a', "").parse::<f32>().map_err(|_| ParseError)?,
 			)))
 		} else {
-			Ok(Size::Pixels(Length::new(
-				value.parse::<f32>().map_err(|_| ParseError)?,
-			)))
+			Ok(Size::Pixels(Length::new(value.parse::<f32>().map_err(|_| ParseError)?)))
 		}
 	}
 }
 
-pub fn parse_calc(
-	mut value: &str,
-) -> Result<Vec<DynamicCalculation>, ParseError> {
+pub fn parse_calc(mut value:&str) -> Result<Vec<DynamicCalculation>, ParseError> {
 	let mut calcs = Vec::new();
 
 	value = value
@@ -71,9 +58,7 @@ pub fn parse_calc(
 		} else if val == "*" {
 			calcs.push(DynamicCalculation::Mul);
 		} else {
-			calcs.push(DynamicCalculation::Pixels(
-				val.parse::<f32>().map_err(|_| ParseError)?,
-			));
+			calcs.push(DynamicCalculation::Pixels(val.parse::<f32>().map_err(|_| ParseError)?));
 		}
 	}
 

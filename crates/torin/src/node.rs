@@ -14,47 +14,48 @@ use crate::{
 #[derive(PartialEq, Clone, Debug, Default)]
 pub struct Node {
 	/// Dimentions
-	pub width: Size,
-	pub height: Size,
+	pub width:Size,
+	pub height:Size,
 
 	// Minimum dimensions
-	pub minimum_width: Size,
-	pub minimum_height: Size,
+	pub minimum_width:Size,
+	pub minimum_height:Size,
 
 	// Maximum dimensions
-	pub maximum_width: Size,
-	pub maximum_height: Size,
+	pub maximum_width:Size,
+	pub maximum_height:Size,
 
 	// Axis alignments for the children
-	pub main_alignment: Alignment,
-	pub cross_alignment: Alignment,
+	pub main_alignment:Alignment,
+	pub cross_alignment:Alignment,
 
 	/// Inner padding
-	pub padding: Gaps,
+	pub padding:Gaps,
 
 	/// Inner margin
-	pub margin: Gaps,
+	pub margin:Gaps,
 
 	/// Inner position offsets
-	pub offset_x: Length,
-	pub offset_y: Length,
+	pub offset_x:Length,
+	pub offset_y:Length,
 
 	/// Direction in which it's inner Nodes will be stacked
-	pub direction: DirectionMode,
+	pub direction:DirectionMode,
 
 	/// Position config
-	pub position: Position,
+	pub position:Position,
 
-	pub content: Content,
+	pub content:Content,
 
-	/// A Node might depend on inner sizes but have a fixed position, like scroll views.
-	pub has_layout_references: bool,
+	/// A Node might depend on inner sizes but have a fixed position, like
+	/// scroll views.
+	pub has_layout_references:bool,
 
-	pub contains_text: bool,
+	pub contains_text:bool,
 }
 
 impl Scaled for Node {
-	fn scale(&mut self, scale_factor: f32) {
+	fn scale(&mut self, scale_factor:f32) {
 		self.width.scale(scale_factor);
 		self.height.scale(scale_factor);
 		self.minimum_width.scale(scale_factor);
@@ -71,83 +72,57 @@ impl Scaled for Node {
 
 impl Node {
 	/// Create a Node with the default values
-	pub fn new() -> Self {
-		Self::default()
-	}
+	pub fn new() -> Self { Self::default() }
 
 	/// Construct a new Node given a size and a direction
-	pub fn from_size_and_direction(
-		width: Size,
-		height: Size,
-		direction: DirectionMode,
-	) -> Self {
+	pub fn from_size_and_direction(width:Size, height:Size, direction:DirectionMode) -> Self {
 		Self { width, height, direction, ..Default::default() }
 	}
 
 	/// Construct a new Node given a size and a scroll
-	pub fn from_size_and_scroll(
-		width: Size,
-		height: Size,
-		offset_x: Length,
-		offset_y: Length,
-	) -> Self {
+	pub fn from_size_and_scroll(width:Size, height:Size, offset_x:Length, offset_y:Length) -> Self {
 		Self { width, height, offset_x, offset_y, ..Default::default() }
 	}
 
 	/// Construct a new Node given a size and padding
-	pub fn from_size_and_padding(
-		width: Size,
-		height: Size,
-		padding: Gaps,
-	) -> Self {
+	pub fn from_size_and_padding(width:Size, height:Size, padding:Gaps) -> Self {
 		Self { width, height, padding, ..Default::default() }
 	}
 
 	/// Construct a new Node given a size, alignments and a direction
 	pub fn from_size_and_alignments_and_direction(
-		width: Size,
-		height: Size,
-		main_alignment: Alignment,
-		cross_alignment: Alignment,
-		direction: DirectionMode,
+		width:Size,
+		height:Size,
+		main_alignment:Alignment,
+		cross_alignment:Alignment,
+		direction:DirectionMode,
 	) -> Self {
-		Self {
-			width,
-			height,
-			main_alignment,
-			cross_alignment,
-			direction,
-			..Default::default()
-		}
+		Self { width, height, main_alignment, cross_alignment, direction, ..Default::default() }
 	}
 
 	/// Construct a new Node given a size and a direction
-	pub fn from_size_and_margin(
-		width: Size,
-		height: Size,
-		margin: Gaps,
-	) -> Self {
+	pub fn from_size_and_margin(width:Size, height:Size, margin:Gaps) -> Self {
 		Self { width, height, margin, ..Default::default() }
 	}
 
 	/// Construct a new Node given a size and a direction and some margin,
 	pub fn from_size_and_direction_and_margin(
-		width: Size,
-		height: Size,
-		direction: DirectionMode,
-		margin: Gaps,
+		width:Size,
+		height:Size,
+		direction:DirectionMode,
+		margin:Gaps,
 	) -> Self {
 		Self { width, height, direction, margin, ..Default::default() }
 	}
 
 	/// Construct a new Node given a size, alignments and a direction
 	pub fn from_size_and_alignments_and_direction_and_padding(
-		width: Size,
-		height: Size,
-		main_alignment: Alignment,
-		cross_alignment: Alignment,
-		direction: DirectionMode,
-		padding: Gaps,
+		width:Size,
+		height:Size,
+		main_alignment:Alignment,
+		cross_alignment:Alignment,
+		direction:DirectionMode,
+		padding:Gaps,
 	) -> Self {
 		Self {
 			width,
@@ -161,20 +136,12 @@ impl Node {
 	}
 
 	/// Construct a new Node given a size and a position
-	pub fn from_size_and_position(
-		width: Size,
-		height: Size,
-		position: Position,
-	) -> Self {
+	pub fn from_size_and_position(width:Size, height:Size, position:Position) -> Self {
 		Self { width, height, position, ..Default::default() }
 	}
 
 	/// Construct a new Node given a size and content
-	pub fn from_size_and_content(
-		width: Size,
-		height: Size,
-		content: Content,
-	) -> Self {
+	pub fn from_size_and_content(width:Size, height:Size, content:Content) -> Self {
 		Self { width, height, content, ..Default::default() }
 	}
 

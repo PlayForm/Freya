@@ -1,11 +1,8 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-const ICON: &[u8] = include_bytes!("../assets/icon.png");
+const ICON:&[u8] = include_bytes!("../assets/icon.png");
 
 fn main() {
 	launch_cfg(

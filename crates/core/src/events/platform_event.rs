@@ -10,21 +10,21 @@ use crate::prelude::EventName;
 #[derive(Clone, Debug)]
 pub enum PlatformEvent {
 	/// A Mouse Event.
-	Mouse { name: EventName, cursor: CursorPoint, button: Option<MouseButton> },
+	Mouse { name:EventName, cursor:CursorPoint, button:Option<MouseButton> },
 	/// A Wheel event.
-	Wheel { name: EventName, scroll: CursorPoint, cursor: CursorPoint },
+	Wheel { name:EventName, scroll:CursorPoint, cursor:CursorPoint },
 	/// A Keyboard event.
-	Keyboard { name: EventName, key: Key, code: Code, modifiers: Modifiers },
+	Keyboard { name:EventName, key:Key, code:Code, modifiers:Modifiers },
 	/// A Touch event.
 	Touch {
-		name: EventName,
-		location: CursorPoint,
-		finger_id: u64,
-		phase: TouchPhase,
-		force: Option<Force>,
+		name:EventName,
+		location:CursorPoint,
+		finger_id:u64,
+		phase:TouchPhase,
+		force:Option<Force>,
 	},
 	/// A File event.
-	File { name: EventName, cursor: CursorPoint, file_path: Option<PathBuf> },
+	File { name:EventName, cursor:CursorPoint, file_path:Option<PathBuf> },
 }
 
 impl PlatformEvent {
@@ -38,7 +38,7 @@ impl PlatformEvent {
 		}
 	}
 
-	pub fn set_name(&mut self, new_name: EventName) {
+	pub fn set_name(&mut self, new_name:EventName) {
 		match self {
 			Self::Mouse { name, .. } => *name = new_name,
 			Self::Wheel { name, .. } => *name = new_name,

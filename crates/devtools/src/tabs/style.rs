@@ -7,15 +7,19 @@ use freya_native_core::NodeId;
 use crate::{
 	hooks::use_node_info,
 	property::{
-		BorderProperty, ColorProperty, GradientProperty, Property,
-		ShadowProperty, TextShadowProperty,
+		BorderProperty,
+		ColorProperty,
+		GradientProperty,
+		Property,
+		ShadowProperty,
+		TextShadowProperty,
 	},
 	NodeIdSerializer,
 };
 
 #[allow(non_snake_case)]
 #[component]
-pub fn NodeInspectorStyle(node_id: String) -> Element {
+pub fn NodeInspectorStyle(node_id:String) -> Element {
 	let node_id = NodeId::deserialize(&node_id);
 	let node = use_node_info(node_id)?;
 

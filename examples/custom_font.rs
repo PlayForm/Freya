@@ -1,11 +1,8 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 
-static SANSITA_SWASHED: &[u8] = include_bytes!("./SansitaSwashed-Regular.ttf");
+static SANSITA_SWASHED:&[u8] = include_bytes!("./SansitaSwashed-Regular.ttf");
 
 fn main() {
 	launch_cfg(

@@ -1,23 +1,16 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use std::path::{Path, PathBuf};
 
 use freya::prelude::*;
 use home::home_dir;
 
-fn main() {
-	launch_with_props(app, "File Explorer", (500.0, 500.0));
-}
+fn main() { launch_with_props(app, "File Explorer", (500.0, 500.0)); }
 
 type TreeFileItem = TreeItem<PathBuf, ()>;
 type FlatFileItem = FlatItem<PathBuf>;
 
-pub async fn read_folder_as_items(
-	dir: &Path,
-) -> tokio::io::Result<Vec<TreeFileItem>> {
+pub async fn read_folder_as_items(dir:&Path) -> tokio::io::Result<Vec<TreeFileItem>> {
 	let mut paths = tokio::fs::read_dir(dir).await?;
 	let mut folder_items = Vec::default();
 	let mut files_items = Vec::default();
@@ -28,12 +21,12 @@ pub async fn read_folder_as_items(
 		let path = entry.path();
 
 		if is_file {
-			files_items.push(TreeItem::Standalone { id: path, value: () })
+			files_items.push(TreeItem::Standalone { id:path, value:() })
 		} else {
 			folder_items.push(TreeItem::Expandable {
-				id: path,
-				value: (),
-				state: ExpandableItemState::Closed,
+				id:path,
+				value:(),
+				state:ExpandableItemState::Closed,
 			})
 		}
 	}
@@ -52,8 +45,7 @@ fn app() -> Element {
 	use_effect(move || {
 		spawn(async move {
 			let home_path = home_dir().expect("Failed to get the Home dir.");
-			let items =
-				read_folder_as_items(&home_path).await.unwrap_or_default();
+			let items = read_folder_as_items(&home_path).await.unwrap_or_default();
 			tree.set(Some(items));
 		});
 	});
@@ -69,10 +61,10 @@ fn app() -> Element {
 
 	// Render the items
 	rsx!(VirtualScrollView {
-		length: flat_items.len(),
-		item_size: 25.,
-		builder_args: (flat_items, tree),
-		builder: |index: usize, values: &Option<State>| {
+		length:flat_items.len(),
+		item_size:25.,
+		builder_args:(flat_items, tree),
+		builder:|index:usize, values:&Option<State>| {
 			let (flat_items, mut tree) = values.as_ref().unwrap();
 			let item = &flat_items[index];
 			let margin = item.depth * 10;
@@ -89,18 +81,10 @@ fn app() -> Element {
 							.find(|tree_item| tree_item.id() == &item.root_id)
 							.unwrap();
 						if item.is_open {
-							expandable_item.set_state(
-								&item.id,
-								&ExpandableItemState::Closed,
-							);
+							expandable_item.set_state(&item.id, &ExpandableItemState::Closed);
 						} else {
-							let items = read_folder_as_items(&item.id)
-								.await
-								.unwrap_or_default();
-							expandable_item.set_state(
-								&item.id,
-								&ExpandableItemState::Open(items),
-							);
+							let items = read_folder_as_items(&item.id).await.unwrap_or_default();
+							expandable_item.set_state(&item.id, &ExpandableItemState::Open(items));
 						}
 					});
 				}

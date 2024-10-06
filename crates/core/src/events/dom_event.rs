@@ -3,8 +3,13 @@ use std::{any::Any, rc::Rc};
 use freya_elements::{
 	elements::PlatformEventData,
 	events::{
-		pointer::PointerType, FileData, KeyboardData, MouseData, PointerData,
-		TouchData, WheelData,
+		pointer::PointerType,
+		FileData,
+		KeyboardData,
+		MouseData,
+		PointerData,
+		TouchData,
+		WheelData,
 	},
 };
 use freya_native_core::NodeId;
@@ -16,32 +21,28 @@ use crate::{events::PlatformEvent, prelude::PotentialEvent};
 /// Event emitted to the DOM.
 #[derive(Debug, Clone, PartialEq)]
 pub struct DomEvent {
-	pub name: EventName,
-	pub node_id: NodeId,
-	pub data: DomEventData,
-	pub bubbles: bool,
-	pub layer: Option<i16>,
+	pub name:EventName,
+	pub node_id:NodeId,
+	pub data:DomEventData,
+	pub bubbles:bool,
+	pub layer:Option<i16>,
 }
 
 impl Eq for DomEvent {}
 
 impl PartialOrd for DomEvent {
-	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-		Some(self.cmp(other))
-	}
+	fn partial_cmp(&self, other:&Self) -> Option<std::cmp::Ordering> { Some(self.cmp(other)) }
 }
 
 impl Ord for DomEvent {
-	fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-		self.name.cmp(&other.name)
-	}
+	fn cmp(&self, other:&Self) -> std::cmp::Ordering { self.name.cmp(&other.name) }
 }
 
 impl DomEvent {
 	pub fn new(
-		PotentialEvent { node_id, layer, event }: PotentialEvent,
-		node_area: Option<Area>,
-		scale_factor: f64,
+		PotentialEvent { node_id, layer, event }:PotentialEvent,
+		node_area:Option<Area>,
+		scale_factor:f64,
 	) -> Self {
 		let name = event.get_name();
 
@@ -50,18 +51,16 @@ impl DomEvent {
 		match event {
 			PlatformEvent::Mouse { cursor, button, .. } => {
 				let screen_coordinates = cursor / scale_factor;
-				let element_x = (cursor.x
-					- node_area.unwrap_or_default().min_x() as f64)
-					/ scale_factor;
-				let element_y = (cursor.y
-					- node_area.unwrap_or_default().min_y() as f64)
-					/ scale_factor;
+				let element_x =
+					(cursor.x - node_area.unwrap_or_default().min_x() as f64) / scale_factor;
+				let element_y =
+					(cursor.y - node_area.unwrap_or_default().min_y() as f64) / scale_factor;
 
 				let event_data = if name.is_pointer() {
 					DomEventData::Pointer(PointerData::new(
 						screen_coordinates,
 						(element_x, element_y).into(),
-						PointerType::Mouse { trigger_button: button },
+						PointerType::Mouse { trigger_button:button },
 					))
 				} else {
 					DomEventData::Mouse(MouseData::new(
@@ -71,33 +70,29 @@ impl DomEvent {
 					))
 				};
 
-				Self { node_id, name, data: event_data, bubbles, layer }
+				Self { node_id, name, data:event_data, bubbles, layer }
 			},
-			PlatformEvent::Wheel { scroll, .. } => Self {
-				node_id,
-				name,
-				data: DomEventData::Wheel(WheelData::new(scroll.x, scroll.y)),
-				bubbles,
-				layer,
+			PlatformEvent::Wheel { scroll, .. } => {
+				Self {
+					node_id,
+					name,
+					data:DomEventData::Wheel(WheelData::new(scroll.x, scroll.y)),
+					bubbles,
+					layer,
+				}
 			},
-			PlatformEvent::Keyboard { ref key, code, modifiers, .. } => Self {
-				node_id,
-				name,
-				data: DomEventData::Keyboard(KeyboardData::new(
-					key.clone(),
-					code,
-					modifiers,
-				)),
-				bubbles,
-				layer,
+			PlatformEvent::Keyboard { ref key, code, modifiers, .. } => {
+				Self {
+					node_id,
+					name,
+					data:DomEventData::Keyboard(KeyboardData::new(key.clone(), code, modifiers)),
+					bubbles,
+					layer,
+				}
 			},
-			PlatformEvent::Touch {
-				location, finger_id, phase, force, ..
-			} => {
-				let element_x =
-					location.x - node_area.unwrap_or_default().min_x() as f64;
-				let element_y =
-					location.y - node_area.unwrap_or_default().min_y() as f64;
+			PlatformEvent::Touch { location, finger_id, phase, force, .. } => {
+				let element_x = location.x - node_area.unwrap_or_default().min_x() as f64;
+				let element_y = location.y - node_area.unwrap_or_default().min_y() as f64;
 
 				let event_data = if name.is_pointer() {
 					DomEventData::Pointer(PointerData::new(
@@ -115,12 +110,12 @@ impl DomEvent {
 					))
 				};
 
-				Self { node_id, name, data: event_data, bubbles, layer }
+				Self { node_id, name, data:event_data, bubbles, layer }
 			},
 			PlatformEvent::File { name, file_path, .. } => {
 				let event_data = DomEventData::File(FileData { file_path });
 
-				Self { node_id, name, data: event_data, bubbles, layer }
+				Self { node_id, name, data:event_data, bubbles, layer }
 			},
 		}
 	}
@@ -140,24 +135,12 @@ pub enum DomEventData {
 impl DomEventData {
 	pub fn any(self) -> Rc<dyn Any> {
 		match self {
-			DomEventData::Mouse(m) => {
-				Rc::new(PlatformEventData::new(Box::new(m)))
-			},
-			DomEventData::Keyboard(k) => {
-				Rc::new(PlatformEventData::new(Box::new(k)))
-			},
-			DomEventData::Wheel(w) => {
-				Rc::new(PlatformEventData::new(Box::new(w)))
-			},
-			DomEventData::Touch(t) => {
-				Rc::new(PlatformEventData::new(Box::new(t)))
-			},
-			DomEventData::Pointer(p) => {
-				Rc::new(PlatformEventData::new(Box::new(p)))
-			},
-			DomEventData::File(fd) => {
-				Rc::new(PlatformEventData::new(Box::new(fd)))
-			},
+			DomEventData::Mouse(m) => Rc::new(PlatformEventData::new(Box::new(m))),
+			DomEventData::Keyboard(k) => Rc::new(PlatformEventData::new(Box::new(k))),
+			DomEventData::Wheel(w) => Rc::new(PlatformEventData::new(Box::new(w))),
+			DomEventData::Touch(t) => Rc::new(PlatformEventData::new(Box::new(t))),
+			DomEventData::Pointer(p) => Rc::new(PlatformEventData::new(Box::new(p))),
+			DomEventData::File(fd) => Rc::new(PlatformEventData::new(Box::new(fd))),
 		}
 	}
 }

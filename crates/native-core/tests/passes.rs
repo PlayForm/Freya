@@ -5,9 +5,9 @@ use shipyard::Component;
 
 fn create_blank_element() -> NodeType {
 	NodeType::Element(ElementNode {
-		tag: TagName::Rect,
-		attributes: FxHashMap::default(),
-		listeners: FxHashSet::default(),
+		tag:TagName::Rect,
+		attributes:FxHashMap::default(),
+		listeners:FxHashSet::default(),
 	})
 }
 
@@ -21,34 +21,27 @@ fn node_pass() {
 		type ChildDependencies = ();
 		type NodeDependencies = ();
 		type ParentDependencies = ();
-		const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new();
+
+		const NODE_MASK:NodeMaskBuilder<'static> = NodeMaskBuilder::new();
 
 		fn update<'a>(
 			&mut self,
-			_: NodeView,
-			_: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			_: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: &SendAnyMap,
+			_:NodeView,
+			_:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			_:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:&SendAnyMap,
 		) -> bool {
 			self.0 += 1;
 			true
 		}
 
 		fn create<'a>(
-			node_view: NodeView<()>,
-			node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			parent: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			children: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			context: &SendAnyMap,
+			node_view:NodeView<()>,
+			node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			context:&SendAnyMap,
 		) -> Self {
 			let mut myself = Self::default();
 			myself.update(node_view, node, parent, children, context);
@@ -56,22 +49,16 @@ fn node_pass() {
 		}
 	}
 
-	let mut tree: RealDom = RealDom::new([Number::to_type_erased()]);
+	let mut tree:RealDom = RealDom::new([Number::to_type_erased()]);
 	tree.update_state(SendAnyMap::new());
 
-	assert_eq!(
-		tree.get(tree.root_id()).unwrap().get().as_deref(),
-		Some(&Number(1))
-	);
+	assert_eq!(tree.get(tree.root_id()).unwrap().get().as_deref(), Some(&Number(1)));
 
 	// mark the node as dirty
 	tree.get_mut(tree.root_id()).unwrap().get_mut::<Number>();
 
 	tree.update_state(SendAnyMap::new());
-	assert_eq!(
-		tree.get(tree.root_id()).unwrap().get().as_deref(),
-		Some(&Number(2))
-	);
+	assert_eq!(tree.get(tree.root_id()).unwrap().get().as_deref(), Some(&Number(2)));
 }
 
 #[test]
@@ -84,34 +71,27 @@ fn dependant_node_pass() {
 		type ChildDependencies = ();
 		type NodeDependencies = (SubtractNumber,);
 		type ParentDependencies = ();
-		const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new();
+
+		const NODE_MASK:NodeMaskBuilder<'static> = NodeMaskBuilder::new();
 
 		fn update<'a>(
 			&mut self,
-			_: NodeView,
-			_: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			_: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: &SendAnyMap,
+			_:NodeView,
+			_:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			_:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:&SendAnyMap,
 		) -> bool {
 			self.0 += 1;
 			true
 		}
 
 		fn create<'a>(
-			node_view: NodeView<()>,
-			node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			parent: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			children: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			context: &SendAnyMap,
+			node_view:NodeView<()>,
+			node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			context:&SendAnyMap,
 		) -> Self {
 			let mut myself = Self::default();
 			myself.update(node_view, node, parent, children, context);
@@ -127,34 +107,27 @@ fn dependant_node_pass() {
 		type ChildDependencies = ();
 		type NodeDependencies = ();
 		type ParentDependencies = ();
-		const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new();
+
+		const NODE_MASK:NodeMaskBuilder<'static> = NodeMaskBuilder::new();
 
 		fn update<'a>(
 			&mut self,
-			_: NodeView,
-			_: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			_: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: &SendAnyMap,
+			_:NodeView,
+			_:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			_:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:&SendAnyMap,
 		) -> bool {
 			self.0 -= 1;
 			true
 		}
 
 		fn create<'a>(
-			node_view: NodeView<()>,
-			node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			parent: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			children: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			context: &SendAnyMap,
+			node_view:NodeView<()>,
+			node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			context:&SendAnyMap,
 		) -> Self {
 			let mut myself = Self::default();
 			myself.update(node_view, node, parent, children, context);
@@ -162,10 +135,8 @@ fn dependant_node_pass() {
 		}
 	}
 
-	let mut tree: RealDom = RealDom::new([
-		AddNumber::to_type_erased(),
-		SubtractNumber::to_type_erased(),
-	]);
+	let mut tree:RealDom =
+		RealDom::new([AddNumber::to_type_erased(), SubtractNumber::to_type_erased()]);
 	tree.update_state(SendAnyMap::new());
 
 	let root = tree.get(tree.root_id()).unwrap();
@@ -200,34 +171,26 @@ fn independant_node_pass() {
 		type NodeDependencies = ();
 		type ParentDependencies = ();
 
-		const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new();
+		const NODE_MASK:NodeMaskBuilder<'static> = NodeMaskBuilder::new();
 
 		fn update<'a>(
 			&mut self,
-			_: NodeView,
-			_: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			_: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: &SendAnyMap,
+			_:NodeView,
+			_:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			_:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:&SendAnyMap,
 		) -> bool {
 			self.0 += 1;
 			true
 		}
 
 		fn create<'a>(
-			node_view: NodeView<()>,
-			node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			parent: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			children: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			context: &SendAnyMap,
+			node_view:NodeView<()>,
+			node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			context:&SendAnyMap,
 		) -> Self {
 			let mut myself = Self::default();
 			myself.update(node_view, node, parent, children, context);
@@ -244,34 +207,26 @@ fn independant_node_pass() {
 		type NodeDependencies = ();
 		type ParentDependencies = ();
 
-		const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new();
+		const NODE_MASK:NodeMaskBuilder<'static> = NodeMaskBuilder::new();
 
 		fn update<'a>(
 			&mut self,
-			_: NodeView,
-			_: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			_: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: &SendAnyMap,
+			_:NodeView,
+			_:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			_:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:&SendAnyMap,
 		) -> bool {
 			self.0 -= 1;
 			true
 		}
 
 		fn create<'a>(
-			node_view: NodeView<()>,
-			node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			parent: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			children: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			context: &SendAnyMap,
+			node_view:NodeView<()>,
+			node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			context:&SendAnyMap,
 		) -> Self {
 			let mut myself = Self::default();
 			myself.update(node_view, node, parent, children, context);
@@ -279,10 +234,8 @@ fn independant_node_pass() {
 		}
 	}
 
-	let mut tree: RealDom = RealDom::new([
-		AddNumber::to_type_erased(),
-		SubtractNumber::to_type_erased(),
-	]);
+	let mut tree:RealDom =
+		RealDom::new([AddNumber::to_type_erased(), SubtractNumber::to_type_erased()]);
 	tree.update_state(SendAnyMap::new());
 
 	let root = tree.get(tree.root_id()).unwrap();
@@ -314,9 +267,7 @@ fn down_pass() {
 	struct AddNumber(i32);
 
 	impl Default for AddNumber {
-		fn default() -> Self {
-			Self(1)
-		}
+		fn default() -> Self { Self(1) }
 	}
 
 	#[partial_derive_state]
@@ -325,19 +276,15 @@ fn down_pass() {
 		type NodeDependencies = ();
 		type ParentDependencies = (AddNumber,);
 
-		const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new();
+		const NODE_MASK:NodeMaskBuilder<'static> = NodeMaskBuilder::new();
 
 		fn update<'a>(
 			&mut self,
-			_: NodeView,
-			_: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			parent: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: &SendAnyMap,
+			_:NodeView,
+			_:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:&SendAnyMap,
 		) -> bool {
 			if let Some((parent,)) = parent {
 				self.0 += parent.0;
@@ -346,15 +293,11 @@ fn down_pass() {
 		}
 
 		fn create<'a>(
-			node_view: NodeView<()>,
-			node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			parent: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			children: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			context: &SendAnyMap,
+			node_view:NodeView<()>,
+			node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			context:&SendAnyMap,
 		) -> Self {
 			let mut myself = Self::default();
 			myself.update(node_view, node, parent, children, context);
@@ -362,7 +305,7 @@ fn down_pass() {
 		}
 	}
 
-	let mut tree: RealDom = RealDom::new([AddNumber::to_type_erased()]);
+	let mut tree:RealDom = RealDom::new([AddNumber::to_type_erased()]);
 	let grandchild1 = tree.create_node(create_blank_element());
 	let grandchild1 = grandchild1.id();
 	let mut child1 = tree.create_node(create_blank_element());
@@ -421,34 +364,26 @@ fn up_pass() {
 		type NodeDependencies = ();
 		type ParentDependencies = ();
 
-		const NODE_MASK: NodeMaskBuilder<'static> = NodeMaskBuilder::new();
+		const NODE_MASK:NodeMaskBuilder<'static> = NodeMaskBuilder::new();
 
 		fn update<'a>(
 			&mut self,
-			_: NodeView,
-			_: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			_: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			children: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			_: &SendAnyMap,
+			_:NodeView,
+			_:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			_:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			_:&SendAnyMap,
 		) -> bool {
 			self.0 += children.iter().map(|(i,)| i.0).sum::<i32>();
 			true
 		}
 
 		fn create<'a>(
-			node_view: NodeView<()>,
-			node: <Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
-			parent: Option<
-				<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			children: Vec<
-				<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>,
-			>,
-			context: &SendAnyMap,
+			node_view:NodeView<()>,
+			node:<Self::NodeDependencies as Dependancy>::ElementBorrowed<'a>,
+			parent:Option<<Self::ParentDependencies as Dependancy>::ElementBorrowed<'a>>,
+			children:Vec<<Self::ChildDependencies as Dependancy>::ElementBorrowed<'a>>,
+			context:&SendAnyMap,
 		) -> Self {
 			let mut myself = Self(1);
 			myself.update(node_view, node, parent, children, context);
@@ -456,7 +391,7 @@ fn up_pass() {
 		}
 	}
 
-	let mut tree: RealDom = RealDom::new([AddNumber::to_type_erased()]);
+	let mut tree:RealDom = RealDom::new([AddNumber::to_type_erased()]);
 	let grandchild1 = tree.create_node(create_blank_element());
 	let grandchild1 = grandchild1.id();
 	let mut child1 = tree.create_node(create_blank_element());

@@ -60,9 +60,9 @@ use crate::TickIcon;
 #[component]
 pub fn Checkbox(
 	/// Indicate whether this checkbox is selected or not.
-	selected: bool,
+	selected:bool,
 	/// Theme override.
-	theme: Option<CheckboxThemeWith>,
+	theme:Option<CheckboxThemeWith>,
 ) -> Element {
 	let CheckboxTheme { unselected_fill, selected_fill, selected_icon_fill } =
 		use_applied_theme!(&theme, checkbox);
@@ -164,15 +164,16 @@ mod test {
 		let root = utils.root();
 		utils.wait_for_update().await;
 
-		// If the inner square exists it means that the Checkbox is selected, otherwise it isn't
+		// If the inner square exists it means that the Checkbox is selected,
+		// otherwise it isn't
 		assert!(root.get(0).get(0).get(0).get(0).is_placeholder());
 		assert!(root.get(1).get(0).get(0).get(0).is_placeholder());
 		assert!(root.get(2).get(0).get(0).get(0).is_placeholder());
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (20.0, 50.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(20.0, 50.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -181,9 +182,9 @@ mod test {
 		assert!(root.get(2).get(0).get(0).get(0).is_placeholder());
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (10.0, 90.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(10.0, 90.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -192,15 +193,15 @@ mod test {
 		assert!(root.get(2).get(0).get(0).get(0).is_element());
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (10.0, 10.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(10.0, 10.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (10.0, 50.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(10.0, 50.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 

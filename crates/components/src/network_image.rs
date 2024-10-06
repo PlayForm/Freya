@@ -2,8 +2,13 @@ use bytes::Bytes;
 use dioxus::prelude::*;
 use freya_elements::elements as dioxus_elements;
 use freya_hooks::{
-	use_applied_theme, use_asset_cacher, use_focus, AssetAge,
-	AssetConfiguration, NetworkImageTheme, NetworkImageThemeWith,
+	use_applied_theme,
+	use_asset_cacher,
+	use_focus,
+	AssetAge,
+	AssetConfiguration,
+	NetworkImageTheme,
+	NetworkImageThemeWith,
 };
 use freya_node_state::dynamic_bytes;
 use reqwest::Url;
@@ -14,19 +19,19 @@ use crate::Loader;
 #[derive(Props, Clone, PartialEq)]
 pub struct NetworkImageProps {
 	/// Theme override.
-	pub theme: Option<NetworkImageThemeWith>,
+	pub theme:Option<NetworkImageThemeWith>,
 
 	/// URL of the image.
-	pub url: ReadOnlySignal<Url>,
+	pub url:ReadOnlySignal<Url>,
 
 	/// Fallback element.
-	pub fallback: Option<Element>,
+	pub fallback:Option<Element>,
 
 	/// Loading element.
-	pub loading: Option<Element>,
+	pub loading:Option<Element>,
 
 	/// Information about the image.
-	pub alt: Option<String>,
+	pub alt:Option<String>,
 }
 
 /// Image status.
@@ -58,7 +63,7 @@ pub enum ImageState {
 ///     )
 /// }
 #[allow(non_snake_case)]
-pub fn NetworkImage(props: NetworkImageProps) -> Element {
+pub fn NetworkImage(props:NetworkImageProps) -> Element {
 	let mut asset_cacher = use_asset_cacher();
 	let focus = use_focus();
 	let mut status = use_signal(|| ImageState::Loading);
@@ -66,8 +71,7 @@ pub fn NetworkImage(props: NetworkImageProps) -> Element {
 	let mut assets_tasks = use_signal::<Vec<Task>>(Vec::new);
 
 	let focus_id = focus.attribute();
-	let NetworkImageTheme { width, height } =
-		use_applied_theme!(&props.theme, network_image);
+	let NetworkImageTheme { width, height } = use_applied_theme!(&props.theme, network_image);
 	let alt = props.alt.as_deref();
 
 	use_memo(move || {
@@ -82,10 +86,8 @@ pub fn NetworkImage(props: NetworkImageProps) -> Element {
 			asset_cacher.unuse_asset(cached_asset);
 		}
 
-		let asset_configuration = AssetConfiguration {
-			age: AssetAge::default(),
-			id: url.to_string(),
-		};
+		let asset_configuration =
+			AssetConfiguration { age:AssetAge::default(), id:url.to_string() };
 
 		// Loading image
 		status.set(ImageState::Loading);
@@ -97,11 +99,8 @@ pub fn NetworkImage(props: NetworkImageProps) -> Element {
 			let asset_task = spawn(async move {
 				let asset = fetch_image(url).await;
 				if let Ok(asset_bytes) = asset {
-					let asset_signal = asset_cacher.cache(
-						asset_configuration.clone(),
-						asset_bytes,
-						true,
-					);
+					let asset_signal =
+						asset_cacher.cache(asset_configuration.clone(), asset_bytes, true);
 					// Image loaded
 					status.set(ImageState::Loaded(asset_signal));
 					cached_assets.write().push(asset_configuration);
@@ -117,14 +116,7 @@ pub fn NetworkImage(props: NetworkImageProps) -> Element {
 
 	if let ImageState::Loaded(bytes) = &*status.read_unchecked() {
 		let image_data = dynamic_bytes(bytes.read().clone());
-		rsx!(image {
-			height: "{height}",
-			width: "{width}",
-			focus_id,
-			image_data,
-			role: "image",
-			alt
-		})
+		rsx!(image { height:"{height}", width:"{width}", focus_id, image_data, role:"image", alt })
 	} else if *status.read() == ImageState::Loading {
 		if let Some(loading_element) = &props.loading {
 			rsx!({ loading_element })
@@ -157,7 +149,7 @@ pub fn NetworkImage(props: NetworkImageProps) -> Element {
 	}
 }
 
-async fn fetch_image(url: Url) -> reqwest::Result<Bytes> {
+async fn fetch_image(url:Url) -> reqwest::Result<Bytes> {
 	let res = reqwest::get(url).await?;
 	res.bytes().await
 }

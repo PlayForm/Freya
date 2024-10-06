@@ -1,15 +1,13 @@
 use dioxus::prelude::*;
 use freya_elements::{elements as dioxus_elements, events::KeyboardEvent};
-use freya_hooks::{
-	theme_with, use_applied_theme, ButtonThemeWith, PopupTheme, PopupThemeWith,
-};
+use freya_hooks::{theme_with, use_applied_theme, ButtonThemeWith, PopupTheme, PopupThemeWith};
 
 use crate::{Button, CrossIcon};
 
 /// The background of the [`Popup`] component.
 #[allow(non_snake_case)]
 #[component]
-pub fn PopupBackground(children: Element) -> Element {
+pub fn PopupBackground(children:Element) -> Element {
 	rsx!(rect {
 		height: "100v",
 		width: "100v",
@@ -24,7 +22,8 @@ pub fn PopupBackground(children: Element) -> Element {
 	})
 }
 
-/// Floating window intended for quick interactions. Also called `Dialog` in other frameworks.
+/// Floating window intended for quick interactions. Also called `Dialog` in
+/// other frameworks.
 ///
 /// # Styling
 /// Inherits the [`PopupTheme`](freya_hooks::PopupTheme) theme.
@@ -64,17 +63,18 @@ pub fn PopupBackground(children: Element) -> Element {
 #[component]
 pub fn Popup(
 	/// Theme override.
-	theme: Option<PopupThemeWith>,
+	theme:Option<PopupThemeWith>,
 	/// Popup inner content.
-	children: Element,
+	children:Element,
 	/// Optional close request handler.
-	oncloserequest: Option<EventHandler>,
+	oncloserequest:Option<EventHandler>,
 	/// Whether to show or no the cross button in the top right corner.
 	#[props(default = true)]
-	show_close_button: bool,
-	/// Whether to trigger close request handler when the Escape key is pressed.
+	show_close_button:bool,
+	/// Whether to trigger close request handler when the Escape key is
+	/// pressed.
 	#[props(default = true)]
-	close_on_escape_key: bool,
+	close_on_escape_key:bool,
 ) -> Element {
 	let PopupTheme { background, color, cross_fill, width, height } =
 		use_applied_theme!(&theme, popup);
@@ -85,7 +85,7 @@ pub fn Popup(
 		}
 	};
 
-	let onkeydown = move |event: KeyboardEvent| {
+	let onkeydown = move |event:KeyboardEvent| {
 		if close_on_escape_key && event.key == Key::Escape {
 			request_to_close()
 		}
@@ -134,7 +134,7 @@ pub fn Popup(
 /// Optionally use a styled title inside a [`Popup`].
 #[allow(non_snake_case)]
 #[component]
-pub fn PopupTitle(children: Element) -> Element {
+pub fn PopupTitle(children:Element) -> Element {
 	rsx!(
 		rect {
 			font_size: "18",
@@ -148,7 +148,7 @@ pub fn PopupTitle(children: Element) -> Element {
 /// Optionally wrap the content of your [`Popup`] in a styled container.
 #[allow(non_snake_case)]
 #[component]
-pub fn PopupContent(children: Element) -> Element {
+pub fn PopupContent(children:Element) -> Element {
 	rsx!(
 		rect {
 			font_size: "15",
@@ -198,9 +198,9 @@ mod test {
 
 		// Open the popup
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 15.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 15.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -208,9 +208,9 @@ mod test {
 		assert_eq!(utils.sdom().get().layout().size(), 10);
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (395.0, 180.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(395.0, 180.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -219,18 +219,18 @@ mod test {
 
 		// Open the popup
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 15.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 15.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
 		// Send a random keydown event
 		utils.push_event(PlatformEvent::Keyboard {
-			name: EventName::KeyDown,
-			key: Key::ArrowDown,
-			code: Code::ArrowDown,
-			modifiers: Modifiers::empty(),
+			name:EventName::KeyDown,
+			key:Key::ArrowDown,
+			code:Code::ArrowDown,
+			modifiers:Modifiers::empty(),
 		});
 		utils.wait_for_update().await;
 		// Check the popup is still open
@@ -238,10 +238,10 @@ mod test {
 
 		// Send a ESC keydown event
 		utils.push_event(PlatformEvent::Keyboard {
-			name: EventName::KeyDown,
-			key: Key::Escape,
-			code: Code::Escape,
-			modifiers: Modifiers::empty(),
+			name:EventName::KeyDown,
+			key:Key::Escape,
+			code:Code::Escape,
+			modifiers:Modifiers::empty(),
 		});
 		utils.wait_for_update().await;
 		// Check the popup is closed

@@ -1,18 +1,12 @@
-#![cfg_attr(
-	all(not(debug_assertions), target_os = "windows"),
-	windows_subsystem = "windows"
-)]
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 use freya::prelude::*;
 use freya_core::prelude::PlatformInformation;
 
-fn main() {
-	launch_with_props(app, "Counter", (400.0, 350.0));
-}
+fn main() { launch_with_props(app, "Counter", (400.0, 350.0)); }
 
 fn app() -> Element {
-	let PlatformInformation { viewport_size, .. } =
-		*use_platform_information().read();
+	let PlatformInformation { viewport_size, .. } = *use_platform_information().read();
 
 	rsx!(
 		rect {

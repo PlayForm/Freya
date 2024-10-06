@@ -10,7 +10,7 @@ pub enum OverflowMode {
 }
 
 impl Parse for OverflowMode {
-	fn parse(value: &str) -> Result<Self, ParseError> {
+	fn parse(value:&str) -> Result<Self, ParseError> {
 		Ok(match value {
 			"clip" => OverflowMode::Clip,
 			_ => OverflowMode::None,
@@ -19,7 +19,7 @@ impl Parse for OverflowMode {
 }
 
 impl fmt::Display for OverflowMode {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+	fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
 		f.write_str(match self {
 			OverflowMode::Clip => "clip",
 			OverflowMode::None => "none",

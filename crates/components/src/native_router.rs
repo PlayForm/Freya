@@ -11,13 +11,11 @@ use freya_elements::{
 /// - Navigate using back and forward buttons of the mouse.
 #[allow(non_snake_case)]
 #[component]
-pub fn NativeRouter(children: Element) -> Element {
+pub fn NativeRouter(children:Element) -> Element {
 	let router = use_navigator();
 
-	let onpointerup = move |e: PointerEvent| {
-		if let PointerType::Mouse { trigger_button } =
-			e.data().get_pointer_type()
-		{
+	let onpointerup = move |e:PointerEvent| {
+		if let PointerType::Mouse { trigger_button } = e.data().get_pointer_type() {
 			match trigger_button {
 				Some(MouseButton::Back) => router.go_back(),
 				Some(MouseButton::Forward) => router.go_forward(),
@@ -106,9 +104,9 @@ mod test {
 		assert_eq!(utils.root().get(0).get(1).get(0).text(), Some("A"));
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (5.0, 5.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(5.0, 5.0).into(),
+			button:Some(MouseButton::Left),
 		});
 
 		utils.wait_for_update().await;
@@ -116,9 +114,9 @@ mod test {
 		assert_eq!(utils.root().get(0).get(1).get(0).text(), Some("B"));
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::PointerUp,
-			cursor: (5.0, 5.0).into(),
-			button: Some(MouseButton::Back),
+			name:EventName::PointerUp,
+			cursor:(5.0, 5.0).into(),
+			button:Some(MouseButton::Back),
 		});
 
 		utils.wait_for_update().await;
@@ -126,9 +124,9 @@ mod test {
 		assert_eq!(utils.root().get(0).get(1).get(0).text(), Some("A"));
 
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::PointerUp,
-			cursor: (5.0, 5.0).into(),
-			button: Some(MouseButton::Forward),
+			name:EventName::PointerUp,
+			cursor:(5.0, 5.0).into(),
+			button:Some(MouseButton::Forward),
 		});
 
 		utils.wait_for_update().await;

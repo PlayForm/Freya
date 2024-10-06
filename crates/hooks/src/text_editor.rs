@@ -9,30 +9,22 @@ pub struct TextCursor(usize);
 
 impl TextCursor {
 	/// Construct a new [TextCursor]
-	pub fn new(pos: usize) -> Self {
-		Self(pos)
-	}
+	pub fn new(pos:usize) -> Self { Self(pos) }
 
 	/// Get the position
-	pub fn pos(&self) -> usize {
-		self.0
-	}
+	pub fn pos(&self) -> usize { self.0 }
 
 	/// Set the position
-	pub fn set(&mut self, pos: usize) {
-		self.0 = pos;
-	}
+	pub fn set(&mut self, pos:usize) { self.0 = pos; }
 
 	/// Write the position
-	pub fn write(&mut self) -> &mut usize {
-		&mut self.0
-	}
+	pub fn write(&mut self) -> &mut usize { &mut self.0 }
 }
 
 /// A text line from a [TextEditor]
 #[derive(Clone)]
 pub struct Line<'a> {
-	pub text: Cow<'a, str>,
+	pub text:Cow<'a, str>,
 }
 
 impl Line<'_> {
@@ -43,9 +35,7 @@ impl Line<'_> {
 }
 
 impl Display for Line<'_> {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		f.write_str(&self.text)
-	}
+	fn fmt(&self, f:&mut std::fmt::Formatter<'_>) -> std::fmt::Result { f.write_str(&self.text) }
 }
 
 bitflags::bitflags! {
@@ -67,32 +57,32 @@ pub trait TextEditor {
 	where
 		Self: 'a;
 
-	fn set(&mut self, text: &str);
+	fn set(&mut self, text:&str);
 
 	/// Iterator over all the lines in the text.
 	fn lines(&self) -> Self::LinesIterator<'_>;
 
 	/// Insert a character in the text in the given position.
-	fn insert_char(&mut self, char: char, char_idx: usize);
+	fn insert_char(&mut self, char:char, char_idx:usize);
 
 	/// Insert a string in the text in the given position.
-	fn insert(&mut self, text: &str, char_idx: usize);
+	fn insert(&mut self, text:&str, char_idx:usize);
 
 	/// Remove a part of the text.
-	fn remove(&mut self, range: Range<usize>);
+	fn remove(&mut self, range:Range<usize>);
 
 	/// Get line from the given char
-	fn char_to_line(&self, char_idx: usize) -> usize;
+	fn char_to_line(&self, char_idx:usize) -> usize;
 
 	/// Get the first char from the given line
-	fn line_to_char(&self, line_idx: usize) -> usize;
+	fn line_to_char(&self, line_idx:usize) -> usize;
 
-	fn utf16_cu_to_char(&self, utf16_cu_idx: usize) -> usize;
+	fn utf16_cu_to_char(&self, utf16_cu_idx:usize) -> usize;
 
-	fn char_to_utf16_cu(&self, idx: usize) -> usize;
+	fn char_to_utf16_cu(&self, idx:usize) -> usize;
 
 	/// Get a line from the text
-	fn line(&self, line_idx: usize) -> Option<Line<'_>>;
+	fn line(&self, line_idx:usize) -> Option<Line<'_>>;
 
 	/// Total of lines
 	fn len_lines(&self) -> usize;
@@ -121,14 +111,10 @@ pub trait TextEditor {
 	}
 
 	/// Get the cursor row and col
-	fn cursor_row_and_col(&self) -> (usize, usize) {
-		(self.cursor_row(), self.cursor_col())
-	}
+	fn cursor_row_and_col(&self) -> (usize, usize) { (self.cursor_row(), self.cursor_col()) }
 
 	/// Get the visible cursor position
-	fn visible_cursor_col(&self) -> usize {
-		self.char_to_utf16_cu(self.cursor_col())
-	}
+	fn visible_cursor_col(&self) -> usize { self.char_to_utf16_cu(self.cursor_col()) }
 
 	/// Move the cursor 1 line down
 	fn cursor_down(&mut self) -> bool {
@@ -208,19 +194,13 @@ pub trait TextEditor {
 	}
 
 	/// Get the cursor position
-	fn cursor_pos(&self) -> usize {
-		self.cursor().pos()
-	}
+	fn cursor_pos(&self) -> usize { self.cursor().pos() }
 
 	/// Get the cursor position
-	fn visible_cursor_pos(&self) -> usize {
-		self.char_to_utf16_cu(self.cursor_pos())
-	}
+	fn visible_cursor_pos(&self) -> usize { self.char_to_utf16_cu(self.cursor_pos()) }
 
 	/// Set the cursor position
-	fn set_cursor_pos(&mut self, pos: usize) {
-		self.cursor_mut().set(pos);
-	}
+	fn set_cursor_pos(&mut self, pos:usize) { self.cursor_mut().set(pos); }
 
 	// Check if has any selection at all
 	fn has_any_selection(&self) -> bool;
@@ -229,25 +209,19 @@ pub trait TextEditor {
 	fn get_selection(&self) -> Option<(usize, usize)>;
 
 	// Return the visible selected text from a given editor Id
-	fn get_visible_selection(&self, editor_id: usize)
-		-> Option<(usize, usize)>;
+	fn get_visible_selection(&self, editor_id:usize) -> Option<(usize, usize)>;
 
 	// Remove the selection
 	fn clear_selection(&mut self);
 
 	// Select some text
-	fn set_selection(&mut self, selected: (usize, usize));
+	fn set_selection(&mut self, selected:(usize, usize));
 
 	// Measure a new text selection
-	fn measure_new_selection(
-		&self,
-		from: usize,
-		to: usize,
-		editor_id: usize,
-	) -> (usize, usize);
+	fn measure_new_selection(&self, from:usize, to:usize, editor_id:usize) -> (usize, usize);
 
 	// Measure a new cursor
-	fn measure_new_cursor(&self, to: usize, editor_id: usize) -> TextCursor;
+	fn measure_new_cursor(&self, to:usize, editor_id:usize) -> TextCursor;
 
 	// Update the selection with a new cursor
 	fn expand_selection_to_cursor(&mut self);
@@ -255,12 +229,7 @@ pub trait TextEditor {
 	fn get_clipboard(&mut self) -> &mut UseClipboard;
 
 	// Process a Keyboard event
-	fn process_key(
-		&mut self,
-		key: &Key,
-		code: &Code,
-		modifiers: &Modifiers,
-	) -> TextEvent {
+	fn process_key(&mut self, key:&Key, code:&Code, modifiers:&Modifiers) -> TextEvent {
 		let mut event = if self.has_any_selection() {
 			TextEvent::SELECTION_CHANGED
 		} else {
@@ -337,8 +306,7 @@ pub trait TextEditor {
 				}
 			},
 			Key::Backspace => {
-				let char_idx =
-					self.line_to_char(self.cursor_row()) + self.cursor_col();
+				let char_idx = self.line_to_char(self.cursor_row()) + self.cursor_col();
 				let selection = self.get_selection_range();
 
 				if let Some((start, end)) = selection {
@@ -353,8 +321,7 @@ pub trait TextEditor {
 				}
 			},
 			Key::Delete => {
-				let char_idx =
-					self.line_to_char(self.cursor_row()) + self.cursor_col();
+				let char_idx = self.line_to_char(self.cursor_row()) + self.cursor_col();
 				let selection = self.get_selection_range();
 
 				if let Some((start, end)) = selection {
@@ -385,11 +352,8 @@ pub trait TextEditor {
 				event.insert(TextEvent::TEXT_CHANGED);
 			},
 			Key::Character(character) => {
-				let meta_or_ctrl = if cfg!(target_os = "macos") {
-					modifiers.meta()
-				} else {
-					modifiers.ctrl()
-				};
+				let meta_or_ctrl =
+					if cfg!(target_os = "macos") { modifiers.meta() } else { modifiers.ctrl() };
 
 				match code {
 					Code::Delete => {},
@@ -434,8 +398,7 @@ pub trait TextEditor {
 					Code::KeyV if meta_or_ctrl => {
 						let copied_text = self.get_clipboard().get();
 						if let Ok(copied_text) = copied_text {
-							let char_idx = self.line_to_char(self.cursor_row())
-								+ self.cursor_col();
+							let char_idx = self.line_to_char(self.cursor_row()) + self.cursor_col();
 							self.insert(&copied_text, char_idx);
 							let last_idx = copied_text.len() + char_idx;
 							self.set_cursor_pos(last_idx);
@@ -483,9 +446,7 @@ pub trait TextEditor {
 							// Inserts a text
 							let cursor_pos = self.cursor_pos();
 							self.insert(character, cursor_pos);
-							self.set_cursor_pos(
-								cursor_pos + character.chars().count(),
-							);
+							self.set_cursor_pos(cursor_pos + character.chars().count());
 
 							event.insert(TextEvent::TEXT_CHANGED);
 						}

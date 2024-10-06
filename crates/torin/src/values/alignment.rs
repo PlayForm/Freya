@@ -10,15 +10,10 @@ pub enum Alignment {
 }
 
 impl Alignment {
-	pub fn is_not_start(&self) -> bool {
-		*self != Self::Start
-	}
+	pub fn is_not_start(&self) -> bool { *self != Self::Start }
 
 	pub fn is_spaced(&self) -> bool {
-		matches!(
-			self,
-			Self::SpaceBetween | Self::SpaceAround | Self::SpaceEvenly
-		)
+		matches!(self, Self::SpaceBetween | Self::SpaceAround | Self::SpaceEvenly)
 	}
 
 	pub fn pretty(&self) -> String {

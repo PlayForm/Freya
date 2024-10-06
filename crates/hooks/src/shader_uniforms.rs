@@ -5,7 +5,7 @@ use freya_engine::prelude::RuntimeEffect;
 /// Pass uniform values to a Shader.
 #[derive(Default)]
 pub struct UniformsBuilder {
-	uniforms: HashMap<String, UniformValue>,
+	uniforms:HashMap<String, UniformValue>,
 }
 
 /// Uniform value to be passed to a Shader.
@@ -17,12 +17,12 @@ pub enum UniformValue {
 
 impl UniformsBuilder {
 	/// Set a uniform value.
-	pub fn set(&mut self, name: &str, value: UniformValue) {
+	pub fn set(&mut self, name:&str, value:UniformValue) {
 		self.uniforms.insert(name.to_string(), value);
 	}
 
 	/// Build the uniform bytes.
-	pub fn build(&self, shader: &RuntimeEffect) -> Vec<u8> {
+	pub fn build(&self, shader:&RuntimeEffect) -> Vec<u8> {
 		let mut values = Vec::new();
 
 		for uniform in shader.uniforms().iter() {

@@ -1,8 +1,13 @@
 use dioxus::prelude::*;
 use freya_elements::{elements as dioxus_elements, events::MouseEvent};
 use freya_hooks::{
-	use_applied_theme, use_focus, use_platform, MenuContainerTheme,
-	MenuContainerThemeWith, MenuItemTheme, MenuItemThemeWith,
+	use_applied_theme,
+	use_focus,
+	use_platform,
+	MenuContainerTheme,
+	MenuContainerThemeWith,
+	MenuItemTheme,
+	MenuItemThemeWith,
 };
 use winit::window::CursorIcon;
 
@@ -59,13 +64,11 @@ use winit::window::CursorIcon;
 /// ```
 #[allow(non_snake_case)]
 #[component]
-pub fn Menu(children: Element, onclose: Option<EventHandler<()>>) -> Element {
+pub fn Menu(children:Element, onclose:Option<EventHandler<()>>) -> Element {
 	// Provide the menus ID generator
 	use_context_provider(|| Signal::new(ROOT_MENU.0));
 	// Provide the menus stack
-	use_context_provider::<Signal<Vec<MenuId>>>(|| {
-		Signal::new(vec![ROOT_MENU])
-	});
+	use_context_provider::<Signal<Vec<MenuId>>>(|| Signal::new(vec![ROOT_MENU]));
 	// Provide this the ROOT Menu ID
 	use_context_provider(|| ROOT_MENU);
 
@@ -86,9 +89,9 @@ pub fn Menu(children: Element, onclose: Option<EventHandler<()>>) -> Element {
 #[derive(Clone, Copy, PartialEq)]
 struct MenuId(usize);
 
-static ROOT_MENU: MenuId = MenuId(0);
+static ROOT_MENU:MenuId = MenuId(0);
 
-fn close_menus_until(menus: &mut Signal<Vec<MenuId>>, until_to: MenuId) {
+fn close_menus_until(menus:&mut Signal<Vec<MenuId>>, until_to:MenuId) {
 	loop {
 		let last_menu_id = menus.read().last().cloned();
 		if let Some(last_menu_id) = last_menu_id {
@@ -103,7 +106,7 @@ fn close_menus_until(menus: &mut Signal<Vec<MenuId>>, until_to: MenuId) {
 	}
 }
 
-fn push_menu(menus: &mut Signal<Vec<MenuId>>, menu_id: MenuId) {
+fn push_menu(menus:&mut Signal<Vec<MenuId>>, menu_id:MenuId) {
 	let last_menu_id = menus.read().last().cloned();
 	if let Some(last_menu_id) = last_menu_id {
 		if last_menu_id != menu_id {
@@ -130,13 +133,13 @@ pub enum MenuItemStatus {
 #[component]
 pub fn MenuItem(
 	/// Inner children for the MenuItem.
-	children: Element,
+	children:Element,
 	/// Theme override for the MenuItem.
-	theme: Option<MenuItemThemeWith>,
+	theme:Option<MenuItemThemeWith>,
 	/// Handler for the `onclick` event.
-	onclick: Option<EventHandler<Option<MouseEvent>>>,
+	onclick:Option<EventHandler<Option<MouseEvent>>>,
 	/// Handler for the `onmouseenter` event.
-	onmouseenter: Option<EventHandler<()>>,
+	onmouseenter:Option<EventHandler<()>>,
 ) -> Element {
 	let mut focus = use_focus();
 	let mut status = use_signal(MenuItemStatus::default);
@@ -209,9 +212,9 @@ pub fn MenuItem(
 #[component]
 pub fn SubMenu(
 	/// Submenu configuration.
-	menu: Element,
+	menu:Element,
 	/// Inner children for the MenuButton
-	children: Element,
+	children:Element,
 ) -> Element {
 	let parent_menu_id = use_context::<MenuId>();
 	let mut menus = use_context::<Signal<Vec<MenuId>>>();
@@ -254,9 +257,9 @@ pub fn SubMenu(
 #[component]
 pub fn MenuButton(
 	/// Inner children for the MenuButton
-	children: Element,
+	children:Element,
 	/// Handler for the `onclick` event.
-	onclick: Option<EventHandler<Option<MouseEvent>>>,
+	onclick:Option<EventHandler<Option<MouseEvent>>>,
 ) -> Element {
 	let mut menus = use_context::<Signal<Vec<MenuId>>>();
 	let parent_menu_id = use_context::<MenuId>();
@@ -277,10 +280,11 @@ pub fn MenuButton(
 #[allow(non_snake_case)]
 #[component]
 pub fn MenuContainer(
-	/// Inner children for the MenuContainer. Usually just `MenuButton` or `SubMenu`.
-	children: Element,
+	/// Inner children for the MenuContainer. Usually just `MenuButton` or
+	/// `SubMenu`.
+	children:Element,
 	/// Theme override.
-	theme: Option<MenuContainerThemeWith>,
+	theme:Option<MenuContainerThemeWith>,
 ) -> Element {
 	let MenuContainerTheme { background, padding, shadow } =
 		use_applied_theme!(&theme, menu_container);
@@ -370,25 +374,22 @@ mod test {
 
 		// Open the Menu
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 15.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 15.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
 		// Check the `Open` button exists
-		assert_eq!(
-			utils.root().get(0).get(1).get(0).get(0).get(0).get(0).text(),
-			Some("Open")
-		);
+		assert_eq!(utils.root().get(0).get(1).get(0).get(0).get(0).get(0).text(), Some("Open"));
 
 		assert!(utils.sdom().get().layout().size() > start_size);
 
 		// Close the Menu
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 60.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 60.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -396,9 +397,9 @@ mod test {
 
 		// Open the Menu again
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (15.0, 15.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(15.0, 15.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 		utils.wait_for_update().await;
@@ -408,9 +409,9 @@ mod test {
 
 		// Open the SubMenu
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (15.0, 130.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(15.0, 130.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -436,9 +437,9 @@ mod test {
 
 		// Stop showing the submenu
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::MouseOver,
-			cursor: (15.0, 90.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::MouseOver,
+			cursor:(15.0, 90.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
@@ -446,9 +447,9 @@ mod test {
 
 		// Click somewhere also so all the menus hide
 		utils.push_event(PlatformEvent::Mouse {
-			name: EventName::Click,
-			cursor: (333.0, 333.0).into(),
-			button: Some(MouseButton::Left),
+			name:EventName::Click,
+			cursor:(333.0, 333.0).into(),
+			button:Some(MouseButton::Left),
 		});
 		utils.wait_for_update().await;
 
