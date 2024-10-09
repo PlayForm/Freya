@@ -64,7 +64,7 @@ jobs:
                   profile: minimal
                   toolchain: ${{ matrix.toolchain }}
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -79,7 +79,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -94,7 +94,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/common/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -109,7 +109,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/components/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -124,7 +124,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/core/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -139,7 +139,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/devtools/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -154,7 +154,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/elements/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -169,7 +169,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/engine/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -184,7 +184,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/freya/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -199,7 +199,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/hooks/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -214,7 +214,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/native-core-macro/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -229,7 +229,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/native-core/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -244,7 +244,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/renderer/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -259,7 +259,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/state/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -274,7 +274,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/testing/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
@@ -289,7 +289,7 @@ jobs:
                 command: build
                 args: --release --all-features --manifest-path ./crates/torin/Cargo.toml
 
-            - uses: actions/cache@v4.0.2
+            - uses: actions/cache@v4.1.1
               with:
                   path: |
                       ~/.cargo/bin/
