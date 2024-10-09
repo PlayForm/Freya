@@ -86,8 +86,8 @@ tokio = { version = "1.40.0", features = [
 	"time",
 	"macros",
 ] }
-accesskit = { version = "0.16.2", features = ["serde"] }
-accesskit_winit = "0.22.2"
+accesskit = { version = "0.16.3", features = ["serde"] }
+accesskit_winit = "0.22.3"
 shipyard = { version = "0.7.2", features = [
 	"proc",
 	"std",
