@@ -8,6 +8,9 @@ import rehypeSlug from "rehype-slug";
 // https://astro.build/config
 export default defineConfig({
 	site: "https://freyaui.dev",
+	build: {
+		concurrency: 9999
+	},
 	integrations: [tailwind()],
 	output: "server",
 	adapter: deno(),
