@@ -1,7 +1,7 @@
 The `pointerenter` event fires when the user starts hovering/touching an
 element.
 
-Event Data: [`PointerData`](crate::events::PointerData)
+Event Data: [`PointerData``](crate::events::PointerData)
 
 ### Example
 

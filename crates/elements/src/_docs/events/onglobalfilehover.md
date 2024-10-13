@@ -1,6 +1,6 @@
 The `onglobalfilehover` event fires when the user hovers a file over the window.
 
-Event Data: [`FileData`](crate::events::FileData)
+Event Data: [`FileData``](crate::events::FileData)
 
 ### Example
 

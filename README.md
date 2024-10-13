@@ -6,15 +6,15 @@
 [![Github Sponsors](https://img.shields.io/github/sponsors/marc2332?style=social)](https://github.com/sponsors/marc2332)
 [![codecov](https://codecov.io/github/marc2332/freya/branch/main/graph/badge.svg?token=APSGEC84B8)](https://codecov.io/github/marc2332/freya)
 
-[Website](https://freyaui.dev) | [Nightly Docs](https://docs.freyaui.dev/freya)
-| [Stable Docs](https://docs.rs/freya/latest/freya) |
-[Book](https://book.freyaui.dev) | [Discord](https://discord.gg/sYejxCdewG)
+[`Website](https://freyaui.dev) | [Nightly Docs`](https://docs.freyaui.dev/freya)
+| [`Stable Docs`](https://docs.rs/freya/latest/freya) |
+[`Book](https://book.freyaui.dev) | [Discord`](https://discord.gg/sYejxCdewG)
 
 **Freya** is a cross-paltform GUI library for Rust powered by 🧬
-[Dioxus](https://dioxuslabs.com) and 🎨 [Skia](https://skia.org/).
+[`Dioxus](https://dioxuslabs.com) and 🎨 [Skia`](https://skia.org/).
 
 ⚠️ It's currently work in progress, but you can already play with it! You can
-join the [Discord](https://discord.gg/sYejxCdewG) server if you have any
+join the [`Discord`](https://discord.gg/sYejxCdewG) server if you have any
 question or issue.
 
 <br/>
@@ -65,7 +65,7 @@ fn app() -> Element {
 </td>
 <td style="border:hidden;">
 
-![Freya Demo](https://github.com/marc2332/freya/assets/38158676/f81a95a2-7add-4dbe-9820-3d3b6b42f6e5)
+![`Freya Demo`](https://github.com/marc2332/freya/assets/38158676/f81a95a2-7add-4dbe-9820-3d3b6b42f6e5)
 
 </td>
 </table>
@@ -78,11 +78,11 @@ Thanks to my sponsors for supporting this project! 😄
 
 ### Want to try it? 🤔
 
-👋 Make sure to check the [Setup guide](https://book.freyaui.dev/setup.html)
+👋 Make sure to check the [`Setup guide`](https://book.freyaui.dev/setup.html)
 first.
 
 > ⚠️ If you happen to be on Windows using `windows-gnu` and get compile errors,
-> maybe go check this [issue](https://github.com/marc2332/freya/issues/794).
+> maybe go check this [`issue`](https://github.com/marc2332/freya/issues/794).
 
 Clone this repo and run:
 
@@ -90,7 +90,7 @@ Clone this repo and run:
 cargo run --example counter
 ```
 
-You can also try [`freya-template`](https://github.com/marc2332/freya-template)
+You can also try [`freya-template``](https://github.com/marc2332/freya-template)
 
 ### Usage 📜
 
@@ -129,9 +129,9 @@ dioxus = { version = "0.5", features = [
 
 ### 🤠 Projects
 
-[Valin](https://github.com/marc2332/valin) ⚒️ is a Work-In-Progress
+[`Valin`](https://github.com/marc2332/valin) ⚒️ is a Work-In-Progress
 cross-platform code editor, made with Freya 🦀 and Rust, by me.
 
-![Valin](https://github.com/marc2332/valin/raw/main/demo.png)
+![`Valin`](https://github.com/marc2332/valin/raw/main/demo.png)
 
-[MIT License](./LICENSE.md)
+[`MIT License`](./LICENSE.md)

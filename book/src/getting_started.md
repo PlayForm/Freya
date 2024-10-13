@@ -1,8 +1,8 @@
 # Getting Started
 
-I encourage you to first learn about [Dioxus](dioxus.html), when you are done
+I encourage you to first learn about [`Dioxus`](dioxus.html), when you are done
 you can continue here. Also make sure you have the followed the
-[Setup](./setup.html) guide.
+[`Setup`](./setup.html) guide.
 
 Now, let's start by creating a hello world project.
 
@@ -112,5 +112,5 @@ cargo run
 Nice! You have created your first Freya app.
 
 You can learn more with the
-[examples](https://github.com/marc2332/freya/tree/main/examples) in the
+[`examples`](https://github.com/marc2332/freya/tree/main/examples) in the
 repository.

@@ -2,7 +2,7 @@
 
 ## How is this different from Dioxus?
 
-See the [differences](./differences_with_dioxus.md).
+See the [`differences`](./differences_with_dioxus.md).
 
 ## Will Freya have Mobile/Web support?
 

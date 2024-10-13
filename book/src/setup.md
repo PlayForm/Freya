@@ -1,13 +1,13 @@
 # Setup
 
-Make sure you have [Rust](https://www.rust-lang.org/) and your OS dependencies
+Make sure you have [`Rust`](https://www.rust-lang.org/) and your OS dependencies
 installed.
 
 ### Windows
 
 You will need C++ build tools which you can get through Visual Studio 2022,
 learn more
-[here](https://learn.microsoft.com/en-us/windows/dev-environment/rust/setup#install-visual-studio-recommended-or-the-microsoft-c-build-tools).
+[`here`](https://learn.microsoft.com/en-us/windows/dev-environment/rust/setup#install-visual-studio-recommended-or-the-microsoft-c-build-tools).
 
 ### Linux
 

@@ -2,8 +2,8 @@
 
 This is a quick introduction to Dioxus in the world of Freya. For more examples
 or tips you can check the official
-[Dioxus Docs](https://dioxuslabs.com/learn/0.5/) or the
-[Dioxus Cheatsheet](https://github.com/marc2332/dioxus-cheatsheet)
+[`Dioxus Docs`](https://dioxuslabs.com/learn/0.5/) or the
+[`Dioxus Cheatsheet`](https://github.com/marc2332/dioxus-cheatsheet)
 
 ## Components
 
@@ -191,5 +191,5 @@ fn ThirdComponent() -> Element {
 There are other state management libraries with more granular control or with
 other goals that are worth checking out.
 
--   [`dioxus-radio`](https://github.com/dioxus-community/dioxus-radio)
--   [`dioxus-query`](https://github.com/marc2332/dioxus-query)
+-   [`dioxus-radio``](https://github.com/dioxus-community/dioxus-radio)
+-   [`dioxus-query``](https://github.com/marc2332/dioxus-query)

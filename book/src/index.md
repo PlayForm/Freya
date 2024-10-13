@@ -1,8 +1,8 @@
 # Overview
 
 **Freya** is a **work in progress** cross-platform native GUI library for 🦀
-Rust, built on top of 🧬 [Dioxus](https://dioxuslabs.com) and using 🎨
-[Skia](https://skia.org/) as a graphics library.
+Rust, built on top of 🧬 [`Dioxus`](https://dioxuslabs.com) and using 🎨
+[`Skia`](https://skia.org/) as a graphics library.
 
 <table>
 <tr>
@@ -55,7 +55,7 @@ fn app() -> Element {
 </table>
 
 Check out the examples in the Freya
-[repository](https://github.com/marc2332/freya/tree/main/examples) to learn
+[`repository`](https://github.com/marc2332/freya/tree/main/examples) to learn
 more.
 
 ### Features
@@ -70,12 +70,12 @@ more.
 -   🔄️ Dioxus **Hot-reload** support
 -   📒 Multi-line **text editing** (experimental ⚠️)
 -   🦾 Basic **Accessibility** Support
--   🧩 Compatible with [Dioxus SDK](https://github.com/DioxusLabs/sdk) and other
+-   🧩 Compatible with [`Dioxus SDK`](https://github.com/DioxusLabs/sdk) and other
     Dioxus renderer-agnostic libraries
 
 ### Learn More
 
--   [Setup](./setup.html)
--   [API References](https://docs.rs/freya/latest/freya/)
--   [Main differences with Dioxus](./differences_with_dioxus.html)
--   [Discord](https://discord.gg/sYejxCdewG)
+-   [`Setup`](./setup.html)
+-   [`API References`](https://docs.rs/freya/latest/freya/)
+-   [`Main differences with Dioxus`](./differences_with_dioxus.html)
+-   [`Discord`](https://discord.gg/sYejxCdewG)

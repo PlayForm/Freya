@@ -2,8 +2,8 @@
 
 Hey! I hope this guide can help you contribute to Freya. If you simply have
 question or issues you can go to the
-[Discussions Tab](https://github.com/marc2332/freya/discussions) or the
-[Issues Tracker](https://github.com/marc2332/freya/issues).
+[`Discussions Tab`](https://github.com/marc2332/freya/discussions) or the
+[`Issues Tracker`](https://github.com/marc2332/freya/issues).
 
 ## Basic commands
 
@@ -63,14 +63,14 @@ also find some in the form of docs comments in the code itself.
 ## Book
 
 The book you find under https://book.freyaui.dev/ is located in `./book` and is
-written with [mdBook](https://github.com/rust-lang/mdBook).
+written with [`mdBook`](https://github.com/rust-lang/mdBook).
 
 ## Website
 
 The https://freyaui.dev source code is located inside the `./website` folder and
-is made with [Astro](https://astro.build/).
+is made with [`Astro`](https://astro.build/).
 
 ## Donations
 
 You might also want to sponsor the development of this project through my
-[Github Sponsor](https://github.com/sponsors/marc2332).
+[`Github Sponsor`](https://github.com/sponsors/marc2332).
