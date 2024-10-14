@@ -2,7 +2,7 @@
 
 `rect` supports specifying a maximum width and height.
 
-See syntax for [`Size Units``](crate::_docs::size_unit).
+See syntax for [`Size Units`](crate::_docs::size_unit).
 
 ##### Usage
 

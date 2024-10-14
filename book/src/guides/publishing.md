@@ -61,12 +61,12 @@ or on the
 ### Changing the executable icon on Windows
 
 `cargo-packager` will change the icon for platforms other than Windows using the
-[`icons``](https://docs.rs/cargo-packager/latest/cargo_packager/config/struct.Config.html#structfield.icons)
+[`icons`](https://docs.rs/cargo-packager/latest/cargo_packager/config/struct.Config.html#structfield.icons)
 field, but it does not do it on Windows (yet?).
 
 Anyway, the `cargo-packager` team recommends using
-[`winresource``](https://crates.io/crates/winresource) (as opposed to
-[`winres``](https://crates.io/crates/winres) which is not maintained). Before
+[`winresource`](https://crates.io/crates/winresource) (as opposed to
+[`winres`](https://crates.io/crates/winres) which is not maintained). Before
 using it, make sure that you have the requirements that are listed on its page.
 
 Add it to your build dependencies in `Cargo.toml`:

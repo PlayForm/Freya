@@ -3,7 +3,7 @@
 `rect` supports specifying a minimum width and height, this can be useful if you
 use it alongside a percentage for the target size.
 
-See syntax for [`Size Units``](crate::_docs::size_unit).
+See syntax for [`Size Units`](crate::_docs::size_unit).
 
 ##### Usage
 

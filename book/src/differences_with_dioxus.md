@@ -10,7 +10,7 @@ Dioxus renderers for Desktop (WebView and Blitz):
 | Category                            | Freya                                                               | Dioxus Renderers                                      |
 | ----------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------- |
 | **Elements, attributes and events** | Custom                                                              | HTML                                                  |
-| **Layout**                          | [`Torin`](https://github.com/marc2332/freya/tree/main/crates/torin) | CSS or [`Taffy``](https://github.com/DioxusLabs/taffy) |
+| **Layout**                          | [`Torin`](https://github.com/marc2332/freya/tree/main/crates/torin) | CSS or [`Taffy`](https://github.com/DioxusLabs/taffy) |
 | **Styling**                         | Custom                                                              | CSS                                                   |
 | **Renderer**                        | Skia                                                                | WebView or WGPU                                       |
 | **Components library**              | Custom                                                              | None, but can use HTML elements and CSS libraries     |

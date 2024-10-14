@@ -90,7 +90,7 @@ Clone this repo and run:
 cargo run --example counter
 ```
 
-You can also try [`freya-template``](https://github.com/marc2332/freya-template)
+You can also try [`freya-template`](https://github.com/marc2332/freya-template)
 
 ### Usage 📜
 

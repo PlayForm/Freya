@@ -191,5 +191,5 @@ fn ThirdComponent() -> Element {
 There are other state management libraries with more granular control or with
 other goals that are worth checking out.
 
--   [`dioxus-radio``](https://github.com/dioxus-community/dioxus-radio)
--   [`dioxus-query``](https://github.com/marc2332/dioxus-query)
+-   [`dioxus-radio`](https://github.com/dioxus-community/dioxus-radio)
+-   [`dioxus-query`](https://github.com/marc2332/dioxus-query)

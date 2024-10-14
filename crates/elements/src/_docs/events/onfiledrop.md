@@ -1,6 +1,6 @@
 The `filedrop` event fires when the user drops a file over the element.
 
-Event Data: [`FileData``](crate::events::FileData)
+Event Data: [`FileData`](crate::events::FileData)
 
 ### Example
 
