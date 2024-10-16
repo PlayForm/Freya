@@ -133,5 +133,3 @@ dioxus = { version = "0.5", features = [
 cross-platform code editor, made with Freya 🦀 and Rust, by me.
 
 ![`Valin`](https://github.com/marc2332/valin/raw/main/demo.png)
-
-[`MIT License`](./LICENSE.md)
