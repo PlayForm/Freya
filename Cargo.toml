@@ -96,7 +96,7 @@ shipyard = { version = "0.7.2", features = [
 smallvec = "1.13.2"
 
 euclid = "0.22.11"
-uuid = { version = "1.10.0", features = ["v4"] }
+uuid = { version = "1.11.0", features = ["v4"] }
 futures-util = "0.3.31"
 futures-task = "0.3.31"
 tracing = "0.1"
