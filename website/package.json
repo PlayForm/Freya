@@ -23,6 +23,6 @@
 	},
 	"devDependencies": {
 		"@astrojs/ts-plugin": "1.10.3",
-		"@biomejs/biome": "1.9.3"
+		"@biomejs/biome": "1.9.4"
 	}
 }
