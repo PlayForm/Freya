@@ -110,8 +110,8 @@ dioxus = { workspace = true }
 freya = { workspace = true }
 freya-core = { workspace = true }
 freya-testing = { workspace = true }
-reqwest = { version = "0.12.8", features = ["json"] }
-serde = "1.0.213"
+reqwest = { version = "0.12.9", features = ["json"] }
+serde = "1.0.214"
 dioxus-i18n = "0.2.5"
 rand = "0.8.5"
 dioxus-router = { workspace = true }
