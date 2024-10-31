@@ -15,7 +15,7 @@
 		"@astrojs/deno": "5.0.1",
 		"@astrojs/rss": "4.0.9",
 		"@astrojs/tailwind": "6.0.0-beta.0",
-		"astro": "5.0.0-beta.5",
+		"astro": "5.0.0-beta.6",
 		"rehype-accessible-emojis": "0.3.2",
 		"rehype-autolink-headings": "7.1.0",
 		"rehype-slug": "6.0.0",
