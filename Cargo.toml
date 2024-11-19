@@ -73,7 +73,7 @@ dioxus-hot-reload = { version = "0.5", features = [
 dioxus-router = { version = "0.5", default-features = false }
 dioxus-sdk = { version = "0.5", features = ["clipboard"] }
 
-skia-safe = { version = "0.78.2", features = ["gl", "textlayout", "svg"] }
+skia-safe = { version = "0.80.1", features = ["gl", "textlayout", "svg"] }
 
 gl = "0.14.0"
 glutin = "0.32.1"
